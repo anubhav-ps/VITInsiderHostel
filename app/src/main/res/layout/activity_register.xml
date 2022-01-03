@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EEEEEE"
+    android:orientation="vertical"
+    tools:context=".RegisterActivity">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="80dp"
+        android:fontFamily="@font/harmattan"
+        android:text="@string/register_pge_sign_up"
+        android:textColor="@color/theme_green"
+        android:textSize="60sp"
+        android:textStyle="bold" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="82dp"
+        android:layout_marginEnd="32dp"
+        android:hint="@string/register_pge_name_hint"
+        android:textColorHint="#878787"
+        app:boxStrokeColor="@color/theme_green"
+        app:endIconMode="clear_text"
+        app:endIconTint="@color/theme_green"
+        app:endIconTintMode="src_atop"
+        app:hintTextColor="@color/theme_green">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/registerPgeNameTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:lines="1"
+            android:maxLines="1">
+
+        </com.google.android.material.textfield.TextInputEditText>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="32dp"
+        android:hint="@string/register_pge_mail_hint"
+        android:textColorHint="#878787"
+        app:boxStrokeColor="@color/theme_green"
+        app:endIconMode="clear_text"
+        app:endIconTint="@color/theme_green"
+        app:endIconTintMode="src_atop"
+        app:hintTextColor="@color/theme_green">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/registerPgeMailTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress">
+
+        </com.google.android.material.textfield.TextInputEditText>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:hint="@string/register_pge_user_type_hint"
+            android:textColorHint="#878787"
+            app:boxBackgroundColor="#EEEEEE"
+            app:boxStrokeColor="@color/theme_green"
+            app:endIconTint="@color/theme_green"
+            app:endIconTintMode="src_atop"
+            app:hintTextColor="@color/theme_green">
+
+            <AutoCompleteTextView
+                android:id="@+id/registerPgeUserTypeTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:inputType="none"
+                tools:ignore="LabelFor">
+
+            </AutoCompleteTextView>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="38dp"
+            android:layout_marginEnd="32dp"
+            android:hint="@string/register_pge_gender_hint"
+            android:textColorHint="#878787"
+            app:boxBackgroundColor="#EEEEEE"
+            app:boxStrokeColor="@color/theme_green"
+            app:endIconTint="@color/theme_green"
+            app:endIconTintMode="src_atop"
+            app:hintTextColor="@color/theme_green">
+
+            <AutoCompleteTextView
+                android:id="@+id/registerPgeGenderTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#EEEEEE"
+                android:gravity="center_vertical"
+                android:inputType="none"
+                tools:ignore="LabelFor">
+
+            </AutoCompleteTextView>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="32dp"
+        android:hint="@string/register_pge_password_hint"
+        android:textColorHint="#878787"
+        app:boxStrokeColor="@color/theme_green"
+        app:endIconMode="password_toggle"
+        app:endIconTint="@color/theme_green"
+        app:endIconTintMode="src_atop"
+        app:hintTextColor="@color/theme_green">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/registerPgePasswordTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:lines="1"
+            android:maxLines="1">
+
+        </com.google.android.material.textfield.TextInputEditText>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/registerPgeRegisterBtn"
+        android:layout_width="320dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/register_pge_register_btn"
+        android:textColor="@color/white"
+        app:backgroundTint="@color/theme_green"
+        app:cornerRadius="4dp"
+        app:elevation="4dp">
+
+    </com.google.android.material.button.MaterialButton>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:gravity="right"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:paddingEnd="24dp"
+        tools:ignore="RtlHardcoded,RtlSymmetry">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/register_pge_to_login_lbl"
+            android:textColor="#8C8C8C" />
+
+        <ImageButton
+            android:id="@+id/registerPgeArrowBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="6dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:elevation="8dp"
+            android:src="@drawable/arrow_icon" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

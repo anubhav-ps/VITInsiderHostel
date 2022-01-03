@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EEEEEE"
+    android:orientation="vertical"
+    tools:context=".LoginActivity">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="110dp"
+        android:fontFamily="@font/harmattan"
+        android:text="@string/login_pge_1st_txt"
+        android:textColor="@color/theme_green"
+        android:textSize="50sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:fontFamily="@font/harmattan"
+        android:text="@string/login_pge_2nd_txt"
+        android:textColor="#7F7F7F"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="32dp"
+        android:hint="@string/login_pge_mail_hint"
+        android:textColorHint="#878787"
+        app:boxStrokeColor="@color/theme_green"
+        app:endIconMode="clear_text"
+        app:endIconTint="@color/theme_green"
+        app:endIconTintMode="src_atop"
+        app:hintTextColor="@color/theme_green">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/loginPgeMailTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress">
+
+        </com.google.android.material.textfield.TextInputEditText>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="32dp"
+        android:hint="@string/login_pge_password_hint"
+        android:textColorHint="#878787"
+        app:boxStrokeColor="@color/theme_green"
+        app:endIconMode="password_toggle"
+        app:endIconTint="@color/theme_green"
+        app:endIconTintMode="src_atop"
+        app:hintTextColor="@color/theme_green">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/loginPgePasswordTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:lines="1"
+            android:maxLines="1">
+
+        </com.google.android.material.textfield.TextInputEditText>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/loginPgeLoginBtn"
+        android:layout_width="320dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/login_pge_login_btn_txt"
+        android:textColor="@color/white"
+        app:backgroundTint="@color/theme_green"
+        app:cornerRadius="4dp"
+        app:elevation="4dp">
+
+    </com.google.android.material.button.MaterialButton>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="6dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/login_pge_forgot_password_lbl"
+        android:textColor="#8C8C8C" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/login_pge_resend_link_lbl"
+        android:textColor="#8C8C8C" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="140dp"
+        android:gravity="left"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        tools:ignore="RtlHardcoded,RtlSymmetry">
+
+        <ImageButton
+            android:id="@+id/loginPgeArrowBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="6dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:elevation="8dp"
+            android:src="@drawable/back_arrow_icon" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="4dp"
+            android:text="@string/login_pge_register_lbl"
+            android:textColor="#8C8C8C" />
+
+    </LinearLayout>
+</LinearLayout>

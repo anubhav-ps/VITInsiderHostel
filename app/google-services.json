@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "85851567219",
+    "project_id": "vitinsiderhostel",
+    "storage_bucket": "vitinsiderhostel.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85851567219:android:b054f059eb41a0078a2606",
+        "android_client_info": {
+          "package_name": "com.anubhav.vitinsiderhostel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "85851567219-g12ovo43iklf5mqi41muokcl6f75kimc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9ADAqBp1dR7ufygyy30TDDcTO1bapEd4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "85851567219-g12ovo43iklf5mqi41muokcl6f75kimc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

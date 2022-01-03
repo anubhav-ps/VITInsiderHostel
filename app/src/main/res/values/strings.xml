@@ -1,3 +1,28 @@
 <resources>
-    <string name="app_name">VITInsiderHostel</string>
+    <string name="app_name">Insider Hostel</string>
+
+
+    /* register page */
+    <string name="register_pge_sign_up">Sign Up</string>
+    <string name="register_pge_name_hint">Enter your Name</string>
+    <string name="register_pge_mail_hint">Enter your V.I.T Mail ID</string>
+    <string name="register_pge_gender_lbl">Gender</string>
+    <string name="register_pge_user_type_hint">User Type</string>
+    <string name="register_pge_gender_hint">Gender</string>
+    <string name="register_pge_password_hint">Pick a strong password</string>
+    <string name="register_pge_register_btn">Create Account</string>
+    <string name="register_pge_to_login_lbl">already have an account ?</string>
+    <string name="splash_pge_campus_lbl">Chennai Campus</string>
+
+    /* login page */
+    <string name="login_pge_mail_hint">Enter your V.I.T Mail ID</string>
+    <string name="login_pge_password_hint">Enter your password</string>
+    <string name="login_pge_login_btn_txt">Login</string>
+    <string name="login_pge_register_lbl">Dont have an account ?</string>
+    <string name="login_pge_resend_link_lbl">Resend verification link</string>
+    <string name="login_pge_forgot_password_lbl">Forgot Password ?</string>
+    <string name="login_pge_2nd_txt">Login in to continue.</string>
+    <string name="login_pge_1st_txt">Welcome Back !</string>
+
+
 </resources>
