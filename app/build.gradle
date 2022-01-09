@@ -13,7 +13,7 @@ android {
         targetSdk 31
         versionCode 1
         versionName "1.0"
-
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -35,7 +35,6 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     implementation 'com.google.firebase:firebase-auth:21.0.1'
     implementation 'com.google.firebase:firebase-firestore:24.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.6'
     implementation 'com.google.firebase:firebase-analytics:20.0.2'
     implementation 'com.google.firebase:firebase-storage:20.0.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

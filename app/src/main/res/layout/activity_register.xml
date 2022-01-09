@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="#EEEEEE"
     android:orientation="vertical"
+    android:id="@+id/registerPge"
     tools:context=".RegisterActivity">
 
     <com.google.android.material.textview.MaterialTextView
@@ -104,6 +105,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/registerPgeBlockTxtLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
             android:layout_width="140dp"
             android:layout_height="wrap_content"
@@ -115,10 +117,11 @@
             app:boxStrokeColor="@color/theme_green"
             app:endIconTint="@color/theme_green"
             app:endIconTintMode="src_atop"
-            app:hintTextColor="@color/theme_green">
+            app:hintTextColor="@color/theme_green"
+            android:visibility="invisible">
 
             <AutoCompleteTextView
-                android:id="@+id/registerPgeGenderTxt"
+                android:id="@+id/registerPgeBlockTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#EEEEEE"
@@ -176,10 +179,18 @@
     </com.google.android.material.button.MaterialButton>
 
 
+    <ProgressBar
+        android:id="@+id/registerPgeProgressBar"
+        android:layout_marginTop="14dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="invisible" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="40dp"
         android:gravity="right"
         android:orientation="horizontal"
         android:padding="10dp"
