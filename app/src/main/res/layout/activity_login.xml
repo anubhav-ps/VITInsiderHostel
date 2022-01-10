@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="#EEEEEE"
     android:orientation="vertical"
+    android:id="@+id/loginPge"
     tools:context=".LoginActivity">
 
     <com.google.android.material.textview.MaterialTextView
@@ -97,32 +98,44 @@
 
     </com.google.android.material.button.MaterialButton>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="6dp"
-        android:background="?attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:text="@string/login_pge_forgot_password_lbl"
-        android:textColor="#8C8C8C" />
+        android:layout_margin="4dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
-    <com.google.android.material.textview.MaterialTextView
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:text="@string/login_pge_forgot_password_lbl"
+            android:textColor="#8C8C8C" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/loginPgeReset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="@string/login_pge_reset_link_click_lbl"
+            android:textColor="#737373" />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/loginPgeProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="4dp"
-        android:background="?attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:text="@string/login_pge_resend_link_lbl"
-        android:textColor="#8C8C8C" />
+        android:layout_marginTop="14dp"
+        android:visibility="invisible" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="90dp"
         android:gravity="left"
         android:orientation="horizontal"
         android:padding="10dp"

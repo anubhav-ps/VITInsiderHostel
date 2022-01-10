@@ -319,7 +319,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void validation() {
 
         if (!validName && !validMail && !validPassword && !validBlock && !validUserType) {
-            String message = "Fill all the fields to proceed !";
+            final String message = "Fill all the fields to proceed !";
             callSnackBar(message);
             return;
         }
@@ -411,6 +411,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                                                     userMap.put("roomNo", roomNo);
                                                     userMap.put("roomType", type);
+                                                    userMap.put("isAdmin","0");
 
                                                     // getting document id and uploading to fire store
                                                     DocumentReference documentReference = userSection.document("S").collection(inputBlock).document();
@@ -425,6 +426,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                                     document
                                                                             .get()
                                                                             .addOnSuccessListener(documentSnapshot1 -> {
+                                                                                Map<String, String> userBlock = new HashMap<>();
+                                                                                userBlock.put("block", inputBlock);
+                                                                                userBlock.put("userType",inputUserType);
+                                                                                userBlock.put("doc_id",dID);
+                                                                                db.collection("UserBlockRec").document(inputMail.toLowerCase(Locale.ROOT)).set(userBlock);
                                                                                 if (documentSnapshot1.exists()) {
 
                                                                                     final String userID = Objects.requireNonNull(documentSnapshot1.get("user_Id")).toString();
@@ -442,6 +448,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                                                     final String studentNativeLanguage = Objects.requireNonNull(documentSnapshot1.get("studentNativeLanguage")).toString();
                                                                                     final String studentRoomNo = Objects.requireNonNull(documentSnapshot1.get("roomNo")).toString();
                                                                                     final String studentRoomType = Objects.requireNonNull(documentSnapshot1.get("roomType")).toString();
+                                                                                    final String admin = Objects.requireNonNull(documentSnapshot1.get("isAdmin")).toString();
 
                                                                                     User user = User.getInstance();
                                                                                     user.setUser_Id(userID);
@@ -455,6 +462,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                                                     user.setStudentNativeLanguage(studentNativeLanguage);
                                                                                     user.setRoomNo(studentRoomNo);
                                                                                     user.setRoomType(studentRoomType);
+                                                                                    boolean adminVal = false;
+                                                                                    if (admin.equalsIgnoreCase("1")){
+                                                                                        adminVal = true;
+                                                                                    }
+                                                                                    user.setAdmin(adminVal);
 
                                                                                 } else {
                                                                                     progressBar.setVisibility(View.INVISIBLE);

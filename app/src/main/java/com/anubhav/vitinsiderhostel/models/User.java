@@ -25,6 +25,8 @@ public class User extends Application{
     private String roomNo;           //  block,RoomNo
     private String roomType;         //  bed,1   or bed,0         1-> AC , 2-> Non-Ac
 
+    private Boolean isAdmin = false;
+
     public User() {
 
     }
@@ -125,5 +127,15 @@ public class User extends Application{
         this.roomType = roomType;
     }
 
+    public Boolean getAdmin() {
+        return isAdmin;
+    }
 
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
+    }
+
+    public static void setInstance(User instance) {
+        User.instance = instance;
+    }
 }

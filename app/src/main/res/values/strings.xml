@@ -18,10 +18,12 @@
     <string name="login_pge_password_hint">Enter your password</string>
     <string name="login_pge_login_btn_txt">Login</string>
     <string name="login_pge_register_lbl">Dont have an account ?</string>
-    <string name="login_pge_resend_link_lbl">Resend verification link</string>
+    <string name="login_pge_resend_link_lbl">Verification link Expired ?</string>
     <string name="login_pge_forgot_password_lbl">Forgot Password ?</string>
     <string name="login_pge_2nd_txt">Login in to continue.</string>
     <string name="login_pge_1st_txt">Welcome Back !</string>
+    <string name="login_pge_resend_link_click_lbl">Resend</string>
+    <string name="login_pge_reset_link_click_lbl">Reset</string>
 
 
 </resources>
