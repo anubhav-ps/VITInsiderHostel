@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/registerPge"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EEEEEE"
     android:orientation="vertical"
-    android:id="@+id/registerPge"
     tools:context=".RegisterActivity">
 
     <com.google.android.material.textview.MaterialTextView
@@ -16,7 +16,7 @@
         android:layout_marginTop="80dp"
         android:fontFamily="@font/harmattan"
         android:text="@string/register_pge_sign_up"
-        android:textColor="@color/theme_green"
+        android:textColor="@color/medium_theme_green"
         android:textSize="60sp"
         android:textStyle="bold" />
 
@@ -30,11 +30,11 @@
         android:layout_marginEnd="32dp"
         android:hint="@string/register_pge_name_hint"
         android:textColorHint="#878787"
-        app:boxStrokeColor="@color/theme_green"
+        app:boxStrokeColor="@color/light_theme_green"
         app:endIconMode="clear_text"
-        app:endIconTint="@color/theme_green"
+        app:endIconTint="@color/light_theme_green"
         app:endIconTintMode="src_atop"
-        app:hintTextColor="@color/theme_green">
+        app:hintTextColor="@color/light_theme_green">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/registerPgeNameTxt"
@@ -57,11 +57,11 @@
         android:layout_marginEnd="32dp"
         android:hint="@string/register_pge_mail_hint"
         android:textColorHint="#878787"
-        app:boxStrokeColor="@color/theme_green"
+        app:boxStrokeColor="@color/light_theme_green"
         app:endIconMode="clear_text"
-        app:endIconTint="@color/theme_green"
+        app:endIconTint="@color/light_theme_green"
         app:endIconTintMode="src_atop"
-        app:hintTextColor="@color/theme_green">
+        app:hintTextColor="@color/light_theme_green">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/registerPgeMailTxt"
@@ -87,10 +87,10 @@
             android:hint="@string/register_pge_user_type_hint"
             android:textColorHint="#878787"
             app:boxBackgroundColor="#EEEEEE"
-            app:boxStrokeColor="@color/theme_green"
-            app:endIconTint="@color/theme_green"
+            app:boxStrokeColor="@color/light_theme_green"
+            app:endIconTint="@color/light_theme_green"
             app:endIconTintMode="src_atop"
-            app:hintTextColor="@color/theme_green">
+            app:hintTextColor="@color/light_theme_green">
 
             <AutoCompleteTextView
                 android:id="@+id/registerPgeUserTypeTxt"
@@ -113,12 +113,12 @@
             android:layout_marginEnd="32dp"
             android:hint="@string/register_pge_gender_hint"
             android:textColorHint="#878787"
+            android:visibility="invisible"
             app:boxBackgroundColor="#EEEEEE"
-            app:boxStrokeColor="@color/theme_green"
-            app:endIconTint="@color/theme_green"
+            app:boxStrokeColor="@color/light_theme_green"
+            app:endIconTint="@color/light_theme_green"
             app:endIconTintMode="src_atop"
-            app:hintTextColor="@color/theme_green"
-            android:visibility="invisible">
+            app:hintTextColor="@color/light_theme_green">
 
             <AutoCompleteTextView
                 android:id="@+id/registerPgeBlockTxt"
@@ -144,11 +144,11 @@
         android:layout_marginEnd="32dp"
         android:hint="@string/register_pge_password_hint"
         android:textColorHint="#878787"
-        app:boxStrokeColor="@color/theme_green"
+        app:boxStrokeColor="@color/light_theme_green"
         app:endIconMode="password_toggle"
-        app:endIconTint="@color/theme_green"
+        app:endIconTint="@color/light_theme_green"
         app:endIconTintMode="src_atop"
-        app:hintTextColor="@color/theme_green">
+        app:hintTextColor="@color/light_theme_green">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/registerPgePasswordTxt"
@@ -172,7 +172,7 @@
         android:layout_marginEnd="32dp"
         android:text="@string/register_pge_register_btn"
         android:textColor="@color/white"
-        app:backgroundTint="@color/theme_green"
+        app:backgroundTint="@color/medium_theme_green"
         app:cornerRadius="4dp"
         app:elevation="4dp">
 
@@ -181,10 +181,10 @@
 
     <ProgressBar
         android:id="@+id/registerPgeProgressBar"
-        android:layout_marginTop="14dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="14dp"
         android:visibility="invisible" />
 
     <LinearLayout

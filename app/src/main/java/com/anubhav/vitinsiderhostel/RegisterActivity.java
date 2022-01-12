@@ -1,6 +1,7 @@
 package com.anubhav.vitinsiderhostel;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -13,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.button.MaterialButton;
@@ -553,6 +555,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void callSnackBar(String message) {
         Snackbar snackbar = Snackbar
                 .make(RegisterActivity.this, findViewById(R.id.registerPge), message, Snackbar.LENGTH_LONG);
+        snackbar.setTextColor(Color.WHITE);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(ContextCompat.getColor(RegisterActivity.this,R.color.navy_blue));
         snackbar.show();
     }
 

@@ -1,12 +1,15 @@
 package com.anubhav.vitinsiderhostel;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.anubhav.vitinsiderhostel.models.User;
 import com.anubhav.vitinsiderhostel.ui.TypeWriter;
@@ -121,7 +124,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                                                 }
                                                 user.setAdmin(adminVal);
 
-                                                Toast.makeText(SplashScreenActivity.this, "Logging in", Toast.LENGTH_SHORT).show();
                                                 Intent intent = new Intent(SplashScreenActivity.this, HomePageActivity.class);
                                                 startActivity(intent);
                                                 overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
@@ -154,6 +156,9 @@ public class SplashScreenActivity extends AppCompatActivity {
     private void callSnackBar(String message) {
         Snackbar snackbar = Snackbar
                 .make(SplashScreenActivity.this, findViewById(R.id.splashScreenPge), message, Snackbar.LENGTH_LONG);
+        snackbar.setTextColor(Color.WHITE);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(ContextCompat.getColor(SplashScreenActivity.this,R.color.navy_blue));
         snackbar.show();
     }
 

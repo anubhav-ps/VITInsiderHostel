@@ -1,9 +1,11 @@
 package com.anubhav.vitinsiderhostel;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -400,6 +402,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void callSnackBar(String message) {
         Snackbar snackbar = Snackbar
                 .make(LoginActivity.this, findViewById(R.id.loginPge), message, Snackbar.LENGTH_LONG);
+        snackbar.setTextColor(Color.WHITE);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(ContextCompat.getColor(LoginActivity.this,R.color.navy_blue));
         snackbar.show();
     }
 

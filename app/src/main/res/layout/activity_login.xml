@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/loginPge"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EEEEEE"
     android:orientation="vertical"
-    android:id="@+id/loginPge"
     tools:context=".LoginActivity">
 
     <com.google.android.material.textview.MaterialTextView
@@ -16,7 +16,7 @@
         android:layout_marginTop="110dp"
         android:fontFamily="@font/harmattan"
         android:text="@string/login_pge_1st_txt"
-        android:textColor="@color/theme_green"
+        android:textColor="@color/medium_theme_green"
         android:textSize="50sp"
         android:textStyle="bold" />
 
@@ -39,11 +39,11 @@
         android:layout_marginEnd="32dp"
         android:hint="@string/login_pge_mail_hint"
         android:textColorHint="#878787"
-        app:boxStrokeColor="@color/theme_green"
+        app:boxStrokeColor="@color/light_theme_green"
         app:endIconMode="clear_text"
-        app:endIconTint="@color/theme_green"
+        app:endIconTint="@color/light_theme_green"
         app:endIconTintMode="src_atop"
-        app:hintTextColor="@color/theme_green">
+        app:hintTextColor="@color/light_theme_green">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/loginPgeMailTxt"
@@ -64,11 +64,11 @@
         android:layout_marginEnd="32dp"
         android:hint="@string/login_pge_password_hint"
         android:textColorHint="#878787"
-        app:boxStrokeColor="@color/theme_green"
+        app:boxStrokeColor="@color/light_theme_green"
         app:endIconMode="password_toggle"
-        app:endIconTint="@color/theme_green"
+        app:endIconTint="@color/light_theme_green"
         app:endIconTintMode="src_atop"
-        app:hintTextColor="@color/theme_green">
+        app:hintTextColor="@color/light_theme_green">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/loginPgePasswordTxt"
@@ -92,7 +92,7 @@
         android:layout_marginEnd="32dp"
         android:text="@string/login_pge_login_btn_txt"
         android:textColor="@color/white"
-        app:backgroundTint="@color/theme_green"
+        app:backgroundTint="@color/medium_theme_green"
         app:cornerRadius="4dp"
         app:elevation="4dp">
 
