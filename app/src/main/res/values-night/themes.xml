@@ -16,4 +16,24 @@
         <item name="android:textColorPrimary">@color/black</item>
 
     </style>
+
+    <style name="SelectableItemTheme">
+        <item name="colorControlHighlight">#E6888686</item>
+    </style>
+
+    <style name="SelectableItemBackground">
+        <item name="android:theme">@style/SelectableItemTheme</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="ForArrow">
+        <item name="colorControlHighlight">#B3A7E07A</item>
+    </style>
+
+    <style name="ForArrowTheme">
+        <item name="android:theme">@style/ForArrow</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+
 </resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_room"
+        android:icon="@drawable/ic_room"
+        android:title="Room"
+        app:cnb_backgroundColor="#A6E574"
+        app:cnb_iconColor="@color/white"
+        app:cnb_textColor="@color/white" />
+    <item
+        android:id="@+id/menu_block"
+        android:icon="@drawable/ic_hostel"
+        android:title="Block"
+        app:cnb_backgroundColor="#A6E574"
+        app:cnb_iconColor="@color/white"
+        app:cnb_textColor="@color/white" />
+    <item
+        android:id="@+id/menu_account"
+        android:icon="@drawable/ic_account"
+        android:title="Account"
+        app:cnb_backgroundColor="#A6E574"
+        app:cnb_iconColor="@color/white"
+        app:cnb_textColor="@color/white" />
+
+
+</menu>

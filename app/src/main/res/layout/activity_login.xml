@@ -114,6 +114,8 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/loginPgeReset"
+            style="@style/SelectableItemBackground"
+            android:padding="2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
@@ -143,6 +145,7 @@
 
         <ImageButton
             android:id="@+id/loginPgeArrowBtn"
+            style="@style/ForArrowTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

@@ -210,6 +210,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="6dp"
+            style="@style/ForArrowTheme"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:elevation="8dp"
             android:src="@drawable/arrow_icon" />

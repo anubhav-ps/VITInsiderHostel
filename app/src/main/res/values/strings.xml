@@ -26,4 +26,25 @@
     <string name="login_pge_reset_link_click_lbl">Reset</string>
 
 
+    /* home page */
+    <string name="home_pge_toolbar_account_lbl">Account</string>
+
+
+    /* account fragment */
+    <string name="account_frag_username_txt">Chirag Rathore</string>
+    <string name="account_frag_user_mail_id">chirag.rathore2019@vitstudent.ac.in</string>
+    <string name="account_frag_account_settings_lbl">Account Settings</string>
+    <string name="account_frag_user_profile_txt">User Profile</string>
+    <string name="account_frag_ticket_history_txt">Ticket History</string>
+    <string name="account_frag_help_amp_support_lbl"><![CDATA[Help & Support]]></string>
+    <string name="account_frag_about_vit_insider_hostel_txt">About VIT Insider Hostel</string>
+    <string name="account_frag_share_the_app_txt">Share the App</string>
+    <string name="account_frag_report_issue_txt">Report Issue</string>
+    <string name="account_frag_sign_out_txt">Sign Out</string>
+    <string name="account_frag_version_code_txt">v1.01.0</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
 </resources>

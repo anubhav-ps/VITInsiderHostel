@@ -171,6 +171,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+            finish();
         } else if (id == R.id.loginPgeReset) {
             processForgotPassword();
         }
@@ -320,6 +321,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                                         progressBar.setVisibility(View.INVISIBLE);
                                                                         Toast.makeText(getApplicationContext(), "Logging in", Toast.LENGTH_SHORT).show();
                                                                         Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                                                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                                         startActivity(intent);
                                                                         overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
                                                                         finish();
@@ -373,12 +376,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         }
                 );
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
     }
 
 

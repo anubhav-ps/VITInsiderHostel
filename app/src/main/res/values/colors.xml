@@ -12,4 +12,5 @@
     <color name="light_olive_green">#A6CF98</color>
     <color name="theme_pink">#FF6D6D</color>
     <color name="navy_blue">#194350</color>
+    <color name="background_fill_colour">#EEEEEE</color>
 </resources>
