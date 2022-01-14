@@ -32,6 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/cabin_medium"
+            android:layout_marginStart="40dp"
             android:text="@string/home_pge_toolbar_account_lbl"
             android:textColor="@color/medium_theme_green"
             android:textSize="24sp"

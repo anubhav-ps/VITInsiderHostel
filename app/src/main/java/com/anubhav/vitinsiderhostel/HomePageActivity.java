@@ -6,17 +6,24 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultCaller;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
-public class HomePageActivity extends AppCompatActivity {
+public class HomePageActivity extends AppCompatActivity implements AccountFragment.onUserProfileCalledListener {
 
     //firebase declaration
     private FirebaseAuth firebaseAuth;
@@ -32,6 +39,21 @@ public class HomePageActivity extends AppCompatActivity {
 
     }
 
+
+    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if (result.getResultCode() == 84) {
+                chipNavigationBar.setItemSelected(R.id.menu_account, true);
+            }
+        }
+    });
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +91,6 @@ public class HomePageActivity extends AppCompatActivity {
             }
         };
 
-
-
     }
 
     private void bottomNavigationViewSetup() {
@@ -87,14 +107,18 @@ public class HomePageActivity extends AppCompatActivity {
                         logo.setVisibility(View.VISIBLE);
                         makeTransaction(blockFragment);
                     } else if (i == R.id.menu_account) {
-                        AccountFragment accountFragment = new AccountFragment();
-                        toolBarAccountText.setVisibility(View.VISIBLE);
-                        logo.setVisibility(View.INVISIBLE);
-                        makeTransaction(accountFragment);
+                        placeAccountFragment();
                     }
                 });
+
     }
 
+    private void placeAccountFragment() {
+        AccountFragment accountFragment = new AccountFragment();
+        toolBarAccountText.setVisibility(View.VISIBLE);
+        logo.setVisibility(View.INVISIBLE);
+        makeTransaction(accountFragment);
+    }
 
     //function to make the fragment transaction
     public void makeTransaction(Fragment fragment) {
@@ -119,5 +143,10 @@ public class HomePageActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onUserProfileCalled() {
+        Intent intent = new Intent(HomePageActivity.this, UserProfileActivity.class);
+        activityResultLauncher.launch(intent);
+    }
 
 }

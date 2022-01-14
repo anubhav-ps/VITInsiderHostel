@@ -1,5 +1,7 @@
 package com.anubhav.vitinsiderhostel;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,12 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Objects;
 
 public class AccountFragment extends Fragment implements View.OnClickListener {
 
@@ -29,6 +34,13 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser user;
+
+
+    private onUserProfileCalledListener callbackToFragmentContainer;
+
+    public interface onUserProfileCalledListener {
+        void onUserProfileCalled();
+    }
 
 
     public AccountFragment() {
@@ -64,6 +76,9 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             userMailId = User.getInstance().getUserMailID();
         }
 
+        userNameTxt.setText(username);
+        userMailIdTxt.setText(userMailId);
+
         //firebase instantiation
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -78,10 +93,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             }
         };
 
-        userNameTxt.setText(username);
-        userMailIdTxt.setText(userMailId);
-
         signOutTxt.setOnClickListener(this);
+        userProfileTxt.setOnClickListener(this);
 
         return view;
     }
@@ -90,11 +103,17 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.accountPgeSignOut) {
-            processSignOut(v);
+            processSignOut();
+        } else if (id == R.id.accountPgeViewUserProfile) {
+            openUserProfile();
         }
     }
 
-    private void processSignOut(View v) {
+    private void openUserProfile() {
+        this.callbackToFragmentContainer.onUserProfileCalled();
+    }
+
+    private void processSignOut() {
         FirebaseAuth.getInstance().signOut();
         Toast.makeText(getActivity(), "Logging out, see you soon !", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), RegisterActivity.class);
@@ -116,6 +135,25 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         super.onStop();
         if (firebaseAuth != null) {
             firebaseAuth.removeAuthStateListener(authStateListener);
+        }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Activity activity = (Activity) context;
+        try {
+            this.callbackToFragmentContainer = (onUserProfileCalledListener) activity;
+        }  catch (ClassCastException e){
+            throw new ClassCastException(activity.toString()+"is not implementing onUserProfileCalledListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (this.callbackToFragmentContainer!=null){
+            this.callbackToFragmentContainer = null;
         }
     }
 }
