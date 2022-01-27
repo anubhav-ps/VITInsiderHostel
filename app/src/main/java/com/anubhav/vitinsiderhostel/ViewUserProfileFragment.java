@@ -1,0 +1,100 @@
+package com.anubhav.vitinsiderhostel;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.anubhav.vitinsiderhostel.models.User;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textview.MaterialTextView;
+
+
+public class ViewUserProfileFragment extends Fragment implements View.OnClickListener {
+
+
+    MaterialTextView userTypeTxt, userNameTxt, userMailIdTxt, userContactNumTxt, userNativeLanguageTxt, userBranchTxt;
+
+    private String userType;
+    private String username;
+    private String userMailId;
+    private String userContactNum;
+    private String userNativeLanguage;
+    private String userBranch;
+    private String strUserType;
+
+    public ViewUserProfileFragment() {
+        // Required empty public constructor
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_view_user_profile, container, false);
+
+        MaterialButton editBtn, closeAccountBtn;
+
+        editBtn = view.findViewById(R.id.viewUserProfilePgeEdit);
+        closeAccountBtn = view.findViewById(R.id.viewUserProfilePgeCloseAccount);
+
+        userTypeTxt = view.findViewById(R.id.viewUserProfilePgeUserTypeTxt);
+        userNameTxt = view.findViewById(R.id.viewUserProfilePgeUsernameTxt);
+        userMailIdTxt = view.findViewById(R.id.viewUserProfilePgeUserMailIdTxt);
+        userContactNumTxt = view.findViewById(R.id.viewUserProfilePgeContactNumberTxt);
+        userNativeLanguageTxt = view.findViewById(R.id.viewUserProfilePgeNativeLanguageTxt);
+        userBranchTxt = view.findViewById(R.id.viewUserProfilePgeBranchTxt);
+
+        editBtn.setOnClickListener(this);
+        closeAccountBtn.setOnClickListener(this);
+
+        if (User.getInstance() != null) {
+            userType = User.getInstance().getUserType();
+            username = User.getInstance().getUserName();
+            userMailId = User.getInstance().getUserMailID();
+            userContactNum = User.getInstance().getUserContactNumber();
+            userNativeLanguage = User.getInstance().getStudentNativeLanguage();
+            userBranch = User.getInstance().getStudentBranch();
+        }
+
+        if (userType.equalsIgnoreCase("S")) strUserType = "STUDENT";
+        else if (userType.equalsIgnoreCase("F")) strUserType = "FACULTY";
+
+
+        userTypeTxt.setText(strUserType);
+        userNameTxt.setText(username);
+        userMailIdTxt.setText(userMailId);
+        userContactNumTxt.setText(userContactNum);
+        userNativeLanguageTxt.setText(userNativeLanguage);
+        userBranchTxt.setText(userBranch);
+
+        return view;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.viewUserProfilePgeEdit) {
+
+        } else if (id == R.id.viewUserProfilePgeCloseAccount) {
+            DeleteAccountFragment deleteAccountFragment = new DeleteAccountFragment();
+            FragmentManager fragmentManager = getParentFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.userProfilePageContainer, deleteAccountFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
+    }
+
+}

@@ -4,72 +4,63 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultCaller;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.textview.MaterialTextView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
 public class HomePageActivity extends AppCompatActivity implements AccountFragment.onUserProfileCalledListener {
 
-    //firebase declaration
-    private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener authStateListener;
-    private FirebaseUser user;
 
+    // main view declarations
     private ChipNavigationBar chipNavigationBar;
-    private Toolbar toolbar;
     private MaterialTextView toolBarAccountText;
     private ImageView logo;
 
+    // empty constructor
     public HomePageActivity() {
 
     }
 
-
-    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+    // callback to userProfile Activity and its child fragment destruction
+    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<>() {
         @Override
         public void onActivityResult(ActivityResult result) {
-            if (result.getResultCode() == 84) {
+
+            if (result.getResultCode() == 84) {  // to come back to Home Page Activity and place the account fragment , if the back arrow or back pressed is called in user profile activity
                 chipNavigationBar.setItemSelected(R.id.menu_account, true);
+            } else if (result.getResultCode() == 99) {  // to come back to Home Page Activity and then Open the Login Activity when user account is deleted
+                Intent intent = new Intent(HomePageActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
             }
         }
     });
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-
+        // bottom view navigation setup
         chipNavigationBar = findViewById(R.id.bottom_navigation_view);
         chipNavigationBar.setItemSelected(R.id.menu_room, true);
         bottomNavigationViewSetup();
 
-        toolbar = findViewById(R.id.toolbar);
+        // toolbar views
         toolBarAccountText = findViewById(R.id.tool_bar_account_txt);
         logo = findViewById(R.id.tool_bar_logo);
 
-
+        // placing the room fragment on initial entry
         if (savedInstanceState == null) {
             RoomFragment roomFragment = new RoomFragment();
             toolBarAccountText.setVisibility(View.INVISIBLE);
@@ -77,22 +68,10 @@ public class HomePageActivity extends AppCompatActivity implements AccountFragme
             makeTransaction(roomFragment);
         }
 
-        //firebase instantiation
-        firebaseAuth = FirebaseAuth.getInstance();
-
-        //firebase authState listener definition
-        authStateListener = firebaseAuth -> {
-            user = firebaseAuth.getCurrentUser();
-            if (user != null) {
-
-
-            } else {
-
-            }
-        };
 
     }
 
+    // bottom navigation setup process
     private void bottomNavigationViewSetup() {
         chipNavigationBar.setOnItemSelectedListener
                 (i -> {
@@ -113,6 +92,7 @@ public class HomePageActivity extends AppCompatActivity implements AccountFragme
 
     }
 
+    // method to place the account fragment in the frame layout
     private void placeAccountFragment() {
         AccountFragment accountFragment = new AccountFragment();
         toolBarAccountText.setVisibility(View.VISIBLE);
@@ -120,29 +100,14 @@ public class HomePageActivity extends AppCompatActivity implements AccountFragme
         makeTransaction(accountFragment);
     }
 
-    //function to make the fragment transaction
+    //method to make the fragment transaction
     public void makeTransaction(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.homePageFragmentContainer, fragment);
         fragmentTransaction.commit();
     }
 
-    //process 0 and 1 operation
-    @Override
-    protected void onStart() {
-        super.onStart();
-        user = firebaseAuth.getCurrentUser();
-        firebaseAuth.addAuthStateListener(authStateListener);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (firebaseAuth != null) {
-            firebaseAuth.removeAuthStateListener(authStateListener);
-        }
-    }
-
+    // callback to show the user profile activity when user clicks on the user profile text view in the account fragment
     @Override
     public void onUserProfileCalled() {
         Intent intent = new Intent(HomePageActivity.this, UserProfileActivity.class);

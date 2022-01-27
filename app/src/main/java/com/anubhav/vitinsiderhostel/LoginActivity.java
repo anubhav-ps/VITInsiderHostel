@@ -1,8 +1,5 @@
 package com.anubhav.vitinsiderhostel;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,8 +14,10 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import com.anubhav.vitinsiderhostel.models.User;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -28,37 +27,28 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private String inputMail;
-    private String inputPassword;
-
-    private boolean validMail = false;
-    private boolean validPassword = false;
-
     private final String studentMailPattern = "@vitstudent.ac.in";
     private final String facultyMailPattern = "@vit.ac.in";
-
-    private TextInputEditText mailEt, passwordEt;
-    private ProgressBar progressBar;
-
+    //firebase fire store declaration
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final CollectionReference userSection = db.collection("Users");
     //firebase declarations
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener authStateListener;
     FirebaseUser firebaseUser;
-
-    //firebase fire store declaration
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference userSection = db.collection("Users");
+    private String inputMail;
+    private String inputPassword;
+    private boolean validMail = false;
+    private boolean validPassword = false;
+    private TextInputEditText mailEt, passwordEt;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,23 +66,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         firebaseAuth = FirebaseAuth.getInstance();
 
         //firebase authState listener definition
-        authStateListener = firebaseAuth -> {
-            firebaseUser = firebaseAuth.getCurrentUser();
-            if (firebaseUser != null) {
-
-            } else {
-
-            }
-        };
+        authStateListener = firebaseAuth -> firebaseUser = firebaseAuth.getCurrentUser();
 
         // mail id change listeners
-        mailEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (Objects.requireNonNull(mailEt.getText()).toString().trim().isEmpty()) {
-                        mailEt.setError("Mail ID is required !");
-                    }
+        mailEt.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                if (Objects.requireNonNull(mailEt.getText()).toString().trim().isEmpty()) {
+                    mailEt.setError("Mail ID is required !");
                 }
             }
         });
@@ -122,13 +102,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
 
         // password change listeners
-        passwordEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (Objects.requireNonNull(passwordEt.getText()).toString().trim().isEmpty()) {
-                        passwordEt.setError("Minimum 10 characters");
-                    }
+        passwordEt.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                if (Objects.requireNonNull(passwordEt.getText()).toString().trim().isEmpty()) {
+                    passwordEt.setError("Minimum 10 characters");
                 }
             }
         });
@@ -270,73 +247,75 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     DocumentReference documentReference = db.collection("UserBlockRec").document(currentUserMailId.toLowerCase(Locale.ROOT));
                                     documentReference
                                             .get()
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                    if (documentSnapshot.exists()) {
-                                                        final String tempBlock = Objects.requireNonNull(documentSnapshot.get("block")).toString();
-                                                        final String tempUserType = Objects.requireNonNull(documentSnapshot.get("userType")).toString();
-                                                        final String tempDocID = Objects.requireNonNull(documentSnapshot.get("doc_id")).toString();
-                                                        DocumentReference document = userSection.document(tempUserType).collection(tempBlock).document(tempDocID);
-                                                        document
-                                                                .get()
-                                                                .addOnSuccessListener(documentSnapshot1 -> {
-                                                                    if (documentSnapshot1.exists()) {
+                                            .addOnSuccessListener(documentSnapshot -> {
+                                                if (documentSnapshot.exists()) {
+                                                    final String tempBlock = Objects.requireNonNull(documentSnapshot.get("block")).toString();
+                                                    final String tempUserType = Objects.requireNonNull(documentSnapshot.get("userType")).toString();
+                                                    final String tempDocID = Objects.requireNonNull(documentSnapshot.get("doc_id")).toString();
+                                                    DocumentReference document = userSection.document(tempUserType).collection(tempBlock).document(tempDocID);
+                                                    document
+                                                            .get()
+                                                            .addOnSuccessListener(documentSnapshot1 -> {
+                                                                if (documentSnapshot1.exists()) {
 
-                                                                        final String userID = Objects.requireNonNull(documentSnapshot1.get("user_Id")).toString();
-                                                                        final String userDocId = Objects.requireNonNull(documentSnapshot1.get("doc_Id")).toString();
+                                                                    final String userID = Objects.requireNonNull(documentSnapshot1.get("user_Id")).toString();
+                                                                    final String userDocId = Objects.requireNonNull(documentSnapshot1.get("doc_Id")).toString();
 
-                                                                        final String userName = Objects.requireNonNull(documentSnapshot1.get("userName")).toString();
-                                                                        final String userMail = Objects.requireNonNull(documentSnapshot1.get("userMailID")).toString();
+                                                                    final String userName = Objects.requireNonNull(documentSnapshot1.get("userName")).toString();
+                                                                    final String userMail = Objects.requireNonNull(documentSnapshot1.get("userMailID")).toString();
 
-                                                                        final String userContactNum = Objects.requireNonNull(documentSnapshot1.get("userContactNumber")).toString();
+                                                                    final String userContactNum = Objects.requireNonNull(documentSnapshot1.get("userContactNumber")).toString();
 
-                                                                        final String userType = Objects.requireNonNull(documentSnapshot1.get("userType")).toString();
-                                                                        final String studentBlock = Objects.requireNonNull(documentSnapshot1.get("studentBlock")).toString();
+                                                                    final String userType = Objects.requireNonNull(documentSnapshot1.get("userType")).toString();
+                                                                    final String studentBlock = Objects.requireNonNull(documentSnapshot1.get("studentBlock")).toString();
 
-                                                                        final String studentBranch = Objects.requireNonNull(documentSnapshot1.get("studentBranch")).toString();
-                                                                        final String studentNativeLanguage = Objects.requireNonNull(documentSnapshot1.get("studentNativeLanguage")).toString();
-                                                                        final String studentRoomNo = Objects.requireNonNull(documentSnapshot1.get("roomNo")).toString();
-                                                                        final String studentRoomType = Objects.requireNonNull(documentSnapshot1.get("roomType")).toString();
-                                                                        final String admin = Objects.requireNonNull(documentSnapshot1.get("isAdmin")).toString();
+                                                                    final String studentBranch = Objects.requireNonNull(documentSnapshot1.get("studentBranch")).toString();
+                                                                    final String studentNativeLanguage = Objects.requireNonNull(documentSnapshot1.get("studentNativeLanguage")).toString();
+                                                                    final String studentRoomNo = Objects.requireNonNull(documentSnapshot1.get("roomNo")).toString();
+                                                                    final String studentRoomType = Objects.requireNonNull(documentSnapshot1.get("roomType")).toString();
+                                                                    final String admin = Objects.requireNonNull(documentSnapshot1.get("isAdmin")).toString();
 
-                                                                        User user = User.getInstance();
-                                                                        user.setUser_Id(userID);
-                                                                        user.setDoc_Id(userDocId);
-                                                                        user.setUserName(userName);
-                                                                        user.setUserMailID(userMail);
-                                                                        user.setUserContactNumber(userContactNum);
-                                                                        user.setUserType(userType);
-                                                                        user.setStudentBlock(studentBlock);
-                                                                        user.setStudentBranch(studentBranch);
-                                                                        user.setStudentNativeLanguage(studentNativeLanguage);
-                                                                        user.setRoomNo(studentRoomNo);
-                                                                        user.setRoomType(studentRoomType);
-                                                                        boolean adminVal = false;
-                                                                        if (admin.equalsIgnoreCase("1")){
-                                                                            adminVal = true;
-                                                                        }
-                                                                        user.setAdmin(adminVal);
-
-                                                                        progressBar.setVisibility(View.INVISIBLE);
-                                                                        Toast.makeText(getApplicationContext(), "Logging in", Toast.LENGTH_SHORT).show();
-                                                                        Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
-                                                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                                        startActivity(intent);
-                                                                        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-                                                                        finish();
-
-                                                                    } else {
-                                                                        progressBar.setVisibility(View.INVISIBLE);
-                                                                        callSnackBar("User Record Not Found");
+                                                                    User user = User.getInstance();
+                                                                    user.setUser_Id(userID);
+                                                                    user.setDoc_Id(userDocId);
+                                                                    user.setUserName(userName);
+                                                                    user.setUserMailID(userMail);
+                                                                    user.setUserContactNumber(userContactNum);
+                                                                    user.setUserType(userType);
+                                                                    user.setStudentBlock(studentBlock);
+                                                                    user.setStudentBranch(studentBranch);
+                                                                    user.setStudentNativeLanguage(studentNativeLanguage);
+                                                                    user.setRoomNo(studentRoomNo);
+                                                                    user.setRoomType(studentRoomType);
+                                                                    boolean adminVal = false;
+                                                                    if (admin.equalsIgnoreCase("1")) {
+                                                                        adminVal = true;
                                                                     }
-                                                                })
-                                                                .addOnFailureListener(e -> {
+                                                                    user.setAdmin(adminVal);
+
                                                                     progressBar.setVisibility(View.INVISIBLE);
-                                                                    callSnackBar(e.getMessage());
-                                                                });
-                                                    }
+                                                                    Toast.makeText(getApplicationContext(), "Logging in", Toast.LENGTH_SHORT).show();
+                                                                    Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                                    startActivity(intent);
+                                                                    overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+                                                                    finish();
+
+                                                                } else {
+                                                                    progressBar.setVisibility(View.INVISIBLE);
+                                                                    callSnackBar("User Record Not Found");
+                                                                }
+                                                            })
+                                                            .addOnFailureListener(e -> {
+                                                                progressBar.setVisibility(View.INVISIBLE);
+                                                                callSnackBar(e.getMessage());
+                                                            });
+                                                } else {
+                                                    progressBar.setVisibility(View.INVISIBLE);
+                                                    FirebaseAuth.getInstance().signOut();
+                                                    final String msg = "User Record not found , Account must have been deleted";
+                                                    callSnackBar(msg);
                                                 }
                                             });
 
@@ -401,7 +380,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .make(LoginActivity.this, findViewById(R.id.loginPge), message, Snackbar.LENGTH_LONG);
         snackbar.setTextColor(Color.WHITE);
         View snackBarView = snackbar.getView();
-        snackBarView.setBackgroundColor(ContextCompat.getColor(LoginActivity.this,R.color.navy_blue));
+        snackBarView.setBackgroundColor(ContextCompat.getColor(LoginActivity.this, R.color.navy_blue));
         snackbar.show();
     }
 

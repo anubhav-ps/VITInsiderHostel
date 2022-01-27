@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/background_fill_colour"
     tools:context=".UserProfileActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbarUserProfile"
         android:layout_width="match_parent"
         android:layout_height="62dp"
+        android:layout_alignParentTop="true"
         android:background="@color/white"
         android:elevation="6dp"
         app:elevation="6dp">
@@ -36,7 +36,7 @@
             android:fontFamily="@font/cabin_medium"
             android:gravity="center_vertical"
             android:padding="2dp"
-            android:text="User Profile"
+            android:text="@string/user_profile_pge_toolbar_lbl"
             android:textColor="@color/medium_theme_green"
             android:textSize="24sp">
 
@@ -45,6 +45,12 @@
     </com.google.android.material.appbar.MaterialToolbar>
 
 
+    <FrameLayout
+        android:id="@+id/userProfilePageContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbarUserProfile">
 
+    </FrameLayout>
 
-</LinearLayout>
+</RelativeLayout>
