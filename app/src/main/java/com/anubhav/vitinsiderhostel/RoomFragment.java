@@ -9,14 +9,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anubhav.vitinsiderhostel.adapters.RoomServiceRecyclerAdapter;
 import com.anubhav.vitinsiderhostel.models.RoomService;
-import com.anubhav.vitinsiderhostel.models.TenantData;
+import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textview.MaterialTextView;
@@ -31,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 
-public class RoomFragment extends Fragment implements View.OnClickListener{
+public class RoomFragment extends Fragment implements View.OnClickListener {
 
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -155,7 +154,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener{
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                         if (documentSnapshot.exists()) {
-                                            TenantData tenantData = documentSnapshot.toObject(TenantData.class);
+                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
                                             assert tenantData != null;
                                             p1UserNameCard.setText(tenantData.getTenantUserName());
                                         } else {
@@ -172,7 +171,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener{
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                         if (documentSnapshot.exists()) {
-                                            TenantData tenantData = documentSnapshot.toObject(TenantData.class);
+                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
                                             assert tenantData != null;
                                             p2UserNameCard.setText(tenantData.getTenantUserName());
                                         } else {
@@ -211,7 +210,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener{
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                         if (documentSnapshot.exists()) {
-                                            TenantData tenantData = documentSnapshot.toObject(TenantData.class);
+                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
                                             assert tenantData != null;
                                             p1UserNameCard.setText(tenantData.getTenantUserName());
                                         } else {
@@ -228,7 +227,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener{
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                         if (documentSnapshot.exists()) {
-                                            TenantData tenantData = documentSnapshot.toObject(TenantData.class);
+                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
                                             assert tenantData != null;
                                             p2UserNameCard.setText(tenantData.getTenantUserName());
                                         } else {
@@ -245,7 +244,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener{
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                         if (documentSnapshot.exists()) {
-                                            TenantData tenantData = documentSnapshot.toObject(TenantData.class);
+                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
                                             assert tenantData != null;
                                             p3UserNameCard.setText(tenantData.getTenantUserName());
                                         } else {
@@ -285,7 +284,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener{
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                         if (documentSnapshot.exists()) {
-                                            TenantData tenantData = documentSnapshot.toObject(TenantData.class);
+                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
                                             assert tenantData != null;
                                             p1UserNameCard.setText(tenantData.getTenantUserName());
                                         } else {
@@ -302,7 +301,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener{
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                         if (documentSnapshot.exists()) {
-                                            TenantData tenantData = documentSnapshot.toObject(TenantData.class);
+                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
                                             assert tenantData != null;
                                             p2UserNameCard.setText(tenantData.getTenantUserName());
                                         } else {
@@ -319,7 +318,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener{
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                         if (documentSnapshot.exists()) {
-                                            TenantData tenantData = documentSnapshot.toObject(TenantData.class);
+                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
                                             assert tenantData != null;
                                             p3UserNameCard.setText(tenantData.getTenantUserName());
                                         } else {
@@ -335,7 +334,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener{
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                         if (documentSnapshot.exists()) {
-                                            TenantData tenantData = documentSnapshot.toObject(TenantData.class);
+                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
                                             assert tenantData != null;
                                             p4UserNameCard.setText(tenantData.getTenantUserName());
                                         } else {
@@ -351,7 +350,6 @@ public class RoomFragment extends Fragment implements View.OnClickListener{
             });
 
         }
-
 
 
         roomDetailTxt.setText(roomDetail);
@@ -382,7 +380,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
 
         int id = v.getId();
-        if (id==R.id.roomPgeP1Avatar){
+        if (id == R.id.roomPgeP1Avatar) {
             ViewTenantDialog viewTenantDialog = new ViewTenantDialog();
             FragmentTransaction ft = getParentFragmentManager().beginTransaction();
             Fragment prev = getParentFragmentManager().findFragmentByTag("dialog");
@@ -390,12 +388,12 @@ public class RoomFragment extends Fragment implements View.OnClickListener{
                 ft.remove(prev);
             }
             ft.addToBackStack(null);
-            viewTenantDialog.show(ft,"dialog");
-        }else if (id==R.id.roomPgeP2Avatar){
+            viewTenantDialog.show(ft, "dialog");
+        } else if (id == R.id.roomPgeP2Avatar) {
 
-        }else if (id==R.id.roomPgeP3Avatar){
+        } else if (id == R.id.roomPgeP3Avatar) {
 
-        }else if (id==R.id.roomPgeP4Avatar){
+        } else if (id == R.id.roomPgeP4Avatar) {
 
         }
     }

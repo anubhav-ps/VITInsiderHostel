@@ -9,6 +9,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.anubhav.vitinsiderhostel.appviewmodel.AppViewModel;
 
 public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener, DeleteAccountFragment.onUserAccountDeletedListener {
 
@@ -17,6 +20,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
     }
 
+    private AppViewModel appViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,8 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void userAccountDeleted() {
+        appViewModel = new ViewModelProvider(UserProfileActivity.this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(AppViewModel.class);
+        appViewModel.deleteAllUsers();
         Toast.makeText(UserProfileActivity.this, "User Account Deleted", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         setResult(99, intent);

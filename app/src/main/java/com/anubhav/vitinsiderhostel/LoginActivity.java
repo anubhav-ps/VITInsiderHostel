@@ -16,7 +16,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.anubhav.vitinsiderhostel.appviewmodel.AppViewModel;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -29,8 +31,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -49,6 +53,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private boolean validPassword = false;
     private TextInputEditText mailEt, passwordEt;
     private ProgressBar progressBar;
+
+    private AppViewModel appViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -292,6 +299,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                                         adminVal = true;
                                                                     }
                                                                     user.setAdmin(adminVal);
+
+                                                                    appViewModel = new ViewModelProvider(LoginActivity.this,ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(AppViewModel.class);
+                                                                    appViewModel.insertCurrentUser(user);
+
+
 
                                                                     progressBar.setVisibility(View.INVISIBLE);
                                                                     Toast.makeText(getApplicationContext(), "Logging in", Toast.LENGTH_SHORT).show();

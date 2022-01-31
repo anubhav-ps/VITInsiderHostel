@@ -11,10 +11,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.anubhav.vitinsiderhostel.appviewmodel.AppViewModel;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Objects;
 
 public class AccountFragment extends Fragment implements View.OnClickListener {
 
@@ -25,6 +29,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
     //when user profile activity is called
     private onUserProfileCalledListener callbackToFragmentContainer;
+
+    private AppViewModel appViewModel;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -90,6 +96,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     // method to handle the sign out process
     private void processSignOut() {
         FirebaseAuth.getInstance().signOut();
+        appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
+        appViewModel.deleteAllUsers();
         Toast.makeText(getActivity(), "Logging out, see you soon !", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         requireActivity().startActivity(intent);
