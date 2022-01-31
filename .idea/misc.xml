@@ -15,13 +15,15 @@
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/activity_splash_screen.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/activity_user_profile.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/close_account_dialog.xml" value="0.33" />
+        <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/dialog_tenant_view.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/drop_down_option.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/fragment_account.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/fragment_block.xml" value="0.3013888888888889" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/fragment_delete_account.xml" value="0.31666666666666665" />
-        <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/fragment_room.xml" value="0.31666666666666665" />
+        <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/fragment_room.xml" value="0.33" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/fragment_user_profile.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/fragment_view_user_profile.xml" value="0.3013888888888889" />
+        <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/room_service_item.xml" value="0.33" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/menu/navigation_menu.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/xml/cursor.xml" value="0.31666666666666665" />
         <entry key="..\:/Users/Anubh/Documents/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/activity_main.xml" value="0.2755208333333333" />

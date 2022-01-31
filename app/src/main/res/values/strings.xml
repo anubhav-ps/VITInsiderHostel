@@ -75,5 +75,16 @@
     <string name="delete_pge_sec_lbl">Once your account is deleted,all the personal data associated with your account will be deleted from database\n</string>
     <string name="delete_pge_note_lbl">Note : Account deletion will not delete the tickets that has been raised by the user and still not yet cleared.</string>
 
+    /* room page */
+
+    <string name="room_pge_room_no">Room 000–0</string>
+    <string name="room_pge_beds">0 Bed</string>
+    <string name="room_pge_type">Non Ac</string>
+    <string name="room_pge_p1_name">Student 1</string>
+    <string name="room_pge_p2_name">Student 2</string>
+    <string name="room_pge_p3_name">Student 3</string>
+    <string name="room_pge_p4_name">Student 4</string>
+    <string name="room_service_name_txt">Furnitures</string>
+
 
 </resources>

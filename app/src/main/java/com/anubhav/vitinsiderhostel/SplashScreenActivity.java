@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.anubhav.vitinsiderhostel.models.User;
-import com.anubhav.vitinsiderhostel.ui.TypeWriter;
+import com.anubhav.vitinsiderhostel.adapters.TypeWriter;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

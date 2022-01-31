@@ -21,14 +21,6 @@ public class HomePageActivity extends AppCompatActivity implements AccountFragme
 
     // main view declarations
     private ChipNavigationBar chipNavigationBar;
-    private MaterialTextView toolBarAccountText;
-    private ImageView logo;
-
-    // empty constructor
-    public HomePageActivity() {
-
-    }
-
     // callback to userProfile Activity and its child fragment destruction
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<>() {
         @Override
@@ -45,6 +37,13 @@ public class HomePageActivity extends AppCompatActivity implements AccountFragme
             }
         }
     });
+    private MaterialTextView toolBarAccountText;
+    private ImageView logo;
+
+    // empty constructor
+    public HomePageActivity() {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +53,13 @@ public class HomePageActivity extends AppCompatActivity implements AccountFragme
         // bottom view navigation setup
         chipNavigationBar = findViewById(R.id.bottom_navigation_view);
         chipNavigationBar.setItemSelected(R.id.menu_room, true);
-        bottomNavigationViewSetup();
-
         // toolbar views
         toolBarAccountText = findViewById(R.id.tool_bar_account_txt);
         logo = findViewById(R.id.tool_bar_logo);
+
+        bottomNavigationViewSetup();
+
+
 
         // placing the room fragment on initial entry
         if (savedInstanceState == null) {

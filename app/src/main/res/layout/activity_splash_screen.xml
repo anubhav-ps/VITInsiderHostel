@@ -15,7 +15,7 @@
         android:layout_height="90dp"
         android:src="@drawable/logo" />
 
-    <com.anubhav.vitinsiderhostel.ui.TypeWriter
+    <com.anubhav.vitinsiderhostel.adapters.TypeWriter
         android:id="@+id/splashScreenPgeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

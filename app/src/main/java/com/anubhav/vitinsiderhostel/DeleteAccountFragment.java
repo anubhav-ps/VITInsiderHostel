@@ -149,7 +149,7 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
                                                                 callBackToAccountDeletion.userAccountDeleted();
 
                                                             } else {
-                                                                // report -> user-account deletion problem
+                                                                // TODO: report -> user-account deletion problem
                                                                 progressBar.setVisibility(View.INVISIBLE);
                                                                 FirebaseAuth.getInstance().signOut();
                                                                 callBackToAccountDeletion.userAccountDeleted();
@@ -158,7 +158,7 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
                                                         });
                                             }
                                         } else {
-                                            // report -> user block record deletion error
+                                            //TODO: report -> user block record deletion error
                                             progressBar.setVisibility(View.INVISIBLE);
                                             FirebaseAuth.getInstance().signOut();
                                             callBackToAccountDeletion.userAccountDeleted();
@@ -166,7 +166,7 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
                                         }
                                     });
                         } else {
-                            // report -> users record deletion error
+                            //TODO: report -> users record deletion error
                             progressBar.setVisibility(View.INVISIBLE);
                         }
                     });

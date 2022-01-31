@@ -13,10 +13,12 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.anubhav.vitinsiderhostel.models.User;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -79,6 +81,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private final CollectionReference hostelersSection = db.collection("Hostelers");
     private final CollectionReference roomStructuresSection = db.collection("RoomStructure");
     private final CollectionReference reports = db.collection("Reports");
+    private final CollectionReference tenantsBioSection = db.collection("TenantsBio");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,20 +105,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         nameEt = findViewById(R.id.registerPgeNameTxt);
         mailEt = findViewById(R.id.registerPgeMailTxt);
         passwordEt = findViewById(R.id.registerPgePasswordTxt);
+        progressBar = findViewById(R.id.registerPgeProgressBar);
 
         TextInputLayout forBlock = findViewById(R.id.registerPgeBlockTxtLayout);
         MaterialButton createAccount = findViewById(R.id.registerPgeRegisterBtn);
         ImageButton toLogin = findViewById(R.id.registerPgeArrowBtn);
-        progressBar = findViewById(R.id.registerPgeProgressBar);
 
 
         // student block declaration
         blockTextView = findViewById(R.id.registerPgeBlockTxt);
+        userTypeTextView = findViewById(R.id.registerPgeUserTypeTxt);
+
         ArrayAdapter<String> blockAdapter = new ArrayAdapter<>(this, R.layout.drop_down_option, blockOptions);
         blockTextView.setAdapter(blockAdapter);
 
         // user type declaration
-        userTypeTextView = findViewById(R.id.registerPgeUserTypeTxt);
         ArrayAdapter<String> userTypeAdapter = new ArrayAdapter<>(this, R.layout.drop_down_option, userTypeOptions);
         userTypeTextView.setAdapter(userTypeAdapter);
 
@@ -423,6 +427,20 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                     documentReference.set(userMap)
                                                             .addOnCompleteListener(task11 -> {
                                                                 if (task11.isSuccessful()) {
+
+                                                                    Map<String,String> tenant = new HashMap<>();
+                                                                    tenant.put("tenantUserName",inputName);
+                                                                    tenant.put("tenantMailID",inputMail.toLowerCase(Locale.ROOT));
+                                                                    tenant.put("tenantContactNumber","N/A");
+                                                                    tenant.put("tenantNativeLanguage","N/A");
+                                                                    tenant.put("tenantBranch","N/A");
+
+                                                                    tenantsBioSection.document(inputMail.toLowerCase(Locale.ROOT)).set(tenant).addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            //todo report -> tenant detail not uploaded;
+                                                                        }
+                                                                    });
 
                                                                     DocumentReference document = userSection.document("S").collection(inputBlock).document(dID);
                                                                     document

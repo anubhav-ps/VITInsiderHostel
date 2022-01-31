@@ -1,4 +1,4 @@
-package com.anubhav.vitinsiderhostel.ui;
+package com.anubhav.vitinsiderhostel.adapters;
 
 import android.content.Context;
 import android.util.AttributeSet;
