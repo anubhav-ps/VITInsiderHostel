@@ -29,7 +29,7 @@ public interface UserModelDao {
     @Query("SELECT  * FROM AppUserData WHERE  app_user_id = :userId")
     User peekUserInstance(String userId);
 
-    @Query("SELECT * FROM AppUserData ")
-    LiveData<List<User>> retrieveAllUserInstance();
+    @Query("SELECT * FROM AppUserData")
+   List<User> retrieveAllUserInstance();
 
 }

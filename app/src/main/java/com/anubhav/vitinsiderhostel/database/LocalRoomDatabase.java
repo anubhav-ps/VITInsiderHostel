@@ -30,7 +30,7 @@ public abstract class LocalRoomDatabase extends RoomDatabase {
 
         if (INSTANCE == null) {
             synchronized (LocalRoomDatabase.class) {
-                INSTANCE = Room.databaseBuilder(context, LocalRoomDatabase.class, "INSIDER_HOSTEL_DB").build();
+                INSTANCE = Room.databaseBuilder(context, LocalRoomDatabase.class, "INSIDER_HOSTEL_DB").fallbackToDestructiveMigration().build();
             }
         }
         return INSTANCE;
@@ -40,5 +40,7 @@ public abstract class LocalRoomDatabase extends RoomDatabase {
     public abstract UserModelDao userModelDao();
 
     public abstract TenantModelDao tenantModelDao();
+
+
 
 }

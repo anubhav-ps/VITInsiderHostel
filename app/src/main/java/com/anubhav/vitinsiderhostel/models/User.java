@@ -52,8 +52,8 @@ public class User extends Application {
         return instance;
     }
 
-    public static void setInstance(User instance) {
-        User.instance = instance;
+    public void setInstance(User instance) {
+            User.instance = instance;
     }
 
     public String getUser_Id() {
@@ -150,5 +150,24 @@ public class User extends Application {
 
     public void setAdmin(Boolean admin) {
         isAdmin = admin;
+    }
+
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "user_Id='" + user_Id + '\'' +
+                ", doc_Id='" + doc_Id + '\'' +
+                ", userName='" + userName + '\'' +
+                ", userMailID='" + userMailID + '\'' +
+                ", userContactNumber='" + userContactNumber + '\'' +
+                ", userType='" + userType + '\'' +
+                ", studentBlock='" + studentBlock + '\'' +
+                ", studentBranch='" + studentBranch + '\'' +
+                ", studentNativeLanguage='" + studentNativeLanguage + '\'' +
+                ", roomNo='" + roomNo + '\'' +
+                ", roomType='" + roomType + '\'' +
+                ", isAdmin=" + isAdmin +
+                '}';
     }
 }

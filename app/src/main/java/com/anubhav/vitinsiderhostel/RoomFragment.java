@@ -112,8 +112,6 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
             userMail = User.getInstance().getUserMailID();
         }
 
-        DocumentReference tenantsDocumentReference = tenantSection.document(block).collection(roomNo).document("Tenants");
-
         final String beds = roomType.split("\\|")[0];
         final boolean isAc = roomType.split("\\|")[1].equalsIgnoreCase("AC");
         final String roomDetail = "Room " + roomNo + "-" + block;
@@ -135,7 +133,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
             secondRow.setVisibility(View.GONE);
             p4.setVisibility(View.GONE);
 
-            // find all the tenants of the room
+          /*  // find all the tenants of the room
             tenantsDocumentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -184,170 +182,15 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
                         //todo report error
                     }
                 }
-            });
+            });*/
 
         } else if (beds.equalsIgnoreCase("3")) {
             secondRow.setVisibility(View.VISIBLE);
             p4.setVisibility(View.GONE);
 
-            // find all the tenants of the room
-            tenantsDocumentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                    if (documentSnapshot.exists()) {
-
-                        // get the mail-Id's of the tenants
-                        final String p1Mail = Objects.requireNonNull(documentSnapshot.get("1")).toString();
-                        final String p2Mail = Objects.requireNonNull(documentSnapshot.get("2")).toString();
-                        final String p3Mail = Objects.requireNonNull(documentSnapshot.get("3")).toString();
-
-                        // collect the details of the tenants
-                        tenantsBioSection
-                                .document(p1Mail)
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        if (documentSnapshot.exists()) {
-                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
-                                            assert tenantData != null;
-                                            p1UserNameCard.setText(tenantData.getTenantUserName());
-                                        } else {
-                                            // todo invite user with mail id
-                                        }
-                                    }
-                                });
-
-
-                        tenantsBioSection
-                                .document(p2Mail)
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        if (documentSnapshot.exists()) {
-                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
-                                            assert tenantData != null;
-                                            p2UserNameCard.setText(tenantData.getTenantUserName());
-                                        } else {
-                                            // todo invite user with mail id
-                                        }
-                                    }
-                                });
-
-
-                        tenantsBioSection
-                                .document(p3Mail)
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        if (documentSnapshot.exists()) {
-                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
-                                            assert tenantData != null;
-                                            p3UserNameCard.setText(tenantData.getTenantUserName());
-                                        } else {
-                                            // todo invite user with mail id
-                                        }
-                                    }
-                                });
-
-                    } else {
-                        //todo report error
-                    }
-                }
-            });
-
         } else if (beds.equalsIgnoreCase("4")) {
             secondRow.setVisibility(View.VISIBLE);
             p4.setVisibility(View.VISIBLE);
-
-            // find all the tenants of the room
-            tenantsDocumentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                    if (documentSnapshot.exists()) {
-
-                        // get the mail-Id's of the tenants
-                        final String p1Mail = Objects.requireNonNull(documentSnapshot.get("1")).toString();
-                        final String p2Mail = Objects.requireNonNull(documentSnapshot.get("2")).toString();
-                        final String p3Mail = Objects.requireNonNull(documentSnapshot.get("3")).toString();
-                        final String p4Mail = Objects.requireNonNull(documentSnapshot.get("4")).toString();
-
-                        // collect the details of the tenants
-                        tenantsBioSection
-                                .document(p1Mail)
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        if (documentSnapshot.exists()) {
-                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
-                                            assert tenantData != null;
-                                            p1UserNameCard.setText(tenantData.getTenantUserName());
-                                        } else {
-                                            // todo invite user with mail id
-                                        }
-                                    }
-                                });
-
-
-                        tenantsBioSection
-                                .document(p2Mail)
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        if (documentSnapshot.exists()) {
-                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
-                                            assert tenantData != null;
-                                            p2UserNameCard.setText(tenantData.getTenantUserName());
-                                        } else {
-                                            // todo invite user with mail id
-                                        }
-                                    }
-                                });
-
-
-                        tenantsBioSection
-                                .document(p3Mail)
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        if (documentSnapshot.exists()) {
-                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
-                                            assert tenantData != null;
-                                            p3UserNameCard.setText(tenantData.getTenantUserName());
-                                        } else {
-                                            // todo invite user with mail id
-                                        }
-                                    }
-                                });
-
-                        tenantsBioSection
-                                .document(p4Mail)
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        if (documentSnapshot.exists()) {
-                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
-                                            assert tenantData != null;
-                                            p4UserNameCard.setText(tenantData.getTenantUserName());
-                                        } else {
-                                            // todo invite user with mail id
-                                        }
-                                    }
-                                });
-
-                    } else {
-                        //todo report error
-                    }
-                }
-            });
 
         }
 

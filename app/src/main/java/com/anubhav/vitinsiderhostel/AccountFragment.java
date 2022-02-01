@@ -98,6 +98,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         FirebaseAuth.getInstance().signOut();
         appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
         appViewModel.deleteAllUsers();
+        appViewModel.deleteAllTenants();
         Toast.makeText(getActivity(), "Logging out, see you soon !", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         requireActivity().startActivity(intent);

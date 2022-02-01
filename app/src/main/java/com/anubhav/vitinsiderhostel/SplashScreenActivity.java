@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -22,6 +23,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
+import java.util.Objects;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -69,16 +71,16 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             if (proceed) {
                 appViewModel = new ViewModelProvider(SplashScreenActivity.this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(AppViewModel.class);
-                appViewModel.retrieveAllUsers().observe(this, new Observer<List<User>>() {
+                new Thread(new Runnable() {
                     @Override
-                    public void onChanged(List<User> users) {
-                        User.setInstance(users.get(0));
+                    public void run() {
+                        User.getInstance().setInstance(appViewModel.retrieveAllUsers().get(0));
+                        Intent intent = new Intent(SplashScreenActivity.this, HomePageActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+                        finish();
                     }
-                });
-                Intent intent = new Intent(SplashScreenActivity.this, HomePageActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-                finish();
+                }).start();
             } else {
                 Intent intent = new Intent(SplashScreenActivity.this, RegisterActivity.class);
                 startActivity(intent);

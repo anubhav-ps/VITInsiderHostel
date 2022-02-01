@@ -16,10 +16,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.anubhav.vitinsiderhostel.appviewmodel.AppViewModel;
+import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.User;
+import com.google.android.gms.dynamic.IFragmentWrapper;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -29,6 +34,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -43,6 +49,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference userSection = db.collection("Users");
+    private final CollectionReference tenantsSection = db.collection("Tenants");
     //firebase declarations
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener authStateListener;
@@ -304,6 +311,34 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                                     appViewModel.insertCurrentUser(user);
 
 
+                                                                    tenantsSection
+                                                                            .document(studentBlock)
+                                                                            .collection(studentRoomNo)
+                                                                            .document("Tenants")
+                                                                            .get()
+                                                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                                                @Override
+                                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                                    if (documentSnapshot.exists()){
+                                                                                        final String tenantsRaw = Objects.requireNonNull(documentSnapshot.get("list")).toString();
+                                                                                        final String[] tenantMailList = tenantsRaw.split("%");
+                                                                                        for (String mId : tenantMailList){
+                                                                                            Tenant tenant = new Tenant(mId);
+                                                                                            appViewModel.insertTenant(tenant);
+                                                                                        }
+                                                                                    }else{
+                                                                                        //todo report error -> no tenant list found
+                                                                                    }
+                                                                                }
+                                                                            });
+
+                                                                    LiveData<List<Tenant>> allTenants = appViewModel.retrieveALlTenants();
+                                                                    allTenants.observe(this, new Observer<List<Tenant>>() {
+                                                                        @Override
+                                                                        public void onChanged(List<Tenant> tenants) {
+
+                                                                        }
+                                                                    });
 
                                                                     progressBar.setVisibility(View.INVISIBLE);
                                                                     Toast.makeText(getApplicationContext(), "Logging in", Toast.LENGTH_SHORT).show();

@@ -28,16 +28,30 @@ public class AppViewModel extends AndroidViewModel {
 
     }
 
-    public void insertCurrentUser(User user){
+    public void insertCurrentUser(User user) {
         localRepository.insertCurrentUser(user);
     }
 
-   public LiveData<List<User>> retrieveAllUsers(){
+    public List<User> retrieveAllUsers() {
         return localRepository.retrieveAllUsers();
-   }
+    }
 
-   public void deleteAllUsers(){
+    public void deleteAllUsers() {
         localRepository.deleteAllUsers();
-   }
+    }
+
+
+    public LiveData<List<Tenant>> retrieveALlTenants() {
+        return localRepository.retrieveAllTenants();
+    }
+
+    public void insertTenant(Tenant tenant) {
+        localRepository.insertTenant(tenant);
+    }
+
+    public void deleteAllTenants() {
+        localRepository.deleteAllTenants();
+    }
+
 
 }

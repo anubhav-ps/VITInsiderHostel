@@ -29,7 +29,7 @@ public interface TenantModelDao {
     @Query("SELECT  * FROM TenantData WHERE tenant_mail_id = :tenantMailId")
     LiveData<Tenant> peekTenantInstance(String tenantMailId);
 
-    @Query("SELECT * FROM TENANTDATA ORDER BY tenant_mail_id ASC")
+    @Query("SELECT * FROM TENANTDATA ")
     LiveData<List<Tenant>> retrieveAllTenantInstances();
 
 }

@@ -16,11 +16,11 @@ import com.anubhav.vitinsiderhostel.appviewmodel.AppViewModel;
 public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener, DeleteAccountFragment.onUserAccountDeletedListener {
 
 
+    private AppViewModel appViewModel;
+
     public UserProfileActivity() {
 
     }
-
-    private AppViewModel appViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +63,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     public void userAccountDeleted() {
         appViewModel = new ViewModelProvider(UserProfileActivity.this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(AppViewModel.class);
         appViewModel.deleteAllUsers();
+        appViewModel.deleteAllTenants();
         Toast.makeText(UserProfileActivity.this, "User Account Deleted", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         setResult(99, intent);

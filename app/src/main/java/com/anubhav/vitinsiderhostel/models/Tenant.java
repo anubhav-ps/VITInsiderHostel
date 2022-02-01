@@ -28,6 +28,10 @@ public class Tenant {
     public Tenant() {
     }
 
+    public Tenant(@NonNull String tenantMailID){
+        this.tenantMailID = tenantMailID;
+    }
+
     public Tenant(String tenantUserName, String tenantMailID, String tenantContactNumber, String tenantNativeLanguage, String tenantBranch) {
         this.tenantUserName = tenantUserName;
         this.tenantMailID = tenantMailID;
