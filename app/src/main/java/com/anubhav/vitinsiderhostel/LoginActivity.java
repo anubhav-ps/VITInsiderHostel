@@ -12,19 +12,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.anubhav.vitinsiderhostel.appviewmodel.AppViewModel;
+import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.User;
-import com.google.android.gms.dynamic.IFragmentWrapper;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -34,13 +28,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Optional;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -50,6 +43,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference userSection = db.collection("Users");
     private final CollectionReference tenantsSection = db.collection("Tenants");
+    private final CollectionReference tenantsBioSection = db.collection("TenantsBio");
+
     //firebase declarations
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener authStateListener;
@@ -60,9 +55,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private boolean validPassword = false;
     private TextInputEditText mailEt, passwordEt;
     private ProgressBar progressBar;
-
-    private AppViewModel appViewModel;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,6 +238,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     //logging user using firebase
     private void loginUser(String mailID, String password) {
 
+        final LocalSqlDatabase sqlDatabase = new LocalSqlDatabase(LoginActivity.this);
+
         firebaseAuth
                 .signInWithEmailAndPassword(mailID, password)
                 .addOnCompleteListener(task -> {
@@ -307,41 +301,43 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                                     }
                                                                     user.setAdmin(adminVal);
 
-                                                                    appViewModel = new ViewModelProvider(LoginActivity.this,ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(AppViewModel.class);
-                                                                    appViewModel.insertCurrentUser(user);
+                                                                    //todo insert user to database
+                                                                    boolean userResult = sqlDatabase.addUser(user);
+                                                                    if (!userResult) {
+                                                                        //todo : Report user list download
+                                                                    }
 
-
+                                                                    List<Tenant> tl = new ArrayList<>();
                                                                     tenantsSection
                                                                             .document(studentBlock)
                                                                             .collection(studentRoomNo)
                                                                             .document("Tenants")
                                                                             .get()
-                                                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                                                @Override
-                                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                                                    if (documentSnapshot.exists()){
-                                                                                        final String tenantsRaw = Objects.requireNonNull(documentSnapshot.get("list")).toString();
-                                                                                        final String[] tenantMailList = tenantsRaw.split("%");
-                                                                                        for (String mId : tenantMailList){
-                                                                                            Tenant tenant = new Tenant(mId);
-                                                                                            appViewModel.insertTenant(tenant);
-                                                                                        }
-                                                                                    }else{
-                                                                                        //todo report error -> no tenant list found
+                                                                            .addOnSuccessListener(documentSnapshot2 -> {
+                                                                                if (documentSnapshot2.exists()) {
+                                                                                    final String tenantsRaw = Objects.requireNonNull(documentSnapshot2.get("list")).toString();
+                                                                                    final String[] tenantMailList = tenantsRaw.split("%");
+                                                                                    for (String mId : tenantMailList) {
+                                                                                        tenantsBioSection
+                                                                                                .document(mId)
+                                                                                                .get()
+                                                                                                .addOnSuccessListener(documentSnapshot21 -> {
+                                                                                                    if (documentSnapshot21.exists()) {
+                                                                                                        Tenant updated = documentSnapshot21.toObject(Tenant.class);
+                                                                                                        if (updated != null) {
+                                                                                                            boolean result = sqlDatabase.addTenant(updated);
+                                                                                                            if (!result) {
+                                                                                                                // TODO: Report tenant list download
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                });
                                                                                     }
+                                                                                } else {
+                                                                                    //todo report error -> no tenant list found
                                                                                 }
                                                                             });
-
-                                                                    LiveData<List<Tenant>> allTenants = appViewModel.retrieveALlTenants();
-                                                                    allTenants.observe(this, new Observer<List<Tenant>>() {
-                                                                        @Override
-                                                                        public void onChanged(List<Tenant> tenants) {
-
-                                                                        }
-                                                                    });
-
                                                                     progressBar.setVisibility(View.INVISIBLE);
-                                                                    Toast.makeText(getApplicationContext(), "Logging in", Toast.LENGTH_SHORT).show();
                                                                     Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
                                                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -13,11 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.google.android.material.textview.MaterialTextView;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
-public class HomePageActivity extends AppCompatActivity implements AccountFragment.onUserProfileCalledListener {
-
+public class  HomePageActivity extends AppCompatActivity implements AccountFragment.onUserProfileCalledListener {
 
     // main view declarations
     private ChipNavigationBar chipNavigationBar;
@@ -29,6 +29,9 @@ public class HomePageActivity extends AppCompatActivity implements AccountFragme
             if (result.getResultCode() == 84) {  // to come back to Home Page Activity and place the account fragment , if the back arrow or back pressed is called in user profile activity
                 chipNavigationBar.setItemSelected(R.id.menu_account, true);
             } else if (result.getResultCode() == 99) {  // to come back to Home Page Activity and then Open the Login Activity when user account is deleted
+                LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(HomePageActivity.this);
+                localSqlDatabase.deleteCurrentUser();
+                localSqlDatabase.deleteAllTenants();
                 Intent intent = new Intent(HomePageActivity.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -37,6 +40,7 @@ public class HomePageActivity extends AppCompatActivity implements AccountFragme
             }
         }
     });
+
     private MaterialTextView toolBarAccountText;
     private ImageView logo;
 

@@ -2,46 +2,37 @@ package com.anubhav.vitinsiderhostel.models;
 
 import android.app.Application;
 
-import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
-@Entity(tableName = "AppUserData")
 public class User extends Application {
 
 
     private static User instance;
-    // 11 data members
-    @PrimaryKey
-    @NonNull
-    @ColumnInfo(name = "app_user_id")
+    // 12 data members
     private String user_Id;
-    @ColumnInfo(name = "app_user_doc_id")
+
     private String doc_Id;
-    @ColumnInfo(name = "app_user_name")
+
     private String userName;
-    @ColumnInfo(name = "app_user_mail_id")
+
     private String userMailID;
-    @ColumnInfo(name = "app_user_contact_num")
+
     private String userContactNumber;
-    @ColumnInfo(name = "app_user_type")
+
     private String userType;           // F->Faculty            S->Student
-    @ColumnInfo(name = "app_user_student_block")
+
     private String studentBlock;         // A , B , C
-    @ColumnInfo(name = "app_user_student_branch")
+
     private String studentBranch;
-    @ColumnInfo(name = "app_user_student_language")
+
     private String studentNativeLanguage;
-    @ColumnInfo(name = "app_user_room_no")
+
     private String roomNo;           //  block,RoomNo
-    @ColumnInfo(name = "app_user_room_type")
+
     private String roomType;         //  bed,1   or bed,0         1-> AC , 2-> Non-Ac
-    @ColumnInfo(name = "app_user_room_is_admin")
-    private Boolean isAdmin = false;
+
+    private Boolean isAdmin = false;   // false = 0 , true = 1
 
     public User() {
     }
@@ -53,7 +44,7 @@ public class User extends Application {
     }
 
     public void setInstance(User instance) {
-            User.instance = instance;
+        User.instance = instance;
     }
 
     public String getUser_Id() {
@@ -152,22 +143,4 @@ public class User extends Application {
         isAdmin = admin;
     }
 
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "user_Id='" + user_Id + '\'' +
-                ", doc_Id='" + doc_Id + '\'' +
-                ", userName='" + userName + '\'' +
-                ", userMailID='" + userMailID + '\'' +
-                ", userContactNumber='" + userContactNumber + '\'' +
-                ", userType='" + userType + '\'' +
-                ", studentBlock='" + studentBlock + '\'' +
-                ", studentBranch='" + studentBranch + '\'' +
-                ", studentNativeLanguage='" + studentNativeLanguage + '\'' +
-                ", roomNo='" + roomNo + '\'' +
-                ", roomType='" + roomType + '\'' +
-                ", isAdmin=" + isAdmin +
-                '}';
-    }
 }

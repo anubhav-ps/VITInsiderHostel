@@ -15,26 +15,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.anubhav.vitinsiderhostel.adapters.RoomServiceRecyclerAdapter;
 import com.anubhav.vitinsiderhostel.models.RoomService;
-import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.User;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 
 public class RoomFragment extends Fragment implements View.OnClickListener {
 
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
 
     private final ArrayList<RoomService> roomServices1 = new ArrayList<>() {
         {
@@ -64,6 +58,8 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
 
     private String roomNo, roomType, block, userMail;
 
+
+
     public RoomFragment() {
         // Required empty public constructor
     }
@@ -80,7 +76,6 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_room, container, false);
-
         MaterialTextView bedsTxt = view.findViewById(R.id.roomPgeBeds);
         MaterialTextView typeTxt = view.findViewById(R.id.roomPgeType);
         MaterialTextView roomDetailTxt = view.findViewById(R.id.roomPgeRoomNo);
@@ -117,7 +112,6 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
         final String roomDetail = "Room " + roomNo + "-" + block;
         String typeStr = "NON-A/C";
         typeIcon.setImageResource(R.drawable.non_ac_icon);
-
 
         if (isAc) {
             initialiseRoomServices(view, true);

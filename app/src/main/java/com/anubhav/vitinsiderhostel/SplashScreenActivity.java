@@ -1,42 +1,31 @@
 package com.anubhav.vitinsiderhostel;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.anubhav.vitinsiderhostel.adapters.TypeWriter;
-import com.anubhav.vitinsiderhostel.appviewmodel.AppViewModel;
+import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.anubhav.vitinsiderhostel.models.User;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.List;
-import java.util.Objects;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
 
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference userSection = db.collection("Users");
     //firebase declarations
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener authStateListener;
     FirebaseUser firebaseUser;
     private boolean proceed = false;
-    private AppViewModel appViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,17 +59,15 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         new Handler().postDelayed(() -> {
             if (proceed) {
-                appViewModel = new ViewModelProvider(SplashScreenActivity.this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(AppViewModel.class);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        User.getInstance().setInstance(appViewModel.retrieveAllUsers().get(0));
-                        Intent intent = new Intent(SplashScreenActivity.this, HomePageActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-                        finish();
-                    }
-                }).start();
+                // todo retrieve user data
+                LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(SplashScreenActivity.this);
+                User user = User.getInstance();
+                user = localSqlDatabase.getCurrentUser();
+                Intent intent = new Intent(SplashScreenActivity.this, HomePageActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+                finish();
+
             } else {
                 Intent intent = new Intent(SplashScreenActivity.this, RegisterActivity.class);
                 startActivity(intent);
