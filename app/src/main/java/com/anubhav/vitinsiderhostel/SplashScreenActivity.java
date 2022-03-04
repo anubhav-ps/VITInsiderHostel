@@ -26,13 +26,15 @@ public class SplashScreenActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     private boolean proceed = false;
 
+    private LocalSqlDatabase localSqlDatabase ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash_screen);
-
+        localSqlDatabase = new LocalSqlDatabase(SplashScreenActivity.this);
 
         //firebase auth instantiation
         firebaseAuth = FirebaseAuth.getInstance();
@@ -60,7 +62,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             if (proceed) {
                 // todo retrieve user data
-                LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(SplashScreenActivity.this);
                 User user = User.getInstance();
                 user = localSqlDatabase.getCurrentUser();
                 Intent intent = new Intent(SplashScreenActivity.this, HomePageActivity.class);
@@ -93,5 +94,6 @@ public class SplashScreenActivity extends AppCompatActivity {
             firebaseAuth.removeAuthStateListener(authStateListener);
         }
     }
+
 
 }

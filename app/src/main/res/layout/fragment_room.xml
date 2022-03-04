@@ -62,6 +62,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:text="@string/room_pge_beds"
+                        android:textColor="#E6626161"
                         android:textSize="16sp" />
 
 
@@ -78,6 +79,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:text="@string/room_pge_type"
+                        android:textColor="#E6626161"
                         android:textSize="16sp" />
 
 
@@ -111,6 +113,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
+                            android:textColor="#E6626161"
                             android:text="@string/room_pge_p1_name" />
 
                     </LinearLayout>
@@ -135,6 +138,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
+                            android:textColor="#E6626161"
                             android:text="@string/room_pge_p2_name" />
 
                     </LinearLayout>
@@ -169,6 +173,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
+                            android:textColor="#E6626161"
                             android:text="@string/room_pge_p3_name" />
 
                     </LinearLayout>
@@ -195,6 +200,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
+                            android:textColor="#E6626161"
                             android:text="@string/room_pge_p4_name" />
 
                     </LinearLayout>

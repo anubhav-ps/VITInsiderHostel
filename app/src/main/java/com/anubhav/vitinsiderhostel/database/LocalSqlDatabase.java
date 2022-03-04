@@ -26,8 +26,8 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
 
 
     private static final String USER_TABLE = "USER_TABLE";
-    private static final String USER_ID = "USER_ID" ;
-    private static final String DOC_ID = "DOC_ID" ;
+    private static final String USER_ID = "USER_ID";
+    private static final String DOC_ID = "DOC_ID";
     private static final String USER_MAIL_ID = "MAIL_ID";
     private static final String USER_NAME = "NAME";
     private static final String USER_CONTACT_NUMBER = "CONTACT_NUMBER";
@@ -39,8 +39,9 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
     private static final String ROOM_TYPE = "ROOM_TYPE";
     private static final String IS_ADMIN = "IS_ADMIN";
 
+
     public LocalSqlDatabase(@Nullable Context context) {
-        super(context,"INSIDER_HOSTEL_SQL_DB", null, 1);
+        super(context, "INSIDER_HOSTEL_SQL_DB", null, 1);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
         createTenantTable(db);
     }
 
-    private void createUserTable(SQLiteDatabase db){
+    private void createUserTable(SQLiteDatabase db) {
         final String createTableStatement
                 = "CREATE TABLE " + USER_TABLE +
                 " (" +
@@ -70,10 +71,10 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
 
     }
 
-    private void createTenantTable(SQLiteDatabase db){
+    private void createTenantTable(SQLiteDatabase db) {
         final String createTableStatement
                 = "CREATE TABLE " + TENANT_TABLE +
-                " (" +
+                " ( " +
                 TENANT_MAIL_ID + " TEXT PRIMARY KEY, " +
                 TENANT_NAME + " TEXT , " +
                 TENANT_CONTACT_NUMBER + " TEXT ," +
@@ -89,102 +90,112 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
 
     }
 
-    public boolean addTenant(Tenant tenant){
-        SQLiteDatabase db =  this.getWritableDatabase();
+    public boolean addTenants(Tenant tenant) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(TENANT_MAIL_ID, tenant.getTenantMailID());
+        cv.put(TENANT_NAME, tenant.getTenantUserName());
+        cv.put(TENANT_CONTACT_NUMBER, tenant.getTenantContactNumber());
+        cv.put(TENANT_BRANCH, tenant.getTenantBranch());
+        cv.put(TENANT_NATIVE_LANGUAGE, tenant.getTenantNativeLanguage());
+        long result = db.insert(TENANT_TABLE, null, cv);
+        return result != -1;
+
+    }
+
+    public boolean addUser(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
-        cv.put(TENANT_MAIL_ID,tenant.getTenantMailID());
-        cv.put(TENANT_NAME,tenant.getTenantUserName());
-        cv.put(TENANT_CONTACT_NUMBER,tenant.getTenantContactNumber());
-        cv.put(TENANT_BRANCH,tenant.getTenantBranch());
-        cv.put(TENANT_NATIVE_LANGUAGE,tenant.getTenantNativeLanguage());
+        cv.put(USER_ID, user.getUser_Id());
+        cv.put(DOC_ID, user.getDoc_Id());
+        cv.put(USER_MAIL_ID, user.getUserMailID());
+        cv.put(USER_CONTACT_NUMBER, user.getUserContactNumber());
+        cv.put(USER_NAME, user.getUserName());
+        cv.put(USER_TYPE, user.getUserType());
+        cv.put(STUDENT_BLOCK, user.getStudentBlock());
+        cv.put(STUDENT_BRANCH, user.getStudentBranch());
+        cv.put(STUDENT_NATIVE_LANGUAGE, user.getStudentNativeLanguage());
+        cv.put(ROOM_NO, user.getRoomNo());
+        cv.put(ROOM_TYPE, user.getRoomType());
+        cv.put(IS_ADMIN, user.getAdmin());
 
-        long result = db.insert(TENANT_TABLE,null,cv);
+        long result = db.insert(USER_TABLE, null, cv);
+        return result != -1;
+    }
 
+
+    public boolean updateTenant(Tenant tenant){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(TENANT_MAIL_ID, tenant.getTenantMailID());
+        cv.put(TENANT_NAME, tenant.getTenantUserName());
+        cv.put(TENANT_CONTACT_NUMBER, tenant.getTenantContactNumber());
+        cv.put(TENANT_BRANCH, tenant.getTenantBranch());
+        cv.put(TENANT_NATIVE_LANGUAGE, tenant.getTenantNativeLanguage());
+        db.update(TENANT_TABLE,cv,"MAIL_ID = ?",new String[]{tenant.getTenantMailID()});
         db.close();
-        return result != -1;
+        return true;
     }
 
-    public boolean addUser(User user){
-        SQLiteDatabase db =  this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-
-        cv.put(USER_ID,user.getUser_Id());
-        cv.put(DOC_ID,user.getDoc_Id());
-        cv.put(USER_MAIL_ID,user.getUserMailID());
-        cv.put(USER_CONTACT_NUMBER,user.getUserContactNumber());
-        cv.put(USER_NAME,user.getUserName());
-        cv.put(USER_TYPE,user.getUserType());
-        cv.put(STUDENT_BLOCK,user.getStudentBlock());
-        cv.put(STUDENT_BRANCH,user.getStudentBranch());
-        cv.put(STUDENT_NATIVE_LANGUAGE,user.getStudentNativeLanguage());
-        cv.put(ROOM_NO,user.getRoomNo());
-        cv.put(ROOM_TYPE,user.getRoomType());
-        cv.put(IS_ADMIN,user.getAdmin());
-
-        long result = db.insert(USER_TABLE,null,cv);
-         db.close();
-        return result != -1;
-    }
-
-
-    public User getCurrentUser(){
+    public User getCurrentUser() {
 
         User user = User.getInstance();
-        final String query = "SELECT * FROM "+ USER_TABLE;
+        final String query = "SELECT * FROM " + USER_TABLE;
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(query,null);
-        if (cursor.moveToFirst()){
-                user.setUser_Id(cursor.getString(0));
-                user.setDoc_Id(cursor.getString(1));
-                user.setUserMailID(cursor.getString(2));
-                user.setUserName(cursor.getString(3));
-                user.setUserContactNumber(cursor.getString(4));
-                user.setUserType(cursor.getString(5));
-                user.setStudentBlock(cursor.getString(6));
-                user.setStudentBranch(cursor.getString(7));
-                user.setStudentNativeLanguage(cursor.getString(8));
-                user.setRoomNo(cursor.getString(9));
-                user.setRoomType(cursor.getString(10));
-                user.setAdmin(cursor.getInt(11)==1);
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            user.setUser_Id(cursor.getString(0));
+            user.setDoc_Id(cursor.getString(1));
+            user.setUserMailID(cursor.getString(2));
+            user.setUserName(cursor.getString(3));
+            user.setUserContactNumber(cursor.getString(4));
+            user.setUserType(cursor.getString(5));
+            user.setStudentBlock(cursor.getString(6));
+            user.setStudentBranch(cursor.getString(7));
+            user.setStudentNativeLanguage(cursor.getString(8));
+            user.setRoomNo(cursor.getString(9));
+            user.setRoomType(cursor.getString(10));
+            user.setAdmin(cursor.getInt(11) == 1);
         }
+
         cursor.close();
         db.close();
         return user;
 
     }
 
-    public List<Tenant> getTenants(){
+    public List<Tenant> getTenants() {
 
         List<Tenant> tenants = new ArrayList<>();
 
-        final String query = "SELECT * FROM "+ TENANT_TABLE;
+        final String query = "SELECT * FROM " + TENANT_TABLE;
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(query,null);
-        if (cursor.moveToFirst()){
-           do{
-               tenants.add(
-                       new Tenant(
-                               cursor.getString(1),
-                               cursor.getString(0),
-                               cursor.getString(2),
-                               cursor.getString(4),
-                               cursor.getString(3)
-                       ));
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                tenants.add(
+                        new Tenant(
+                                cursor.getString(1),
+                                cursor.getString(0),
+                                cursor.getString(2),
+                                cursor.getString(4),
+                                cursor.getString(3)
+                        ));
 
-           }while(cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
         cursor.close();
         db.close();
         return tenants;
     }
 
-    public boolean deleteCurrentUser(){
-        final String query = "delete from "+ USER_TABLE;
+    public boolean deleteCurrentUser() {
+        final String query = "delete from " + USER_TABLE;
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query,null);
+        Cursor cursor = db.rawQuery(query, null);
 
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             cursor.close();
             db.close();
             return true;
@@ -194,12 +205,12 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
         return false;
     }
 
-    public boolean deleteAllTenants(){
-        final String query = "delete from "+ TENANT_TABLE;
+    public boolean deleteAllTenants() {
+        final String query = "delete from " + TENANT_TABLE;
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query,null);
+        Cursor cursor = db.rawQuery(query, null);
 
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             cursor.close();
             db.close();
             return true;

@@ -1,5 +1,9 @@
 package com.anubhav.vitinsiderhostel;
 
+import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +18,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anubhav.vitinsiderhostel.adapters.RoomServiceRecyclerAdapter;
+import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.anubhav.vitinsiderhostel.models.RoomService;
+import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.User;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,6 +30,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class RoomFragment extends Fragment implements View.OnClickListener {
@@ -46,6 +54,9 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
             add(new RoomService(R.drawable.ac_card_bg, "A/C"));
         }
     };
+
+    private Dialog dialog ;
+
     private final CollectionReference userSection = db.collection("Users");
     private final CollectionReference tenantSection = db.collection("Tenants");
     private final CollectionReference tenantsBioSection = db.collection("TenantsBio");
@@ -55,9 +66,9 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener authStateListener;
     FirebaseUser firebaseUser;
-
+    private LocalSqlDatabase localSqlDatabase;
+    private List<Tenant> tenantList;
     private String roomNo, roomType, block, userMail;
-
 
 
     public RoomFragment() {
@@ -76,6 +87,11 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_room, container, false);
+        localSqlDatabase = new LocalSqlDatabase(getContext());
+        tenantList = localSqlDatabase.getTenants();
+
+        dialog = new Dialog(getContext());
+
         MaterialTextView bedsTxt = view.findViewById(R.id.roomPgeBeds);
         MaterialTextView typeTxt = view.findViewById(R.id.roomPgeType);
         MaterialTextView roomDetailTxt = view.findViewById(R.id.roomPgeRoomNo);
@@ -100,6 +116,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
 
         ImageView typeIcon = view.findViewById(R.id.roomPgeTypeIcon);
 
+
         if (User.getInstance() != null) {
             roomNo = User.getInstance().getRoomNo();
             roomType = User.getInstance().getRoomType();
@@ -121,77 +138,67 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
             initialiseRoomServices(view, false);
         }
 
+        roomDetailTxt.setText(roomDetail);
+        bedsTxt.setText(beds);
+        typeTxt.setText(typeStr);
 
+        // assign names to the avatar
         if (beds.equalsIgnoreCase("2")) {
-
             secondRow.setVisibility(View.GONE);
             p4.setVisibility(View.GONE);
 
-          /*  // find all the tenants of the room
-            tenantsDocumentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
+            Tenant t1 = tenantList.get(0);
+            if (t1.getTenantUserName() != null) {
+                p1UserNameCard.setText(t1.getTenantUserName());
+            }
 
-                    if (documentSnapshot.exists()) {
-
-                        // get the mail-Id's of the tenants
-                        final String p1Mail = Objects.requireNonNull(documentSnapshot.get("1")).toString();
-                        final String p2Mail = Objects.requireNonNull(documentSnapshot.get("2")).toString();
-
-                        // collect the details of the tenants
-                        tenantsBioSection
-                                .document(p1Mail)
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        if (documentSnapshot.exists()) {
-                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
-                                            assert tenantData != null;
-                                            p1UserNameCard.setText(tenantData.getTenantUserName());
-                                        } else {
-                                            // todo invite user with mail id
-                                        }
-                                    }
-                                });
-
-
-                        tenantsBioSection
-                                .document(p2Mail)
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        if (documentSnapshot.exists()) {
-                                            Tenant tenantData = documentSnapshot.toObject(Tenant.class);
-                                            assert tenantData != null;
-                                            p2UserNameCard.setText(tenantData.getTenantUserName());
-                                        } else {
-                                            // todo invite user with mail id
-                                        }
-                                    }
-                                });
-
-                    } else {
-                        //todo report error
-                    }
-                }
-            });*/
+            Tenant t2 = tenantList.get(1);
+            if (t2.getTenantUserName() != null) {
+                p2UserNameCard.setText(t2.getTenantUserName());
+            }
 
         } else if (beds.equalsIgnoreCase("3")) {
             secondRow.setVisibility(View.VISIBLE);
             p4.setVisibility(View.GONE);
 
+            Tenant t1 = tenantList.get(0);
+            if (t1.getTenantUserName() != null) {
+                p1UserNameCard.setText(t1.getTenantUserName());
+            }
+            Tenant t2 = tenantList.get(1);
+            if (t2.getTenantUserName() != null) {
+                p2UserNameCard.setText(t2.getTenantUserName());
+            }
+
+            Tenant t3 = tenantList.get(2);
+            if (t3.getTenantUserName() != null) {
+                p3UserNameCard.setText(t3.getTenantUserName());
+            }
+
         } else if (beds.equalsIgnoreCase("4")) {
             secondRow.setVisibility(View.VISIBLE);
             p4.setVisibility(View.VISIBLE);
 
+            Tenant t1 = tenantList.get(0);
+            if (t1.getTenantUserName() != null) {
+                p1UserNameCard.setText(t1.getTenantUserName());
+            }
+            Tenant t2 = tenantList.get(1);
+            if (t2.getTenantUserName() != null) {
+                p2UserNameCard.setText(t2.getTenantUserName());
+            }
+
+            Tenant t3 = tenantList.get(2);
+            if (t3.getTenantUserName() != null) {
+                p3UserNameCard.setText(t3.getTenantUserName());
+            }
+
+            Tenant t4 = tenantList.get(3);
+            if (t4.getTenantUserName() != null) {
+                p4UserNameCard.setText(t4.getTenantUserName());
+            }
+
         }
-
-
-        roomDetailTxt.setText(roomDetail);
-        bedsTxt.setText(beds);
-        typeTxt.setText(typeStr);
 
         return view;
     }
@@ -218,21 +225,80 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
 
         int id = v.getId();
         if (id == R.id.roomPgeP1Avatar) {
-            ViewTenantDialog viewTenantDialog = new ViewTenantDialog();
-            FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-            Fragment prev = getParentFragmentManager().findFragmentByTag("dialog");
-            if (prev != null) {
-                ft.remove(prev);
+            if (tenantList.get(0).getTenantUserName() != null) {
+                callTenantDialog(0);
+            } else {
+                //todo invite user
+                inviteUser(0);
             }
-            ft.addToBackStack(null);
-            viewTenantDialog.show(ft, "dialog");
         } else if (id == R.id.roomPgeP2Avatar) {
-
+            if (tenantList.get(1).getTenantUserName() != null) {
+                callTenantDialog(1);
+            } else {
+                //todo invite user
+                inviteUser(1);
+            }
         } else if (id == R.id.roomPgeP3Avatar) {
-
+            if (tenantList.get(2).getTenantUserName() != null) {
+                callTenantDialog(2);
+            } else {
+                //todo invite user
+                inviteUser(2);
+            }
         } else if (id == R.id.roomPgeP4Avatar) {
-
+            if (tenantList.get(3).getTenantUserName() != null) {
+                callTenantDialog(3);
+            } else {
+                //todo invite user
+                inviteUser(3);
+            }
         }
+    }
+
+    private void inviteUser(int pos){
+        dialog.setContentView(R.layout.invite_user_view);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        MaterialButton inviteUser = dialog.findViewById(R.id.inviteUserBtn);
+        inviteUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                final String  mailTo = tenantList.get(pos).getTenantMailID();
+                final String  mailSubject = "Invite to VIT Insider Hostel Edition";
+                final String  mailContent = "Your roommate "+User.getInstance().getUserName()+" has invited you to VIT Insider Hostel Edition. Install the application from playstore \n Link -> ";
+                if (mailTo!=null) {
+                    intent.putExtra(Intent.EXTRA_EMAIL,new String[]{mailTo});
+                    intent.putExtra(Intent.EXTRA_SUBJECT, mailSubject);
+                    intent.putExtra(Intent.EXTRA_TEXT, mailContent);
+                }
+                intent.setType("message/rfc822");
+                v.getContext().startActivity(Intent.createChooser(intent, "Choose an Email client :"));
+            }
+        });
+        dialog.show();
+    }
+
+    private Bundle getTenantBundle(int pos) {
+        Bundle args = new Bundle();
+        args.putString("tenantName", tenantList.get(pos).getTenantUserName());
+        args.putString("tenantMailId", tenantList.get(pos).getTenantMailID());
+        args.putString("tenantContactNumber", tenantList.get(pos).getTenantContactNumber());
+        args.putString("tenantNativeLanguage", tenantList.get(pos).getTenantNativeLanguage());
+        args.putString("tenantBranch", tenantList.get(pos).getTenantBranch());
+        return args;
+    }
+
+    private void callTenantDialog(int pos) {
+        Bundle args = getTenantBundle(pos);
+        ViewTenantDialog viewTenantDialog = new ViewTenantDialog();
+        viewTenantDialog.setArguments(args);
+        FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+        Fragment prev = getParentFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        viewTenantDialog.show(ft, "dialog");
     }
 
 }

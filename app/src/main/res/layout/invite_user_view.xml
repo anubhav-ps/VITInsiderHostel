@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="280dp"
+    android:layout_height="380dp"
+    app:cardBackgroundColor="@color/white"
+    android:clipToPadding="true"
+    app:cardElevation="8dp"
+    app:cardUseCompatPadding="true"
+    android:id="@+id/inviteUser">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/harmattan"
+            android:gravity="center_horizontal"
+            android:text="Invite User"
+            android:textColor="@color/medium_theme_green"
+            android:textSize="34sp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:textColor="#E6626161"
+            android:text="Your roommate has not installed the app. Invite your roomate to view thier details"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:elevation="2dp"
+            android:padding="2dp"
+            android:src="@drawable/avataar_1m"
+            app:elevation="2dp" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/inviteUserBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="18dp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/medium_theme_green"
+            android:text="Invite User" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+
+

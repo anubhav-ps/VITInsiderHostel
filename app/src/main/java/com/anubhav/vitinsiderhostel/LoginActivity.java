@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -34,6 +36,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -45,10 +52,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private final CollectionReference tenantsSection = db.collection("Tenants");
     private final CollectionReference tenantsBioSection = db.collection("TenantsBio");
 
+    private final int N = 2;
+    private ExecutorService executorService;
+
     //firebase declarations
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener authStateListener;
     FirebaseUser firebaseUser;
+
+    private LocalSqlDatabase sqlDatabase;
     private String inputMail;
     private String inputPassword;
     private boolean validMail = false;
@@ -60,6 +72,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        executorService = Executors.newFixedThreadPool(N);
+
+        sqlDatabase = new LocalSqlDatabase(LoginActivity.this);
 
         mailEt = findViewById(R.id.loginPgeMailTxt);
         passwordEt = findViewById(R.id.loginPgePasswordTxt);
@@ -238,7 +254,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     //logging user using firebase
     private void loginUser(String mailID, String password) {
 
-        final LocalSqlDatabase sqlDatabase = new LocalSqlDatabase(LoginActivity.this);
 
         firebaseAuth
                 .signInWithEmailAndPassword(mailID, password)
@@ -307,7 +322,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                                         //todo : Report user list download
                                                                     }
 
-                                                                    List<Tenant> tl = new ArrayList<>();
                                                                     tenantsSection
                                                                             .document(studentBlock)
                                                                             .collection(studentRoomNo)
@@ -318,18 +332,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                                                     final String tenantsRaw = Objects.requireNonNull(documentSnapshot2.get("list")).toString();
                                                                                     final String[] tenantMailList = tenantsRaw.split("%");
                                                                                     for (String mId : tenantMailList) {
+                                                                                        Tenant tenant = new Tenant(mId);
+                                                                                        assert tenant != null;
+                                                                                        sqlDatabase.addTenants(tenant);
                                                                                         tenantsBioSection
                                                                                                 .document(mId)
                                                                                                 .get()
                                                                                                 .addOnSuccessListener(documentSnapshot21 -> {
                                                                                                     if (documentSnapshot21.exists()) {
                                                                                                         Tenant updated = documentSnapshot21.toObject(Tenant.class);
-                                                                                                        if (updated != null) {
-                                                                                                            boolean result = sqlDatabase.addTenant(updated);
-                                                                                                            if (!result) {
-                                                                                                                // TODO: Report tenant list download
-                                                                                                            }
-                                                                                                        }
+                                                                                                        assert updated != null;
+                                                                                                        sqlDatabase.updateTenant(updated);
                                                                                                     }
                                                                                                 });
                                                                                     }
@@ -337,13 +350,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                                                     //todo report error -> no tenant list found
                                                                                 }
                                                                             });
-                                                                    progressBar.setVisibility(View.INVISIBLE);
-                                                                    Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
-                                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                                    startActivity(intent);
-                                                                    overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-                                                                    finish();
+
+                                                                    new Handler().postDelayed(() -> {
+                                                                        progressBar.setVisibility(View.INVISIBLE);
+                                                                        Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                                                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                                        startActivity(intent);
+                                                                        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+                                                                        finish();
+                                                                    }, 2000);
 
                                                                 } else {
                                                                     progressBar.setVisibility(View.INVISIBLE);
@@ -427,5 +443,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         snackbar.show();
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        executorService.shutdown();
+    }
 }
