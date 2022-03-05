@@ -17,7 +17,7 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="#F5F5F5"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
             app:cardPreventCornerOverlap="false"
@@ -102,6 +102,7 @@
                         android:padding="4dp">
 
                         <ImageButton
+                            style="@style/AvatarTheme"
                             android:id="@+id/roomPgeP1Avatar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -127,6 +128,7 @@
                         android:padding="4dp">
 
                         <ImageButton
+                            style="@style/AvatarTheme"
                             android:id="@+id/roomPgeP2Avatar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -162,6 +164,7 @@
                         android:padding="4dp">
 
                         <ImageButton
+                            style="@style/AvatarTheme"
                             android:id="@+id/roomPgeP3Avatar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -189,6 +192,7 @@
                         android:visibility="gone">
 
                         <ImageButton
+                            style="@style/AvatarTheme"
                             android:id="@+id/roomPgeP4Avatar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -214,10 +218,10 @@
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="14dp"
             android:layout_marginTop="14dp"
             android:fontFamily="@font/asap_medium"
-            android:text="Room Services"
+            android:text="@string/room_pge_room_service_txt"
             android:textColor="#7F7F7F"
             android:textSize="20sp" />
 

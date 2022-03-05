@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="360dp"
+    android:layout_height="wrap_content"
+    android:clipToPadding="true"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="12dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="6dp"
+            android:text="@string/ticket_dialog_book_service_txt"
+            android:textColor="@color/medium_theme_green"
+            android:textSize="28sp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/ticketViewServiceName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="22dp"
+            android:text="@string/ticket_dialog_service_name_txt"
+            android:textColor="#E6626161"
+            android:textSize="18sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:gravity="center_horizontal"
+            android:hint="@string/ticket_dialog_description_hint_txt"
+            android:textAlignment="center"
+            android:textColor="#E64C4C4C"
+            android:textColorHint="#E6626161"
+            app:boxBackgroundColor="@color/background_fill_colour"
+            app:boxCornerRadiusTopEnd="10dp"
+            app:boxCornerRadiusTopStart="10dp"
+            app:boxStrokeColor="#E64C4C4C"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/black">
+
+            <!--this is the actual edit text which takes the input-->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/ticketViewDescribeIssue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="6"
+                android:maxLength="500"
+                android:textIsSelectable="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:text="@string/ticket_dialog_captcha_txt"
+                android:textColor="#E6626161" />
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/ticketViewCaptchaText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/background_fill_colour"
+                android:text="@string/ticket_dialog_captcha_num_txt"
+                android:textColor="#E6626161"
+                android:textSize="16sp" />
+
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:gravity="center_horizontal"
+            android:hint="@string/ticket_dialog_captcha_hint_txt"
+            android:textAlignment="center"
+            android:textColor="#E64C4C4C"
+            android:textColorHint="#E6626161"
+            app:boxBackgroundColor="@color/background_fill_colour"
+            app:boxCornerRadiusTopEnd="10dp"
+            app:boxCornerRadiusTopStart="10dp"
+            app:boxStrokeColor="#E64C4C4C"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/black">
+
+            <!--this is the actual edit text which takes the input-->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/ticketViewInputCaptcha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:maxLength="6"
+                android:textIsSelectable="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ticketViewRaiseTicket"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="18dp"
+            android:text="@string/ticket_dialog_raise_ticket_btn_txt"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/medium_theme_green" />
+
+
+    </LinearLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

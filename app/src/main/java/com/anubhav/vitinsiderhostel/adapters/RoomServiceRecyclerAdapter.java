@@ -1,11 +1,9 @@
 package com.anubhav.vitinsiderhostel.adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,11 +18,11 @@ public class RoomServiceRecyclerAdapter extends RecyclerView.Adapter<RoomService
 
 
     private final ArrayList<RoomService> roomServiceArrayList;
-    private final Context context;
+    private RecyclerCardViewClickListener recyclerCardViewClickListener;
 
-    public RoomServiceRecyclerAdapter(ArrayList<RoomService> roomServiceArrayList, Context context) {
+    public RoomServiceRecyclerAdapter(ArrayList<RoomService> roomServiceArrayList, RecyclerCardViewClickListener listener) {
         this.roomServiceArrayList = roomServiceArrayList;
-        this.context = context;
+        recyclerCardViewClickListener = listener;
     }
 
     @NonNull
@@ -39,15 +37,18 @@ public class RoomServiceRecyclerAdapter extends RecyclerView.Adapter<RoomService
 
         holder.backgroundImage.setImageResource(roomServiceArrayList.get(position).getImageUrl());
         holder.serviceName.setText(roomServiceArrayList.get(position).getServiceName());
-
         holder.backgroundImage.setOnClickListener(v -> {
-            Toast.makeText(context, "Hie ", Toast.LENGTH_SHORT).show();
+            recyclerCardViewClickListener.onCardItemClickListener(position);
         });
     }
 
     @Override
     public int getItemCount() {
         return roomServiceArrayList.size();
+    }
+
+    public interface RecyclerCardViewClickListener {
+        void onCardItemClickListener(int pos);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -62,4 +63,6 @@ public class RoomServiceRecyclerAdapter extends RecyclerView.Adapter<RoomService
         }
 
     }
+
+
 }

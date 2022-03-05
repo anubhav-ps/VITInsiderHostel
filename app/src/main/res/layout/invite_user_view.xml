@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/inviteUser"
     android:layout_width="280dp"
-    android:layout_height="380dp"
-    app:cardBackgroundColor="@color/white"
+    android:layout_height="400dp"
     android:clipToPadding="true"
+    app:cardBackgroundColor="@color/white"
     app:cardElevation="8dp"
-    app:cardUseCompatPadding="true"
-    android:id="@+id/inviteUser">
+    app:cardUseCompatPadding="true">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
@@ -23,16 +23,16 @@
             android:layout_marginTop="12dp"
             android:fontFamily="@font/harmattan"
             android:gravity="center_horizontal"
-            android:text="Invite User"
+            android:text="@string/invite_dialog_invite_txt"
             android:textColor="@color/medium_theme_green"
             android:textSize="34sp" />
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/invite_dialog_content_txt"
             android:textColor="#E6626161"
-            android:text="Your roommate has not installed the app. Invite your roomate to view thier details"
             android:textSize="16sp" />
 
         <ImageView
@@ -46,15 +46,25 @@
             app:elevation="2dp" />
 
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/inviteUserMailName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:text="@string/invite_dialog_mail_txt"
+            android:textColor="#E6626161" />
+
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/inviteUserBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="18dp"
-            android:textColor="@color/white"
             android:backgroundTint="@color/medium_theme_green"
-            android:text="Invite User" />
+            android:text="@string/invite_dialog_btn_txt"
+            android:textColor="@color/white" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

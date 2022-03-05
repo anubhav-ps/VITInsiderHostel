@@ -17,7 +17,7 @@
     </style>
 
     <style name="SelectableItemTheme">
-        <item name="colorControlHighlight">#E6888686</item>
+        <item name="colorControlHighlight">#E65F5F5F</item>
     </style>
 
     <style name="SelectableItemBackground">
@@ -31,6 +31,15 @@
 
     <style name="ForArrowTheme">
         <item name="android:theme">@style/ForArrow</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="Avatar">
+        <item name="colorControlHighlight">#E6C5C5C5</item>
+    </style>
+
+    <style name="AvatarTheme">
+        <item name="android:theme">@style/Avatar</item>
         <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 

@@ -87,6 +87,22 @@
 
 
     <string name="room_service_name_txt">Furnitures</string>
+    <string name="room_pge_room_service_txt">Room Services</string>
+    <string name="ticket_dialog_book_service_txt">Book Service</string>
+    <string name="ticket_dialog_service_name_txt">Service</string>
+    <string name="ticket_dialog_description_hint_txt">Describe your issue in few lines</string>
+    <string name="ticket_dialog_captcha_txt">Captcha</string>
+    <string name="ticket_dialog_captcha_num_txt">18S569</string>
+    <string name="ticket_dialog_captcha_hint_txt">Enter the captcha</string>
+    <string name="ticket_dialog_raise_ticket_btn_txt">Raise Ticket</string>
+
+
+    <string name="invite_dialog_invite_txt">Invite User</string>
+    <string name="invite_dialog_content_txt">Your roommate has not installed the app.Invite your roommate via mail to get their details</string>
+    <string name="invite_dialog_mail_txt">.vitstudent.ac.in</string>
+    <string name="invite_dialog_btn_txt">Invite User</string>
+    <string name="tenant_dialog_detail_txt">Detail</string>
+    <string name="tenant_dialog_back_btn_txt">Back</string>
 
 
 </resources>

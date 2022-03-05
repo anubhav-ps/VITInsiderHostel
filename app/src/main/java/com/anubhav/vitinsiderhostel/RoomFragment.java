@@ -5,12 +5,17 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -21,22 +26,34 @@ import com.anubhav.vitinsiderhostel.adapters.RoomServiceRecyclerAdapter;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.anubhav.vitinsiderhostel.models.RoomService;
 import com.anubhav.vitinsiderhostel.models.Tenant;
+import com.anubhav.vitinsiderhostel.models.Ticket;
+import com.anubhav.vitinsiderhostel.models.TicketStatus;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textview.MaterialTextView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 
-public class RoomFragment extends Fragment implements View.OnClickListener {
+public class RoomFragment extends Fragment implements View.OnClickListener, RoomServiceRecyclerAdapter.RecyclerCardViewClickListener {
 
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final CollectionReference roomTickets = db.collection("RoomTickets");
+    private final CollectionReference allTickets = db.collection("AllTickets");
+    private final CollectionReference ticketHistory = db.collection("TicketHistory");
+
 
     private final ArrayList<RoomService> roomServices1 = new ArrayList<>() {
         {
@@ -51,24 +68,14 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
             add(new RoomService(R.drawable.furniture_card_bg, "Furniture"));
             add(new RoomService(R.drawable.lighting_card_bg, "Lighting"));
             add(new RoomService(R.drawable.fan_card_bg, "Ceiling Fan"));
-            add(new RoomService(R.drawable.ac_card_bg, "A/C"));
+            add(new RoomService(R.drawable.ac_card_bg, "AC"));
         }
     };
 
-    private Dialog dialog ;
-
-    private final CollectionReference userSection = db.collection("Users");
-    private final CollectionReference tenantSection = db.collection("Tenants");
-    private final CollectionReference tenantsBioSection = db.collection("TenantsBio");
-
-
-    //firebase declarations
-    FirebaseAuth firebaseAuth;
-    FirebaseAuth.AuthStateListener authStateListener;
-    FirebaseUser firebaseUser;
-    private LocalSqlDatabase localSqlDatabase;
+    private Dialog dialog;
     private List<Tenant> tenantList;
     private String roomNo, roomType, block, userMail;
+    private boolean ac = false;
 
 
     public RoomFragment() {
@@ -87,7 +94,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_room, container, false);
-        localSqlDatabase = new LocalSqlDatabase(getContext());
+        LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getContext());
         tenantList = localSqlDatabase.getTenants();
 
         dialog = new Dialog(getContext());
@@ -126,6 +133,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
 
         final String beds = roomType.split("\\|")[0];
         final boolean isAc = roomType.split("\\|")[1].equalsIgnoreCase("AC");
+        ac = isAc;
         final String roomDetail = "Room " + roomNo + "-" + block;
         String typeStr = "NON-A/C";
         typeIcon.setImageResource(R.drawable.non_ac_icon);
@@ -203,6 +211,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+
     private void initialiseRoomServices(View view, boolean type) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = view.findViewById(R.id.roomPgeRecyclerView);
@@ -210,12 +219,12 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
         RoomServiceRecyclerAdapter roomServiceRecyclerAdapter;
 
         if (type) {
-            roomServiceRecyclerAdapter = new RoomServiceRecyclerAdapter(roomServices2, getActivity());
+            roomServiceRecyclerAdapter = new RoomServiceRecyclerAdapter(roomServices2, this);
             recyclerView.setAdapter(roomServiceRecyclerAdapter);
             return;
         }
 
-        roomServiceRecyclerAdapter = new RoomServiceRecyclerAdapter(roomServices1, getActivity());
+        roomServiceRecyclerAdapter = new RoomServiceRecyclerAdapter(roomServices1, this);
         recyclerView.setAdapter(roomServiceRecyclerAdapter);
 
     }
@@ -255,25 +264,25 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void inviteUser(int pos){
+    private void inviteUser(int pos) {
         dialog.setContentView(R.layout.invite_user_view);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         MaterialButton inviteUser = dialog.findViewById(R.id.inviteUserBtn);
-        inviteUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                final String  mailTo = tenantList.get(pos).getTenantMailID();
-                final String  mailSubject = "Invite to VIT Insider Hostel Edition";
-                final String  mailContent = "Your roommate "+User.getInstance().getUserName()+" has invited you to VIT Insider Hostel Edition. Install the application from playstore \n Link -> ";
-                if (mailTo!=null) {
-                    intent.putExtra(Intent.EXTRA_EMAIL,new String[]{mailTo});
-                    intent.putExtra(Intent.EXTRA_SUBJECT, mailSubject);
-                    intent.putExtra(Intent.EXTRA_TEXT, mailContent);
-                }
-                intent.setType("message/rfc822");
-                v.getContext().startActivity(Intent.createChooser(intent, "Choose an Email client :"));
+        MaterialTextView mailNameTxt = dialog.findViewById(R.id.inviteUserMailName);
+        final String mailName = tenantList.get(pos).getTenantMailID().split("@")[0];
+        mailNameTxt.setText(mailName);
+        inviteUser.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            final String mailTo = tenantList.get(pos).getTenantMailID();
+            final String mailSubject = "Invite to VIT Insider Hostel Edition";
+            final String mailContent = "Your roommate " + User.getInstance().getUserName() + " has invited you to VIT Insider Hostel Edition. Install the application from playstore \n Link -> ";
+            if (mailTo != null) {
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{mailTo});
+                intent.putExtra(Intent.EXTRA_SUBJECT, mailSubject);
+                intent.putExtra(Intent.EXTRA_TEXT, mailContent);
             }
+            intent.setType("message/rfc822");
+            v.getContext().startActivity(Intent.createChooser(intent, "Choose an Email client :"));
         });
         dialog.show();
     }
@@ -301,4 +310,162 @@ public class RoomFragment extends Fragment implements View.OnClickListener {
         viewTenantDialog.show(ft, "dialog");
     }
 
+    @Override
+    public void onCardItemClickListener(int pos) {
+        final DocumentReference documentReferenceToRoomTicket = roomTickets.document(block)
+                .collection("RoomTickets").document(roomNo);
+
+        if (ac) {
+            final String serviceName = roomServices2.get(pos).getServiceName();
+            checkIfTicketExists(documentReferenceToRoomTicket, serviceName);
+            return;
+        }
+
+        final String serviceName = roomServices1.get(pos).getServiceName();
+        checkIfTicketExists(documentReferenceToRoomTicket, serviceName);
+
+    }
+
+    private void checkIfTicketExists(DocumentReference documentReferenceToRoomTicket, String serviceName) {
+        documentReferenceToRoomTicket
+                .get()
+                .addOnSuccessListener(documentSnapshot -> documentReferenceToRoomTicket.collection("RoomService").document(serviceName)
+                        .get()
+                        .addOnSuccessListener(documentSnapshot1 -> {
+                            if (documentSnapshot1.exists()) {
+                                //todo already complaint exists
+                                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
+                                builder.setTitle("Ticket Already Raised !");
+                                builder.setMessage("Ticket has been raised for this service already by you or your roommate.\n" +
+                                        "New Tickets under the same category cannot be raised until the existing ticket is closed.\n\n" +
+                                        "You can check the status and details of the existing ticket in ticket history.\n");
+                                builder.setPositiveButton("Ok", (dialogInterface, i) -> {
+                                });
+                                builder.show();
+                            } else {
+                                //todo collect and upload ticket
+                                collectUploadTicket(documentReferenceToRoomTicket, serviceName);
+                            }
+
+                        }));
+
+    }
+
+    private void collectUploadTicket(DocumentReference documentReferenceToRoomTicket, String serviceName) {
+        //todo display entering of ticket description
+        dialog.setContentView(R.layout.raise_ticket_view);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        MaterialTextView serviceNameTxt = dialog.findViewById(R.id.ticketViewServiceName);
+        MaterialTextView captchaTxt = dialog.findViewById(R.id.ticketViewCaptchaText);
+        EditText descriptionEt = dialog.findViewById(R.id.ticketViewDescribeIssue);
+        EditText captchaInputEt = dialog.findViewById(R.id.ticketViewInputCaptcha);
+        MaterialButton raiseTicketBtn = dialog.findViewById(R.id.ticketViewRaiseTicket);
+        raiseTicketBtn.setEnabled(false);
+
+        final String ser = serviceName + " service";
+        serviceNameTxt.setText(ser);
+        final String genCaptcha = generateCaptcha();
+        captchaTxt.setText(genCaptcha);
+
+        captchaInputEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (captchaInputEt.getText().toString().equals(genCaptcha)) {
+                    raiseTicketBtn.setEnabled(true);
+                    captchaInputEt.setTextColor(Color.parseColor("#FFFF4444"));
+                } else {
+                    raiseTicketBtn.setEnabled(false);
+                    captchaInputEt.setTextColor(Color.parseColor("#E6626161"));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        raiseTicketBtn.setOnClickListener(v -> {
+
+            if (TextUtils.isEmpty(descriptionEt.getText().toString())) {
+                descriptionEt.setError("Description is needed");
+                return;
+            }
+
+            final String serviceDescription = descriptionEt.getText().toString();
+            final Timestamp timestamp = new Timestamp(new Date());
+            final String uploader = User.getInstance().getUserMailID();
+
+            DocumentReference documentReferenceToAllTicket = allTickets.document(block).collection("AllTickets").document();
+
+            final String docIdForTicket = documentReferenceToAllTicket.getId();
+
+            final Ticket ticket = new Ticket(docIdForTicket, roomNo, block, serviceName, serviceDescription, uploader, TicketStatus.BOOKED, timestamp);
+
+            documentReferenceToAllTicket
+                    .set(ticket)
+                    .addOnCompleteListener(task -> {
+
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getContext(), "Ticket successfully raised", Toast.LENGTH_LONG).show();
+                            //todo push ticket into the room-ticket table
+                            Map<String, String> map = new HashMap<>();
+                            map.put("doc_ID", docIdForTicket);
+                            documentReferenceToRoomTicket
+                                    .collection("RoomService")
+                                    .document(serviceName)
+                                    .set(map)
+                                    .addOnCompleteListener(task1 -> {
+
+                                        if (task1.isSuccessful()) {
+                                            Toast.makeText(getContext(), "Ticket successfully linked to room", Toast.LENGTH_LONG).show();
+                                            // todo push ticket into ticket history table
+                                            DocumentReference documentReferenceToTicketHistory = ticketHistory
+                                                    .document(block)
+                                                    .collection(roomNo)
+                                                    .document();
+                                            final String docIdToTicketHistory = documentReferenceToTicketHistory.getId();
+
+                                            Map<String, String> ticketHistoryMap = new HashMap<>();
+                                            ticketHistoryMap.put("doc_Id", docIdToTicketHistory);
+                                            ticketHistoryMap.put("all_ticket_Doc_Id", docIdForTicket);
+
+                                            documentReferenceToTicketHistory
+                                                    .set(ticketHistoryMap)
+                                                    .addOnCompleteListener(task11 -> {
+                                                        if (task11.isSuccessful()) {
+                                                            Toast.makeText(getContext(), "Ticket saved successfully in history", Toast.LENGTH_LONG).show();
+                                                        } else {
+                                                            Toast.makeText(getContext(), "Ticket couldn't be saved to history", Toast.LENGTH_LONG).show();
+                                                        }
+                                                        dialog.dismiss();
+                                                    });
+                                        } else {
+                                            Toast.makeText(getContext(), "Ticket couldn't be linked to room", Toast.LENGTH_LONG).show();
+                                            dialog.dismiss();
+                                        }
+                                    });
+                        } else {
+                            Toast.makeText(getContext(), "Ticket Booking Failed", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
+                    });
+        });
+        dialog.show();
+    }
+
+    private String generateCaptcha() {
+        final int hr = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        final int min = Calendar.getInstance().get(Calendar.MINUTE);
+        Random r = new Random();
+        char c1 = (char) (r.nextInt(25) + 'a');
+        char c2 = (char) (r.nextInt(25) + 'a');
+        return String.valueOf(hr) + c1 + min + c2;
+    }
 }

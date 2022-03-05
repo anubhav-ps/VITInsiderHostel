@@ -5,9 +5,8 @@
     android:layout_height="146dp"
     android:clipToPadding="true"
     app:cardCornerRadius="24dp"
-    android:layout_margin="6dp"
+    android:layout_margin="3dp"
     app:cardElevation="4dp"
-
     app:cardPreventCornerOverlap="false"
     app:cardUseCompatPadding="true"
    >

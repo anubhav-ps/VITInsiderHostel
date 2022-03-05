@@ -57,6 +57,13 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         MaterialTextView signOutTxt = view.findViewById(R.id.accountPgeSignOut);
         MaterialTextView versionCodeTxt = view.findViewById(R.id.accountPgeAppVersion);
 
+        String versionName = " ";
+        try {
+            versionName = BuildConfig.VERSION_NAME;
+        }catch (Exception exception){
+            Toast.makeText(getContext(), "Error fetching version name", Toast.LENGTH_SHORT).show();
+        }
+        versionCodeTxt.setText(versionName);
 
         if (User.getInstance() != null) {
             username = User.getInstance().getUserName();
