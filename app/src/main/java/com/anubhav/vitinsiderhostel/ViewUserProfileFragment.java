@@ -86,15 +86,20 @@ public class ViewUserProfileFragment extends Fragment implements View.OnClickLis
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.viewUserProfilePgeEdit) {
-
+            EditProfileFragment editProfileFragment = new EditProfileFragment();
+            changeFragment(editProfileFragment);
         } else if (id == R.id.viewUserProfilePgeCloseAccount) {
             DeleteAccountFragment deleteAccountFragment = new DeleteAccountFragment();
-            FragmentManager fragmentManager = getParentFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.userProfilePageContainer, deleteAccountFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+            changeFragment(deleteAccountFragment);
         }
+    }
+
+    private void changeFragment(Fragment fragment){
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.userProfilePageContainer,fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
 }

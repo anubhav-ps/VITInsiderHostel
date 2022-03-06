@@ -138,6 +138,21 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updateUser(User user){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(USER_NAME, user.getUserName());
+        cv.put(USER_CONTACT_NUMBER, user.getUserContactNumber());
+        cv.put(STUDENT_NATIVE_LANGUAGE, user.getStudentNativeLanguage());
+        cv.put(STUDENT_BRANCH, user.getStudentBranch());
+
+        db.update(USER_TABLE,cv,"USER_ID = ?",new String[]{user.getUser_Id()});
+        db.close();
+
+        return true;
+    }
     public User getCurrentUser() {
 
         User user = User.getInstance();
