@@ -10,19 +10,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.anubhav.vitinsiderhostel.models.AppError;
+import com.anubhav.vitinsiderhostel.models.ErrorCode;
 import com.anubhav.vitinsiderhostel.models.User;
+import com.google.android.gms.dynamic.IFragmentWrapper;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Date;
 import java.util.Locale;
 
 
@@ -33,6 +41,9 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference userSection = db.collection("Users");
     private final CollectionReference userBlockRecord = db.collection("UserBlockRec");
+    private final CollectionReference reportSection = db.collection("Reports");
+    private final CollectionReference tenantsBioSection = db.collection("TenantsBio");
+
     MaterialButton abort, delete;
     EditText inputEt;
     ProgressBar progressBar;
@@ -140,34 +151,68 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
                                     .delete()
                                     .addOnCompleteListener(task12 -> {
                                         if (task12.isSuccessful()) {
+
+                                            tenantsBioSection
+                                                    .document(mailId)
+                                                    .delete()
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                if (!task.isSuccessful()) {
+                                                                    AppError appError = new AppError(
+                                                                            ErrorCode.DF004,
+                                                                            mailId,
+                                                                            "S",
+                                                                            new Timestamp(new Date()));
+                                                                    reportSection.document().set(appError);
+                                                                }
+                                                        }
+                                                    });
+
                                             user = FirebaseAuth.getInstance().getCurrentUser();
                                             if (user != null) {
-                                                user.delete()
-                                                        .addOnCompleteListener(task1 -> {
-                                                            if (task1.isSuccessful()) {
-                                                                progressBar.setVisibility(View.INVISIBLE);
-                                                                callBackToAccountDeletion.userAccountDeleted();
-
-                                                            } else {
-                                                                // TODO: report -> user-account deletion problem
-                                                                progressBar.setVisibility(View.INVISIBLE);
-                                                                FirebaseAuth.getInstance().signOut();
-                                                                callBackToAccountDeletion.userAccountDeleted();
-
-                                                            }
-                                                        });
+                                                user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()){
+                                                            Toast.makeText(getContext(), "Account deleted successfully", Toast.LENGTH_SHORT).show();
+                                                            progressBar.setVisibility(View.INVISIBLE);
+                                                            callBackToAccountDeletion.userAccountDeleted();
+                                                        }else{
+                                                            progressBar.setVisibility(View.INVISIBLE);
+                                                            AppError appError = new AppError(
+                                                                    ErrorCode.DF003,
+                                                                    mailId,
+                                                                    "S",
+                                                                    new Timestamp(new Date()));
+                                                            reportSection.document().set(appError);
+                                                            FirebaseAuth.getInstance().signOut();
+                                                            callBackToAccountDeletion.userAccountDeleted();
+                                                        }
+                                                    }
+                                                });
                                             }
                                         } else {
-                                            //TODO: report -> user block record deletion error
                                             progressBar.setVisibility(View.INVISIBLE);
+                                            AppError appError = new AppError(
+                                                    ErrorCode.DF002,
+                                                    mailId,
+                                                    "S",
+                                                    new Timestamp(new Date()));
+                                            reportSection.document().set(appError);
                                             FirebaseAuth.getInstance().signOut();
                                             callBackToAccountDeletion.userAccountDeleted();
 
                                         }
                                     });
                         } else {
-                            //TODO: report -> users record deletion error
                             progressBar.setVisibility(View.INVISIBLE);
+                            AppError appError = new AppError(
+                                    ErrorCode.DF001,
+                                    mailId,
+                                    "S",
+                                    new Timestamp(new Date()));
+                            reportSection.document().set(appError);
                         }
                     });
         }

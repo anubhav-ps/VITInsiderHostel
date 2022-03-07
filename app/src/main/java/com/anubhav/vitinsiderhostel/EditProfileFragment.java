@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,17 +23,21 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
+import com.anubhav.vitinsiderhostel.models.AppError;
+import com.anubhav.vitinsiderhostel.models.ErrorCode;
 import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -58,6 +63,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference userSection = db.collection("Users");
     private final CollectionReference tenantsBioSection = db.collection("TenantsBio");
+    private final CollectionReference reportSection = db.collection("Reports");
     private ArrayAdapter<String> branchAdapter;
     private boolean hasChanged = false;
     private Dialog dialog;
@@ -66,6 +72,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private MaterialTextView contactNumberTxt;
     private MaterialTextView nativeLanguageTxt;
     private MaterialTextView branchTxt;
+    private ProgressBar progressBar;
 
     private String branchInnerVal;
 
@@ -87,6 +94,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         View view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
 
         MaterialTextView changeAvatarTxt = view.findViewById(R.id.editPgeAvatar);
+        progressBar = view.findViewById(R.id.editPgeProgressBar);
         userNameTxt = view.findViewById(R.id.editPgeUserName);
         userMailIdTxt = view.findViewById(R.id.editPgeMailId);
         contactNumberTxt = view.findViewById(R.id.editPgeContactNumber);
@@ -172,6 +180,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
     private void editSaveBtn() {
 
+        progressBar.setVisibility(View.VISIBLE);
         final String userName = userNameTxt.getText().toString().trim();
         final String userContactNumber = contactNumberTxt.getText().toString().trim();
         final String userNativeLanguage = nativeLanguageTxt.getText().toString().trim();
@@ -204,7 +213,6 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(getContext(), "Successfully updated", Toast.LENGTH_LONG).show();
                                 documentReferenceToUserDetails
                                         .get()
                                         .addOnSuccessListener(documentSnapshot1 -> {
@@ -242,24 +250,54 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                                                 if (admin.equalsIgnoreCase("1")) {
                                                     adminVal = true;
                                                 }
+
                                                 user.setAdmin(adminVal);
 
                                                 Tenant tenant = new Tenant(userName, userMail, userContactNum, studentNativeLanguage, studentBranch);
+
+                                                Toast.makeText(getContext(), "Successfully updated", Toast.LENGTH_LONG).show();
+                                                progressBar.setVisibility(View.GONE);
+
 
                                                 LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getContext());
                                                 localSqlDatabase.updateUser(user);
                                                 localSqlDatabase.updateTenant(tenant);
 
                                                 hasChanged = false;
+
+                                            } else {
+                                                progressBar.setVisibility(View.GONE);
+                                                AppError appError = new AppError(
+                                                        ErrorCode.EPF003,
+                                                        User.getInstance().getUserMailID(),
+                                                        User.getInstance().getUserType(),
+                                                        new Timestamp(new Date()));
+                                                reportSection.document().set(appError);
+                                                Toast.makeText(getContext(), "Error-EPF003", Toast.LENGTH_LONG).show();
+
                                             }
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            //todo report downloading of user data
-                                            Toast.makeText(getContext(), "Failed to download details. Issue reported", Toast.LENGTH_LONG).show();
                                         });
+                            } else {
+                                progressBar.setVisibility(View.GONE);
+                                AppError appError = new AppError(
+                                        ErrorCode.EPF002,
+                                        User.getInstance().getUserMailID(),
+                                        User.getInstance().getUserType(),
+                                        new Timestamp(new Date()));
+                                reportSection.document().set(appError);
+                                Toast.makeText(getContext(), "Error-EPF002", Toast.LENGTH_LONG).show();
                             }
                         }
                     });
+                } else {
+                    progressBar.setVisibility(View.GONE);
+                    AppError appError = new AppError(
+                            ErrorCode.EPF001,
+                            User.getInstance().getUserMailID(),
+                            User.getInstance().getUserType(),
+                            new Timestamp(new Date()));
+                    reportSection.document().set(appError);
+                    Toast.makeText(getContext(), "Error-EPF001", Toast.LENGTH_LONG).show();
                 }
             }
         });

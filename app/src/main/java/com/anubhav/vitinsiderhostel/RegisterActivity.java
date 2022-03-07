@@ -11,19 +11,22 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.anubhav.vitinsiderhostel.models.AppError;
+import com.anubhav.vitinsiderhostel.models.ErrorCode;
 import com.anubhav.vitinsiderhostel.models.User;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -31,6 +34,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -42,39 +46,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     // auto complete text view drop down entries
     private final String[] blockOptions = {" ", "A", "B", "C"};
     private final String[] userTypeOptions = {" ", "STUDENT", "FACULTY"};
-
-    // auto complete text view declaration
-    private AutoCompleteTextView blockTextView;
-    private AutoCompleteTextView userTypeTextView;
-
-    // input field views
-    private TextInputEditText nameEt, mailEt, passwordEt;
-    private ProgressBar progressBar;
-
-    // input field string values
-    private String inputName;
-    private String inputMail;
-    private String inputPassword;
-    private String inputUserType = " ";
-    private String inputBlock = " ";
-
-    //input flags
-    private boolean validMail = false;
-    private boolean validName = false;
-    private boolean validPassword = false;
-    private boolean validUserType = false;
-    private boolean validBlock = false;
-
     //mail domain pattern
     private final String studentMailPattern = "@vitstudent.ac.in";
     private final String facultyMailPattern = "@vit.ac.in";
-
-
-    //firebase authentication declarations
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser currentUser;
-    private FirebaseAuth.AuthStateListener authStateListener;
-
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference userSection = db.collection("Users");
@@ -82,6 +56,29 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private final CollectionReference roomStructuresSection = db.collection("RoomStructure");
     private final CollectionReference reports = db.collection("Reports");
     private final CollectionReference tenantsBioSection = db.collection("TenantsBio");
+    private final CollectionReference reportSection = db.collection("Reports");
+    // auto complete text view declaration
+    private AutoCompleteTextView blockTextView;
+    private AutoCompleteTextView userTypeTextView;
+    // input field views
+    private TextInputEditText nameEt, mailEt, passwordEt;
+    private ProgressBar progressBar;
+    // input field string values
+    private String inputName;
+    private String inputMail;
+    private String inputPassword;
+    private String inputUserType = " ";
+    private String inputBlock = " ";
+    //input flags
+    private boolean validMail = false;
+    private boolean validName = false;
+    private boolean validPassword = false;
+    private boolean validUserType = false;
+    private boolean validBlock = false;
+    //firebase authentication declarations
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser currentUser;
+    private FirebaseAuth.AuthStateListener authStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -417,7 +414,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                                                     userMap.put("roomNo", roomNo);
                                                     userMap.put("roomType", type);
-                                                    userMap.put("isAdmin","0");
+                                                    userMap.put("isAdmin", "0");
 
                                                     // getting document id and uploading to fire store
                                                     DocumentReference documentReference = userSection.document("S").collection(inputBlock).document();
@@ -428,101 +425,65 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                             .addOnCompleteListener(task11 -> {
                                                                 if (task11.isSuccessful()) {
 
-                                                                    Map<String,String> tenant = new HashMap<>();
-                                                                    tenant.put("tenantUserName",inputName);
-                                                                    tenant.put("tenantMailID",inputMail.toLowerCase(Locale.ROOT));
-                                                                    tenant.put("tenantContactNumber","N/A");
-                                                                    tenant.put("tenantNativeLanguage","N/A");
-                                                                    tenant.put("tenantBranch","N/A");
+                                                                    Map<String, String> tenant = new HashMap<>();
+                                                                    tenant.put("tenantUserName", inputName);
+                                                                    tenant.put("tenantMailID", inputMail.toLowerCase(Locale.ROOT));
+                                                                    tenant.put("tenantContactNumber", "N/A");
+                                                                    tenant.put("tenantNativeLanguage", "N/A");
+                                                                    tenant.put("tenantBranch", "N/A");
 
-                                                                    tenantsBioSection.document(inputMail.toLowerCase(Locale.ROOT)).set(tenant).addOnFailureListener(new OnFailureListener() {
-                                                                        @Override
-                                                                        public void onFailure(@NonNull Exception e) {
-                                                                            //todo report -> tenant detail not uploaded;
-                                                                        }
-                                                                    });
-
-                                                                    DocumentReference document = userSection.document("S").collection(inputBlock).document(dID);
-                                                                    document
-                                                                            .get()
-                                                                            .addOnSuccessListener(documentSnapshot1 -> {
-                                                                                Map<String, String> userBlock = new HashMap<>();
-                                                                                userBlock.put("block", inputBlock);
-                                                                                userBlock.put("userType",inputUserType);
-                                                                                userBlock.put("doc_id",dID);
-                                                                                db.collection("UserBlockRec").document(inputMail.toLowerCase(Locale.ROOT)).set(userBlock);
-                                                                                if (documentSnapshot1.exists()) {
-
-                                                                                    final String userID = Objects.requireNonNull(documentSnapshot1.get("user_Id")).toString();
-                                                                                    final String userDocId = Objects.requireNonNull(documentSnapshot1.get("doc_Id")).toString();
-
-                                                                                    final String userName = Objects.requireNonNull(documentSnapshot1.get("userName")).toString();
-                                                                                    final String userMail = Objects.requireNonNull(documentSnapshot1.get("userMailID")).toString();
-
-                                                                                    final String userContactNum = Objects.requireNonNull(documentSnapshot1.get("userContactNumber")).toString();
-
-                                                                                    final String userType = Objects.requireNonNull(documentSnapshot1.get("userType")).toString();
-                                                                                    final String studentBlock = Objects.requireNonNull(documentSnapshot1.get("studentBlock")).toString();
-
-                                                                                    final String studentBranch = Objects.requireNonNull(documentSnapshot1.get("studentBranch")).toString();
-                                                                                    final String studentNativeLanguage = Objects.requireNonNull(documentSnapshot1.get("studentNativeLanguage")).toString();
-                                                                                    final String studentRoomNo = Objects.requireNonNull(documentSnapshot1.get("roomNo")).toString();
-                                                                                    final String studentRoomType = Objects.requireNonNull(documentSnapshot1.get("roomType")).toString();
-                                                                                    final String admin = Objects.requireNonNull(documentSnapshot1.get("isAdmin")).toString();
-
-                                                                                    User user = User.getInstance();
-                                                                                    user.setUser_Id(userID);
-                                                                                    user.setDoc_Id(userDocId);
-                                                                                    user.setUserName(userName);
-                                                                                    user.setUserMailID(userMail);
-                                                                                    user.setUserContactNumber(userContactNum);
-                                                                                    user.setUserType(userType);
-                                                                                    user.setStudentBlock(studentBlock);
-                                                                                    user.setStudentBranch(studentBranch);
-                                                                                    user.setStudentNativeLanguage(studentNativeLanguage);
-                                                                                    user.setRoomNo(studentRoomNo);
-                                                                                    user.setRoomType(studentRoomType);
-                                                                                    boolean adminVal = false;
-                                                                                    if (admin.equalsIgnoreCase("1")){
-                                                                                        adminVal = true;
+                                                                    tenantsBioSection.document(inputMail.toLowerCase(Locale.ROOT))
+                                                                            .set(tenant)
+                                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                @Override
+                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                    if (!task.isSuccessful()) {
+                                                                                        AppError appError = new AppError(
+                                                                                                ErrorCode.RA005,
+                                                                                                inputMail.toLowerCase(Locale.ROOT),
+                                                                                                "S",
+                                                                                                new Timestamp(new Date()));
+                                                                                        reportSection.document().set(appError);
+                                                                                        callSnackBar("ERROR-RA005 ,Complaint has been raised");
                                                                                     }
-                                                                                    user.setAdmin(adminVal);
-
-                                                                                } else {
-                                                                                    progressBar.setVisibility(View.INVISIBLE);
-                                                                                    callSnackBar("User Record Not Found");
                                                                                 }
-                                                                            })
-                                                                            .addOnFailureListener(e -> {
-                                                                                progressBar.setVisibility(View.INVISIBLE);
-                                                                                callSnackBar(e.getMessage());
                                                                             });
+
+                                                                    Map<String, String> userBlock = new HashMap<>();
+                                                                    userBlock.put("block", inputBlock);
+                                                                    userBlock.put("userType", inputUserType);
+                                                                    userBlock.put("doc_id", dID);
+
+                                                                    // setting user block record
+                                                                    db.collection("UserBlockRec").document(inputMail.toLowerCase(Locale.ROOT)).set(userBlock);
 
                                                                 } else {
                                                                     progressBar.setVisibility(View.INVISIBLE);
-                                                                    callSnackBar(Objects.requireNonNull(task11.getException()).getMessage());
+                                                                    AppError appError = new AppError(
+                                                                            ErrorCode.RA004,
+                                                                            inputMail.toLowerCase(Locale.ROOT),
+                                                                            "S",
+                                                                            new Timestamp(new Date()));
+                                                                    reportSection.document().set(appError);
+                                                                    callSnackBar("ERROR-RA004 ,Complaint has been raised");
                                                                 }
-                                                            })
-                                                            .addOnFailureListener(e -> {
-                                                                progressBar.setVisibility(View.INVISIBLE);
-                                                                callSnackBar(e.getMessage());
                                                             });
-
                                                 } else {
                                                     progressBar.setVisibility(View.INVISIBLE);
-                                                    callSnackBar("00RD");
+                                                    AppError appError = new AppError(
+                                                            ErrorCode.RA003,
+                                                            inputMail.toLowerCase(Locale.ROOT),
+                                                            "S",
+                                                            new Timestamp(new Date()));
+                                                    reportSection.document().set(appError);
+                                                    callSnackBar("ERROR-RA003 ,Complaint has been raised");
                                                 }
-                                            })
-                                            .addOnFailureListener(e -> {
-                                                progressBar.setVisibility(View.INVISIBLE);
-                                                callSnackBar(e.getMessage());
                                             });
 
                                     //second onComplete listener ( to send verification link)
                                     Objects.requireNonNull(firebaseAuth.getCurrentUser())
                                             .sendEmailVerification().addOnCompleteListener(task112 -> {
                                         if (task112.isSuccessful()) {
-
                                             progressBar.setVisibility(View.INVISIBLE);
                                             //create intent for going to login activity
                                             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(RegisterActivity.this);
@@ -535,13 +496,25 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                             builder.show();
                                         } else {
                                             progressBar.setVisibility(View.INVISIBLE);
+                                            AppError appError = new AppError(
+                                                    ErrorCode.RA006,
+                                                    inputMail.toLowerCase(Locale.ROOT),
+                                                    "S",
+                                                    new Timestamp(new Date()));
+                                            reportSection.document().set(appError);
                                             callSnackBar(Objects.requireNonNull(task112.getException()).getMessage());
                                         }
                                     });
 
                                 } else {
                                     progressBar.setVisibility(View.INVISIBLE);
-                                    callSnackBar(Objects.requireNonNull(task1.getException()).getMessage());
+                                    AppError appError = new AppError(
+                                            ErrorCode.RA002,
+                                            inputMail.toLowerCase(Locale.ROOT),
+                                            "S",
+                                            new Timestamp(new Date()));
+                                    reportSection.document().set(appError);
+                                    callSnackBar("ERROR-RA002 ,Complaint has been raised");
                                 }
                             });
 
@@ -550,7 +523,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(RegisterActivity.this);
                     builder.setTitle("User Not Found");
                     builder.setMessage("User record corresponding to your input is not present.");
-                    builder.setPositiveButton("But I'm Hosteler", (dialogInterface, i) -> Toast.makeText(RegisterActivity.this, "Complaint has been raised regarding this issue", Toast.LENGTH_SHORT).show());
+                    builder.setPositiveButton("But I'm Hosteler", (dialogInterface, i) -> {
+                        AppError appError = new AppError(
+                                ErrorCode.RA001,
+                                inputMail.toLowerCase(Locale.ROOT),
+                                "S",
+                                new Timestamp(new Date()));
+                        reportSection.document().set(appError);
+                        callSnackBar("ERROR-RA001 ,Complaint has been raised");
+                    });
                     builder.setNegativeButton("Back", (dialogInterface, i) -> {
 
                     });
@@ -575,7 +556,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 .make(RegisterActivity.this, findViewById(R.id.registerPge), message, Snackbar.LENGTH_LONG);
         snackbar.setTextColor(Color.WHITE);
         View snackBarView = snackbar.getView();
-        snackBarView.setBackgroundColor(ContextCompat.getColor(RegisterActivity.this,R.color.navy_blue));
+        snackBarView.setBackgroundColor(ContextCompat.getColor(RegisterActivity.this, R.color.navy_blue));
         snackbar.show();
     }
 

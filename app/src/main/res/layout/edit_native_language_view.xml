@@ -61,7 +61,7 @@
             <ImageButton
 
                 android:id="@+id/editNativeLangViewCancelBtn"
-                style="@style/ForArrowTheme"
+                style="@style/cancelTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="32dp"

@@ -402,7 +402,10 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
             final Timestamp timestamp = new Timestamp(new Date());
             final String uploader = User.getInstance().getUserMailID();
 
-            DocumentReference documentReferenceToAllTicket = allTickets.document(block).collection("AllTickets").document();
+            DocumentReference documentReferenceToAllTicket = allTickets
+                    .document("Room")
+                    .collection(block)
+                    .document();
 
             final String docIdForTicket = documentReferenceToAllTicket.getId();
 
@@ -427,9 +430,12 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
                                             Toast.makeText(getContext(), "Ticket successfully linked to room", Toast.LENGTH_LONG).show();
                                             // todo push ticket into ticket history table
                                             DocumentReference documentReferenceToTicketHistory = ticketHistory
-                                                    .document(block)
-                                                    .collection(roomNo)
+                                                    .document("Room")
+                                                    .collection(block)
+                                                    .document(roomNo)
+                                                    .collection("TicketsRaised")
                                                     .document();
+
                                             final String docIdToTicketHistory = documentReferenceToTicketHistory.getId();
 
                                             Map<String, String> ticketHistoryMap = new HashMap<>();
@@ -442,16 +448,19 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
                                                         if (task11.isSuccessful()) {
                                                             Toast.makeText(getContext(), "Ticket saved successfully in history", Toast.LENGTH_LONG).show();
                                                         } else {
+                                                            //todo report ticket couldn't be saved in history
                                                             Toast.makeText(getContext(), "Ticket couldn't be saved to history", Toast.LENGTH_LONG).show();
                                                         }
                                                         dialog.dismiss();
                                                     });
                                         } else {
+                                            //todo report ticket couldnt be linked to room
                                             Toast.makeText(getContext(), "Ticket couldn't be linked to room", Toast.LENGTH_LONG).show();
                                             dialog.dismiss();
                                         }
                                     });
                         } else {
+                            //todo report ticket booking failed
                             Toast.makeText(getContext(), "Ticket Booking Failed", Toast.LENGTH_LONG).show();
                             dialog.dismiss();
                         }

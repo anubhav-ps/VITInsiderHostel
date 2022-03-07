@@ -31,6 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
+        android:textSize="16sp"
         android:background="?attr/selectableItemBackground"
         android:text="Change Avatar"
         android:textColor="#E65A5A5A" />
@@ -210,6 +211,13 @@
                 android:elevation="8dp"
                 android:padding="2dp"
                 android:src="@drawable/ic_baseline_cancel_24" />
+
+            <ProgressBar
+                android:id="@+id/editPgeProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:visibility="gone" />
 
 
             <com.google.android.material.button.MaterialButton
