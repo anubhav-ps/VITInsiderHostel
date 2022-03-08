@@ -11,8 +11,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="18dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="18dp">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -87,6 +87,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/roomPgeRow1LinearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
@@ -102,8 +103,8 @@
                         android:padding="4dp">
 
                         <ImageButton
-                            style="@style/AvatarTheme"
                             android:id="@+id/roomPgeP1Avatar"
+                            style="@style/AvatarTheme"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackgroundBorderless"
@@ -114,8 +115,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:textColor="#E6626161"
-                            android:text="@string/room_pge_p1_name" />
+                            android:text="@string/room_pge_p1_name"
+                            android:textColor="#E6626161" />
 
                     </LinearLayout>
 
@@ -128,8 +129,8 @@
                         android:padding="4dp">
 
                         <ImageButton
-                            style="@style/AvatarTheme"
                             android:id="@+id/roomPgeP2Avatar"
+                            style="@style/AvatarTheme"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackgroundBorderless"
@@ -140,8 +141,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:textColor="#E6626161"
-                            android:text="@string/room_pge_p2_name" />
+                            android:text="@string/room_pge_p2_name"
+                            android:textColor="#E6626161" />
 
                     </LinearLayout>
 
@@ -164,8 +165,8 @@
                         android:padding="4dp">
 
                         <ImageButton
-                            style="@style/AvatarTheme"
                             android:id="@+id/roomPgeP3Avatar"
+                            style="@style/AvatarTheme"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackgroundBorderless"
@@ -176,8 +177,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:textColor="#E6626161"
-                            android:text="@string/room_pge_p3_name" />
+                            android:text="@string/room_pge_p3_name"
+                            android:textColor="#E6626161" />
 
                     </LinearLayout>
 
@@ -192,8 +193,8 @@
                         android:visibility="gone">
 
                         <ImageButton
-                            style="@style/AvatarTheme"
                             android:id="@+id/roomPgeP4Avatar"
+                            style="@style/AvatarTheme"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackgroundBorderless"
@@ -204,14 +205,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:textColor="#E6626161"
-                            android:text="@string/room_pge_p4_name" />
+                            android:text="@string/room_pge_p4_name"
+                            android:textColor="#E6626161" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
             </LinearLayout>
+
         </com.google.android.material.card.MaterialCardView>
 
 
@@ -227,13 +229,12 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginTop="4dp"
             android:id="@+id/roomPgeRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:orientation="horizontal">
-
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            android:padding="2dp">
 
 
         </androidx.recyclerview.widget.RecyclerView>

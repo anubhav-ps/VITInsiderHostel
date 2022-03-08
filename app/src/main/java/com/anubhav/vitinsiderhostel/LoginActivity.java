@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -15,12 +14,16 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
+import com.anubhav.vitinsiderhostel.models.NotifyStatus;
 import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -31,18 +34,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, LocalSqlDatabase.iNotify {
 
     private final String studentMailPattern = "@vitstudent.ac.in";
     private final String facultyMailPattern = "@vit.ac.in";
@@ -51,9 +49,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private final CollectionReference userSection = db.collection("Users");
     private final CollectionReference tenantsSection = db.collection("Tenants");
     private final CollectionReference tenantsBioSection = db.collection("TenantsBio");
-
-    private final int N = 2;
-    private ExecutorService executorService;
 
     //firebase declarations
     FirebaseAuth firebaseAuth;
@@ -67,15 +62,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private boolean validPassword = false;
     private TextInputEditText mailEt, passwordEt;
     private ProgressBar progressBar;
+    private String globalBlock;
+    private String globalRoomNo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        executorService = Executors.newFixedThreadPool(N);
-
-        sqlDatabase = new LocalSqlDatabase(LoginActivity.this);
 
         mailEt = findViewById(R.id.loginPgeMailTxt);
         passwordEt = findViewById(R.id.loginPgePasswordTxt);
@@ -275,6 +268,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                     final String tempBlock = Objects.requireNonNull(documentSnapshot.get("block")).toString();
                                                     final String tempUserType = Objects.requireNonNull(documentSnapshot.get("userType")).toString();
                                                     final String tempDocID = Objects.requireNonNull(documentSnapshot.get("doc_id")).toString();
+
                                                     DocumentReference document = userSection.document(tempUserType).collection(tempBlock).document(tempDocID);
                                                     document
                                                             .get()
@@ -316,6 +310,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                                     }
                                                                     user.setAdmin(adminVal);
 
+                                                                    globalBlock = studentBlock;
+                                                                    globalRoomNo = studentRoomNo;
+
+                                                                    final String beds = studentRoomType.split("\\|")[0].trim();
+                                                                    int tNum = Integer.parseInt(beds);
+
+                                                                    //Toast.makeText(LoginActivity.this,tNum , Toast.LENGTH_SHORT).show();
+
+                                                                    sqlDatabase = new LocalSqlDatabase(LoginActivity.this, tNum, LoginActivity.this);
+
                                                                     //todo insert user to database
                                                                     boolean userResult = sqlDatabase.addUser(user);
                                                                     if (!userResult) {
@@ -333,33 +337,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                                                     final String[] tenantMailList = tenantsRaw.split("%");
                                                                                     for (String mId : tenantMailList) {
                                                                                         Tenant tenant = new Tenant(mId);
-                                                                                        assert tenant != null;
-                                                                                        sqlDatabase.addTenants(tenant);
-                                                                                        tenantsBioSection
-                                                                                                .document(mId)
-                                                                                                .get()
-                                                                                                .addOnSuccessListener(documentSnapshot21 -> {
-                                                                                                    if (documentSnapshot21.exists()) {
-                                                                                                        Tenant updated = documentSnapshot21.toObject(Tenant.class);
-                                                                                                        assert updated != null;
-                                                                                                        sqlDatabase.updateTenant(updated);
-                                                                                                    }
-                                                                                                });
+                                                                                        sqlDatabase.addTenant(tenant);
                                                                                     }
+
                                                                                 } else {
                                                                                     //todo report error -> no tenant list found
                                                                                 }
                                                                             });
-
-                                                                    new Handler().postDelayed(() -> {
-                                                                        progressBar.setVisibility(View.INVISIBLE);
-                                                                        Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
-                                                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                                        startActivity(intent);
-                                                                        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-                                                                        finish();
-                                                                    }, 2000);
 
                                                                 } else {
                                                                     progressBar.setVisibility(View.INVISIBLE);
@@ -446,6 +430,40 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        executorService.shutdown();
+        if (LocalSqlDatabase.executors!=null) {
+            LocalSqlDatabase.stopExecutors();
+        }
     }
+
+    @Override
+    public void onNotifyCompleteListDownload(NotifyStatus notifyStatus) {
+        tenantsBioSection
+                .document(globalBlock)
+                .collection(globalRoomNo)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            LocalSqlDatabase.tenantCollectionSize = task.getResult().size();
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                Tenant tenant = documentSnapshot.toObject(Tenant.class);
+                                sqlDatabase.updateTenant(tenant);
+                            }
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onNotifyCompleteDataDownload(NotifyStatus notifyStatus) {
+        progressBar.setVisibility(View.INVISIBLE);
+        Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+        finish();
+    }
+
 }

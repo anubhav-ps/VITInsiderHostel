@@ -24,6 +24,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.anubhav.vitinsiderhostel.adapters.RoomServiceRecyclerAdapter;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
+import com.anubhav.vitinsiderhostel.models.AppError;
+import com.anubhav.vitinsiderhostel.models.ErrorCode;
 import com.anubhav.vitinsiderhostel.models.RoomService;
 import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.Ticket;
@@ -53,6 +55,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
     private final CollectionReference roomTickets = db.collection("RoomTickets");
     private final CollectionReference allTickets = db.collection("AllTickets");
     private final CollectionReference ticketHistory = db.collection("TicketHistory");
+    private final CollectionReference reportSection = db.collection("Reports");
 
 
     private final ArrayList<RoomService> roomServices1 = new ArrayList<>() {
@@ -72,9 +75,34 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
         }
     };
 
-    private Dialog dialog;
+    private LocalSqlDatabase localSqlDatabase;
+
+    private View rootView;
+
+    private MaterialTextView p1UserNameCardTxt;
+    private MaterialTextView p2UserNameCardTxt;
+    private MaterialTextView p3UserNameCardTxt;
+    private MaterialTextView p4UserNameCardTxt;
+
+    private ImageButton avatar1Btn;
+    private ImageButton avatar2Btn;
+    private ImageButton avatar3Btn;
+    private ImageButton avatar4Btn;
+    private ImageView typeIcon;
+
+    private MaterialTextView bedsTxt;
+    private MaterialTextView typeTxt;
+    private MaterialTextView roomDetailTxt;
+
+    private LinearLayout secondRow;
+    private LinearLayout p4;
+    private String beds;
+
     private List<Tenant> tenantList;
+
+    private Dialog dialog;
     private String roomNo, roomType, block, userMail;
+
     private boolean ac = false;
 
 
@@ -86,44 +114,25 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_room, container, false);
-        LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getContext());
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_room, container, false);
+        } else {
+            ((ViewGroup) rootView.getParent()).removeView(rootView);
+        }
+
+        localSqlDatabase = new LocalSqlDatabase(getContext());
         tenantList = localSqlDatabase.getTenants();
 
+        // initialise dialog
         dialog = new Dialog(getContext());
 
-        MaterialTextView bedsTxt = view.findViewById(R.id.roomPgeBeds);
-        MaterialTextView typeTxt = view.findViewById(R.id.roomPgeType);
-        MaterialTextView roomDetailTxt = view.findViewById(R.id.roomPgeRoomNo);
-
-        MaterialTextView p1UserNameCard = view.findViewById(R.id.roomPgeP1Name);
-        MaterialTextView p2UserNameCard = view.findViewById(R.id.roomPgeP2Name);
-        MaterialTextView p3UserNameCard = view.findViewById(R.id.roomPgeP3Name);
-        MaterialTextView p4UserNameCard = view.findViewById(R.id.roomPgeP4Name);
-
-        ImageButton avatar1 = view.findViewById(R.id.roomPgeP1Avatar);
-        ImageButton avatar2 = view.findViewById(R.id.roomPgeP2Avatar);
-        ImageButton avatar3 = view.findViewById(R.id.roomPgeP3Avatar);
-        ImageButton avatar4 = view.findViewById(R.id.roomPgeP4Avatar);
-
-        avatar1.setOnClickListener(this);
-        avatar2.setOnClickListener(this);
-        avatar3.setOnClickListener(this);
-        avatar4.setOnClickListener(this);
-
-        LinearLayout secondRow = view.findViewById(R.id.roomPgeRow2LinearLayout);
-        LinearLayout p4 = view.findViewById(R.id.roomPgeP4LinearLayout);
-
-        ImageView typeIcon = view.findViewById(R.id.roomPgeTypeIcon);
-
-
+        // retrieve user data from user instance
         if (User.getInstance() != null) {
             roomNo = User.getInstance().getRoomNo();
             roomType = User.getInstance().getRoomType();
@@ -131,19 +140,41 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
             userMail = User.getInstance().getUserMailID();
         }
 
-        final String beds = roomType.split("\\|")[0];
+
+        bedsTxt = rootView.findViewById(R.id.roomPgeBeds);
+        typeTxt = rootView.findViewById(R.id.roomPgeType);
+        roomDetailTxt = rootView.findViewById(R.id.roomPgeRoomNo);
+        typeIcon = rootView.findViewById(R.id.roomPgeTypeIcon);
+
+        p1UserNameCardTxt = rootView.findViewById(R.id.roomPgeP1Name);
+        p2UserNameCardTxt = rootView.findViewById(R.id.roomPgeP2Name);
+        p3UserNameCardTxt = rootView.findViewById(R.id.roomPgeP3Name);
+        p4UserNameCardTxt = rootView.findViewById(R.id.roomPgeP4Name);
+
+        avatar1Btn = rootView.findViewById(R.id.roomPgeP1Avatar);
+        avatar2Btn = rootView.findViewById(R.id.roomPgeP2Avatar);
+        avatar3Btn = rootView.findViewById(R.id.roomPgeP3Avatar);
+        avatar4Btn = rootView.findViewById(R.id.roomPgeP4Avatar);
+
+        secondRow = rootView.findViewById(R.id.roomPgeRow2LinearLayout);
+        p4 = rootView.findViewById(R.id.roomPgeP4LinearLayout);
+
+        beds = roomType.split("\\|")[0];
+
         final boolean isAc = roomType.split("\\|")[1].equalsIgnoreCase("AC");
         ac = isAc;
-        final String roomDetail = "Room " + roomNo + "-" + block;
-        String typeStr = "NON-A/C";
         typeIcon.setImageResource(R.drawable.non_ac_icon);
 
+        final String roomDetail = "Room " + roomNo + "-" + block;
+
+        String typeStr = "NON-A/C";
+
         if (isAc) {
-            initialiseRoomServices(view, true);
+            initialiseRoomServices(rootView, true);
             typeIcon.setImageResource(R.drawable.ac_icon);
             typeStr = "A/C";
         } else {
-            initialiseRoomServices(view, false);
+            initialiseRoomServices(rootView, false);
         }
 
         roomDetailTxt.setText(roomDetail);
@@ -157,12 +188,12 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
 
             Tenant t1 = tenantList.get(0);
             if (t1.getTenantUserName() != null) {
-                p1UserNameCard.setText(t1.getTenantUserName());
+                p1UserNameCardTxt.setText(t1.getTenantUserName());
             }
 
             Tenant t2 = tenantList.get(1);
             if (t2.getTenantUserName() != null) {
-                p2UserNameCard.setText(t2.getTenantUserName());
+                p2UserNameCardTxt.setText(t2.getTenantUserName());
             }
 
         } else if (beds.equalsIgnoreCase("3")) {
@@ -171,16 +202,16 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
 
             Tenant t1 = tenantList.get(0);
             if (t1.getTenantUserName() != null) {
-                p1UserNameCard.setText(t1.getTenantUserName());
+                p1UserNameCardTxt.setText(t1.getTenantUserName());
             }
             Tenant t2 = tenantList.get(1);
             if (t2.getTenantUserName() != null) {
-                p2UserNameCard.setText(t2.getTenantUserName());
+                p2UserNameCardTxt.setText(t2.getTenantUserName());
             }
 
             Tenant t3 = tenantList.get(2);
             if (t3.getTenantUserName() != null) {
-                p3UserNameCard.setText(t3.getTenantUserName());
+                p3UserNameCardTxt.setText(t3.getTenantUserName());
             }
 
         } else if (beds.equalsIgnoreCase("4")) {
@@ -189,26 +220,32 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
 
             Tenant t1 = tenantList.get(0);
             if (t1.getTenantUserName() != null) {
-                p1UserNameCard.setText(t1.getTenantUserName());
+                p1UserNameCardTxt.setText(t1.getTenantUserName());
             }
             Tenant t2 = tenantList.get(1);
             if (t2.getTenantUserName() != null) {
-                p2UserNameCard.setText(t2.getTenantUserName());
+                p2UserNameCardTxt.setText(t2.getTenantUserName());
             }
 
             Tenant t3 = tenantList.get(2);
             if (t3.getTenantUserName() != null) {
-                p3UserNameCard.setText(t3.getTenantUserName());
+                p3UserNameCardTxt.setText(t3.getTenantUserName());
             }
 
             Tenant t4 = tenantList.get(3);
             if (t4.getTenantUserName() != null) {
-                p4UserNameCard.setText(t4.getTenantUserName());
+                p4UserNameCardTxt.setText(t4.getTenantUserName());
             }
 
         }
 
-        return view;
+        avatar1Btn.setOnClickListener(this);
+        avatar2Btn.setOnClickListener(this);
+        avatar3Btn.setOnClickListener(this);
+        avatar4Btn.setOnClickListener(this);
+
+
+        return rootView;
     }
 
 
@@ -236,28 +273,28 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
         if (id == R.id.roomPgeP1Avatar) {
             if (tenantList.get(0).getTenantUserName() != null) {
                 callTenantDialog(0);
-            } else {
+            } else if (!tenantList.get(0).getTenantMailID().equalsIgnoreCase(userMail)) {
                 //todo invite user
                 inviteUser(0);
             }
         } else if (id == R.id.roomPgeP2Avatar) {
             if (tenantList.get(1).getTenantUserName() != null) {
                 callTenantDialog(1);
-            } else {
+            } else if (!tenantList.get(1).getTenantMailID().equalsIgnoreCase(userMail)) {
                 //todo invite user
                 inviteUser(1);
             }
         } else if (id == R.id.roomPgeP3Avatar) {
             if (tenantList.get(2).getTenantUserName() != null) {
                 callTenantDialog(2);
-            } else {
+            } else if (!tenantList.get(2).getTenantMailID().equalsIgnoreCase(userMail)) {
                 //todo invite user
                 inviteUser(2);
             }
         } else if (id == R.id.roomPgeP4Avatar) {
             if (tenantList.get(3).getTenantUserName() != null) {
                 callTenantDialog(3);
-            } else {
+            } else if (!tenantList.get(3).getTenantMailID().equalsIgnoreCase(userMail)) {
                 //todo invite user
                 inviteUser(3);
             }
@@ -400,7 +437,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
 
             final String serviceDescription = descriptionEt.getText().toString();
             final Timestamp timestamp = new Timestamp(new Date());
-            final String uploader = User.getInstance().getUserMailID();
+            final String uploader = userMail;
 
             DocumentReference documentReferenceToAllTicket = allTickets
                     .document("Room")
@@ -416,7 +453,6 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
                     .addOnCompleteListener(task -> {
 
                         if (task.isSuccessful()) {
-                            Toast.makeText(getContext(), "Ticket successfully raised", Toast.LENGTH_LONG).show();
                             //todo push ticket into the room-ticket table
                             Map<String, String> map = new HashMap<>();
                             map.put("doc_ID", docIdForTicket);
@@ -427,7 +463,6 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
                                     .addOnCompleteListener(task1 -> {
 
                                         if (task1.isSuccessful()) {
-                                            Toast.makeText(getContext(), "Ticket successfully linked to room", Toast.LENGTH_LONG).show();
                                             // todo push ticket into ticket history table
                                             DocumentReference documentReferenceToTicketHistory = ticketHistory
                                                     .document("Room")
@@ -446,22 +481,35 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
                                                     .set(ticketHistoryMap)
                                                     .addOnCompleteListener(task11 -> {
                                                         if (task11.isSuccessful()) {
-                                                            Toast.makeText(getContext(), "Ticket saved successfully in history", Toast.LENGTH_LONG).show();
+                                                            Toast.makeText(getContext(), "Ticket has been successfully raised", Toast.LENGTH_LONG).show();
                                                         } else {
-                                                            //todo report ticket couldn't be saved in history
-                                                            Toast.makeText(getContext(), "Ticket couldn't be saved to history", Toast.LENGTH_LONG).show();
+                                                            AppError appError = new AppError(
+                                                                    ErrorCode.RF003,
+                                                                    userMail,
+                                                                    "S",
+                                                                    new Timestamp(new Date()));
+                                                            reportSection.document().set(appError);
                                                         }
                                                         dialog.dismiss();
                                                     });
                                         } else {
-                                            //todo report ticket couldnt be linked to room
-                                            Toast.makeText(getContext(), "Ticket couldn't be linked to room", Toast.LENGTH_LONG).show();
+                                            AppError appError = new AppError(
+                                                    ErrorCode.RF002,
+                                                    userMail,
+                                                    "S",
+                                                    new Timestamp(new Date()));
+                                            reportSection.document().set(appError);
                                             dialog.dismiss();
                                         }
                                     });
                         } else {
-                            //todo report ticket booking failed
                             Toast.makeText(getContext(), "Ticket Booking Failed", Toast.LENGTH_LONG).show();
+                            AppError appError = new AppError(
+                                    ErrorCode.RF001,
+                                    userMail,
+                                    "S",
+                                    new Timestamp(new Date()));
+                            reportSection.document().set(appError);
                             dialog.dismiss();
                         }
                     });
@@ -477,4 +525,6 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
         char c2 = (char) (r.nextInt(25) + 'a');
         return String.valueOf(hr) + c1 + min + c2;
     }
+
+
 }

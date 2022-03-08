@@ -42,6 +42,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:lines="1"
+            android:maxLength="20"
             android:maxLines="1">
 
         </com.google.android.material.textfield.TextInputEditText>

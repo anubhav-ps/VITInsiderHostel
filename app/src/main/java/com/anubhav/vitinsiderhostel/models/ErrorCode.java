@@ -13,7 +13,10 @@ public enum ErrorCode {
     DF001,
     DF002,
     DF003,
-    DF004
+    DF004,
+    RF001,
+    RF002,
+    RF003
 }
 
 
@@ -47,8 +50,10 @@ public enum ErrorCode {
         -> couldn't delete user account id
         Error-DF004
         -> couldn't delete user data from tenant table
-
-
-
-
+        ERROR - RF001
+        -> Error in booking ticket
+        ERROR - RF002
+        -> Ticket raised couldn't be linked to the specific room
+        ERROR - RF003
+        -> Ticket couldn't be saved to history
         */

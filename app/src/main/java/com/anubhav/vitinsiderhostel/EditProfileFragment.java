@@ -2,6 +2,7 @@ package com.anubhav.vitinsiderhostel;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -39,6 +41,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -192,7 +195,9 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                 .document(User.getInstance().getDoc_Id());
 
         DocumentReference documentReferenceToTenantBio = tenantsBioSection
-                .document(User.getInstance().getUserMailID());
+                .document(User.getInstance().getStudentBlock())
+                .collection(User.getInstance().getRoomNo())
+                .document(User.getInstance().getUserMailID().toLowerCase(Locale.ROOT));
 
         documentReferenceToUserDetails
                 .update(
@@ -213,70 +218,18 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                documentReferenceToUserDetails
-                                        .get()
-                                        .addOnSuccessListener(documentSnapshot1 -> {
-                                            if (documentSnapshot1.exists()) {
-                                                final String userID = Objects.requireNonNull(documentSnapshot1.get("user_Id")).toString();
-                                                final String userDocId = Objects.requireNonNull(documentSnapshot1.get("doc_Id")).toString();
+                                Toast.makeText(getContext(), "Successfully updated, Login Again....", Toast.LENGTH_LONG).show();
+                                progressBar.setVisibility(View.GONE);
 
-                                                final String userName = Objects.requireNonNull(documentSnapshot1.get("userName")).toString();
-                                                final String userMail = Objects.requireNonNull(documentSnapshot1.get("userMailID")).toString();
+                                FirebaseAuth.getInstance().signOut();
+                                LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getActivity());
+                                localSqlDatabase.deleteCurrentUser();
+                                localSqlDatabase.deleteAllTenants();
+                                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                requireActivity().startActivity(intent);
+                                requireActivity().overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+                                requireActivity().finish();
 
-                                                final String userContactNum = Objects.requireNonNull(documentSnapshot1.get("userContactNumber")).toString();
-
-                                                final String userType = Objects.requireNonNull(documentSnapshot1.get("userType")).toString();
-                                                final String studentBlock = Objects.requireNonNull(documentSnapshot1.get("studentBlock")).toString();
-
-                                                final String studentBranch = Objects.requireNonNull(documentSnapshot1.get("studentBranch")).toString();
-                                                final String studentNativeLanguage = Objects.requireNonNull(documentSnapshot1.get("studentNativeLanguage")).toString();
-                                                final String studentRoomNo = Objects.requireNonNull(documentSnapshot1.get("roomNo")).toString();
-                                                final String studentRoomType = Objects.requireNonNull(documentSnapshot1.get("roomType")).toString();
-                                                final String admin = Objects.requireNonNull(documentSnapshot1.get("isAdmin")).toString();
-
-                                                User user = User.getInstance();
-                                                user.setUser_Id(userID);
-                                                user.setDoc_Id(userDocId);
-                                                user.setUserName(userName);
-                                                user.setUserMailID(userMail);
-                                                user.setUserContactNumber(userContactNum);
-                                                user.setUserType(userType);
-                                                user.setStudentBlock(studentBlock);
-                                                user.setStudentBranch(studentBranch);
-                                                user.setStudentNativeLanguage(studentNativeLanguage);
-                                                user.setRoomNo(studentRoomNo);
-                                                user.setRoomType(studentRoomType);
-                                                boolean adminVal = false;
-                                                if (admin.equalsIgnoreCase("1")) {
-                                                    adminVal = true;
-                                                }
-
-                                                user.setAdmin(adminVal);
-
-                                                Tenant tenant = new Tenant(userName, userMail, userContactNum, studentNativeLanguage, studentBranch);
-
-                                                Toast.makeText(getContext(), "Successfully updated", Toast.LENGTH_LONG).show();
-                                                progressBar.setVisibility(View.GONE);
-
-
-                                                LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getContext());
-                                                localSqlDatabase.updateUser(user);
-                                                localSqlDatabase.updateTenant(tenant);
-
-                                                hasChanged = false;
-
-                                            } else {
-                                                progressBar.setVisibility(View.GONE);
-                                                AppError appError = new AppError(
-                                                        ErrorCode.EPF003,
-                                                        User.getInstance().getUserMailID(),
-                                                        User.getInstance().getUserType(),
-                                                        new Timestamp(new Date()));
-                                                reportSection.document().set(appError);
-                                                Toast.makeText(getContext(), "Error-EPF003", Toast.LENGTH_LONG).show();
-
-                                            }
-                                        });
                             } else {
                                 progressBar.setVisibility(View.GONE);
                                 AppError appError = new AppError(
@@ -409,8 +362,8 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 final String username = usernameEt.getText().toString().trim();
-                if (username.length() < 10 || username.length() > 16) {
-                    usernameEt.setError("Username should be minimum 10 characters wide and 16 characters maximum");
+                if (username.length() < 10 || username.length() > 20) {
+                    usernameEt.setError("Username should be minimum 10 characters wide and   20 characters maximum");
                     return;
                 }
                 if (!TextUtils.isEmpty(username)) {

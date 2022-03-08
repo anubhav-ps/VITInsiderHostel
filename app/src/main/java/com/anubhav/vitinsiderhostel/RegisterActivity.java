@@ -432,7 +432,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                                     tenant.put("tenantNativeLanguage", "N/A");
                                                                     tenant.put("tenantBranch", "N/A");
 
-                                                                    tenantsBioSection.document(inputMail.toLowerCase(Locale.ROOT))
+                                                                    tenantsBioSection
+                                                                            .document(inputBlock)
+                                                                            .collection(roomNo)
+                                                                            .document(inputMail.toLowerCase(Locale.ROOT))
                                                                             .set(tenant)
                                                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                 @Override
