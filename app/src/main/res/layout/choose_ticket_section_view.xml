@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="380dp"
+    android:layout_width="220dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     app:cardBackgroundColor="@color/white"
@@ -16,80 +16,41 @@
         android:padding="16dp">
 
         <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="6dp"
-            android:text="Contact Number"
-            android:textColor="@color/medium_theme_green"
-            android:textSize="18sp" />
-
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="6dp"
-            android:text="Only Indian Contact number is accepted. Do not prefix country code."
-            android:textColor="#8C8C8C"
-            android:textSize="12sp" />
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
-            android:hint="Enter new contact number"
-            android:textColorHint="#878787"
-            app:boxStrokeColor="@color/light_theme_green"
-            app:endIconMode="clear_text"
-            app:endIconTint="@color/light_theme_green"
-            app:endIconTintMode="src_atop"
-            app:hintTextColor="@color/light_theme_green">
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:text="Select ticket section"
+            android:textColor="@color/medium_theme_green"
+            android:textSize="20sp" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="phone"
-                android:maxLength="10">
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/chooseTicketRoomTxt"
+            style="@style/SelectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
 
-            </com.google.android.material.textfield.TextInputEditText>
+            android:layout_marginTop="16dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="6dp"
+            android:text="Room Tickets"
+            android:textColor="#E6626161"
+            android:textSize="18sp" />
 
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
-
-            <ImageButton
-                style="@style/cancelTheme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="32dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:elevation="8dp"
-                android:src="@drawable/ic_baseline_close_24" />
-
-            <ImageButton
-                style="@style/ForArrowTheme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:elevation="8dp"
-                android:src="@drawable/ic_baseline_done_24" />
-
-
-        </LinearLayout>
-
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/chooseTicketBlockTxt"
+            style="@style/SelectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginTop="2dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="6dp"
+            android:text="Block Tickets"
+            android:textColor="#E6626161"
+            android:textSize="18sp" />
 
     </LinearLayout>
 

@@ -27,6 +27,7 @@ import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.anubhav.vitinsiderhostel.models.AppError;
 import com.anubhav.vitinsiderhostel.models.ErrorCode;
 import com.anubhav.vitinsiderhostel.models.RoomService;
+import com.anubhav.vitinsiderhostel.models.ServiceType;
 import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.Ticket;
 import com.anubhav.vitinsiderhostel.models.TicketStatus;
@@ -60,18 +61,20 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
 
     private final ArrayList<RoomService> roomServices1 = new ArrayList<>() {
         {
-            add(new RoomService(R.drawable.furniture_card_bg, "Furniture"));
-            add(new RoomService(R.drawable.lighting_card_bg, "Lighting"));
-            add(new RoomService(R.drawable.fan_card_bg, "Ceiling Fan"));
+            add(new RoomService(R.drawable.furniture_card_bg, ServiceType.FURNITURE.toString()));
+            add(new RoomService(R.drawable.lighting_card_bg, ServiceType.LIGHTING.toString()));
+            add(new RoomService(R.drawable.fan_card_bg, ServiceType.CEILING_FAN.toString()));
+            add(new RoomService(R.drawable.other_card_bg, ServiceType.OTHERS.toString()));
         }
     };
 
     private final ArrayList<RoomService> roomServices2 = new ArrayList<>() {
         {
-            add(new RoomService(R.drawable.furniture_card_bg, "Furniture"));
-            add(new RoomService(R.drawable.lighting_card_bg, "Lighting"));
-            add(new RoomService(R.drawable.fan_card_bg, "Ceiling Fan"));
-            add(new RoomService(R.drawable.ac_card_bg, "AC"));
+            add(new RoomService(R.drawable.furniture_card_bg, ServiceType.FURNITURE.toString()));
+            add(new RoomService(R.drawable.lighting_card_bg, ServiceType.LIGHTING.toString()));
+            add(new RoomService(R.drawable.fan_card_bg, ServiceType.CEILING_FAN.toString()));
+            add(new RoomService(R.drawable.ac_card_bg, ServiceType.AC.toString()));
+            add(new RoomService(R.drawable.other_card_bg, ServiceType.OTHERS.toString()));
         }
     };
 

@@ -220,7 +220,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                             if (task.isSuccessful()) {
                                 Toast.makeText(getContext(), "Successfully updated, Login Again....", Toast.LENGTH_LONG).show();
                                 progressBar.setVisibility(View.GONE);
-
+                                hasChanged = false;
                                 FirebaseAuth.getInstance().signOut();
                                 LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getActivity());
                                 localSqlDatabase.deleteCurrentUser();

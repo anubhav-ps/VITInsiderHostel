@@ -17,7 +17,7 @@ import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.google.android.material.textview.MaterialTextView;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
-public class  HomePageActivity extends AppCompatActivity implements AccountFragment.onUserProfileCalledListener {
+public class  HomePageActivity extends AppCompatActivity implements AccountFragment.onUserProfileCalledListener , AccountFragment.iOnTicketSectionChosen{
 
     // main view declarations
     private ChipNavigationBar chipNavigationBar;
@@ -37,6 +37,8 @@ public class  HomePageActivity extends AppCompatActivity implements AccountFragm
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
+            }else if (result.getResultCode() == 86){
+                chipNavigationBar.setItemSelected(R.id.menu_account, true);
             }
         }
     });
@@ -120,4 +122,17 @@ public class  HomePageActivity extends AppCompatActivity implements AccountFragm
     }
 
 
+    @Override
+    public void onRoomTicketClicked() {
+        Intent intent = new Intent(HomePageActivity.this, TicketHistoryActivity.class);
+        intent.putExtra("Section","ROOM");
+        activityResultLauncher.launch(intent);
+    }
+
+    @Override
+    public void onBlockTicketClicked() {
+        Intent intent = new Intent(HomePageActivity.this, TicketHistoryActivity.class);
+        intent.putExtra("Section","BLOCK");
+        activityResultLauncher.launch(intent);
+    }
 }

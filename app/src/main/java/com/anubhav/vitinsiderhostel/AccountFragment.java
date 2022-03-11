@@ -1,8 +1,11 @@
 package com.anubhav.vitinsiderhostel;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +23,11 @@ import com.google.firebase.auth.FirebaseAuth;
 public class AccountFragment extends Fragment implements View.OnClickListener {
 
 
+    iOnTicketSectionChosen onTicketSectionChosen;
     // user instance values
     private String username;
     private String userMailId;
-
+    private Dialog dialog;
     //when user profile activity is called
     private onUserProfileCalledListener callbackToFragmentContainer;
 
@@ -43,6 +47,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_account, container, false);
 
+        dialog = new Dialog(getContext());
 
         // view declarations
         MaterialTextView userNameTxt = view.findViewById(R.id.accountPgeUserName);
@@ -59,8 +64,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
         String versionName = "v ";
         try {
-            versionName = versionName+BuildConfig.VERSION_NAME;
-        }catch (Exception exception){
+            versionName = versionName + BuildConfig.VERSION_NAME;
+        } catch (Exception exception) {
             Toast.makeText(getContext(), "Error fetching version name", Toast.LENGTH_SHORT).show();
         }
         versionCodeTxt.setText(versionName);
@@ -75,6 +80,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
         signOutTxt.setOnClickListener(this);
         userProfileTxt.setOnClickListener(this);
+        ticketHistoryTxt.setOnClickListener(this);
 
         return view;
     }
@@ -87,7 +93,46 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             processSignOut();
         } else if (id == R.id.accountPgeViewUserProfile) {
             openUserProfile();
+        } else if (id == R.id.accountPgeViewTicketHistory) {
+            promptTicketSection();
         }
+    }
+
+    private void promptTicketSection() {
+        dialog.setContentView(R.layout.choose_ticket_section_view);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
+        MaterialTextView roomTicket = dialog.findViewById(R.id.chooseTicketRoomTxt);
+        MaterialTextView blockTicket = dialog.findViewById(R.id.chooseTicketBlockTxt);
+
+        roomTicket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                openRoomTickets();
+            }
+        });
+
+        blockTicket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                openBlockTickets();
+            }
+        });
+
+        dialog.show();
+
+
+    }
+
+    private void openRoomTickets() {
+            onTicketSectionChosen.onRoomTicketClicked();
+    }
+
+    private void openBlockTickets() {
+            onTicketSectionChosen.onBlockTicketClicked();
     }
 
     // callback to
@@ -114,6 +159,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         Activity activity = (Activity) context;
         try {
             this.callbackToFragmentContainer = (onUserProfileCalledListener) activity;
+            this.onTicketSectionChosen = (iOnTicketSectionChosen) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + "is not implementing onUserProfileCalledListener");
         }
@@ -124,11 +170,20 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         super.onDetach();
         if (this.callbackToFragmentContainer != null) {
             this.callbackToFragmentContainer = null;
+            this.onTicketSectionChosen = null;
         }
+    }
+
+    interface iOnTicketSectionChosen {
+        void onRoomTicketClicked();
+
+        void onBlockTicketClicked();
     }
 
     // listener to listen to click on user profile text lbl
     public interface onUserProfileCalledListener {
         void onUserProfileCalled();
     }
+
+
 }

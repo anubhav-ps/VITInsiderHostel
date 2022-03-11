@@ -22,9 +22,12 @@ public class Ticket {
         this.block = block;
         this.serviceName = serviceName;
         this.serviceDescription = serviceDescription;
+
         this.uploaderMailId = uploaderMailId;
         this.status = status.toString();
         this.itemTimeStamp = itemTimeStamp;
+
+
     }
 
     public String getDocId() {

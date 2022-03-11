@@ -46,8 +46,11 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
     private static int totalTenants;
     private static List<Tenant> tenantList;
     private static List<Tenant> updatedTenantList;
+
+
     public static ExecutorService executors;
     private final int N = 2;
+
     iNotify notify;
 
     public LocalSqlDatabase(@Nullable Context context) {

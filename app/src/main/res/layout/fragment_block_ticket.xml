@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_fill_colour"
+    android:orientation="vertical"
+    tools:context=".RoomTicketFragment">
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingStart="20dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:textColor="#7F7F7F"
+        android:text="Block Tickets"
+        android:textSize="18sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ticketHistoryBlockRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:paddingStart="12dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="12dp">
+
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+</LinearLayout>

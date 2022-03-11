@@ -351,6 +351,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             passwordEt.setError("Minimum 10 characters");
             return;
         }
+
         progressBar.setVisibility(View.VISIBLE);
         uploadData();
 
