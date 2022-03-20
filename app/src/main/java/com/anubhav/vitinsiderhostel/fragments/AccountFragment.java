@@ -1,0 +1,185 @@
+package com.anubhav.vitinsiderhostel.fragments;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+import com.anubhav.vitinsiderhostel.BuildConfig;
+import com.anubhav.vitinsiderhostel.R;
+import com.anubhav.vitinsiderhostel.activities.LoginActivity;
+import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
+import com.anubhav.vitinsiderhostel.interfaces.iOnTicketSectionChosen;
+import com.anubhav.vitinsiderhostel.interfaces.iOnUserProfileClicked;
+import com.anubhav.vitinsiderhostel.models.User;
+import com.google.android.material.textview.MaterialTextView;
+import com.google.firebase.auth.FirebaseAuth;
+
+public class AccountFragment extends Fragment implements View.OnClickListener {
+
+
+    private iOnTicketSectionChosen onTicketSectionChosen;
+    // user instance values
+    private String username;
+    private String userMailId;
+    private Dialog dialog;
+    //when user profile activity is called
+    private iOnUserProfileClicked callbackToFragmentContainer;
+
+    public AccountFragment() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_account, container, false);
+
+        dialog = new Dialog(getContext());
+
+        // view declarations
+        MaterialTextView userNameTxt = view.findViewById(R.id.accountPgeUserName);
+        MaterialTextView userMailIdTxt = view.findViewById(R.id.accountPgeUserMail);
+
+        MaterialTextView userProfileTxt = view.findViewById(R.id.accountPgeViewUserProfile);
+        MaterialTextView ticketHistoryTxt = view.findViewById(R.id.accountPgeViewTicketHistory);
+        MaterialTextView aboutAppTxt = view.findViewById(R.id.accountPgeViewAbout);
+        MaterialTextView shareAppTxt = view.findViewById(R.id.accountPgeViewShareApp);
+        MaterialTextView reportIssueTxt = view.findViewById(R.id.accountPgeViewReportIssue);
+
+        MaterialTextView signOutTxt = view.findViewById(R.id.accountPgeSignOut);
+        MaterialTextView versionCodeTxt = view.findViewById(R.id.accountPgeAppVersion);
+
+        String versionName = "v ";
+        try {
+            versionName = versionName + BuildConfig.VERSION_NAME;
+        } catch (Exception exception) {
+            Toast.makeText(getContext(), "Error fetching version name", Toast.LENGTH_SHORT).show();
+        }
+        versionCodeTxt.setText(versionName);
+
+        if (User.getInstance() != null) {
+            username = User.getInstance().getUserName();
+            userMailId = User.getInstance().getUserMailID();
+        }
+
+        userNameTxt.setText(username);
+        userMailIdTxt.setText(userMailId);
+
+        signOutTxt.setOnClickListener(this);
+        userProfileTxt.setOnClickListener(this);
+        ticketHistoryTxt.setOnClickListener(this);
+
+        return view;
+    }
+
+    // on-click listeners onUserProfileCalledListener
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.accountPgeSignOut) {
+            processSignOut();
+        } else if (id == R.id.accountPgeViewUserProfile) {
+            openUserProfile();
+        } else if (id == R.id.accountPgeViewTicketHistory) {
+            promptTicketSection();
+        }
+    }
+
+    private void promptTicketSection() {
+        dialog.setContentView(R.layout.choose_ticket_section_view);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
+        MaterialTextView roomTicket = dialog.findViewById(R.id.chooseTicketRoomTxt);
+        MaterialTextView blockTicket = dialog.findViewById(R.id.chooseTicketBlockTxt);
+
+        roomTicket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                openRoomTickets();
+            }
+        });
+
+        blockTicket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                openBlockTickets();
+            }
+        });
+
+        dialog.show();
+
+
+    }
+
+    private void openRoomTickets() {
+        onTicketSectionChosen.onRoomTicketClicked();
+    }
+
+    private void openBlockTickets() {
+        onTicketSectionChosen.onBlockTicketClicked();
+    }
+
+    // callback to
+    private void openUserProfile() {
+        this.callbackToFragmentContainer.onUserProfileCalled();
+    }
+
+    // method to handle the sign out process
+    private void processSignOut() {
+        FirebaseAuth.getInstance().signOut();
+        LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getActivity());
+        localSqlDatabase.deleteCurrentUser();
+        localSqlDatabase.deleteAllTenants();
+        Toast.makeText(getActivity(), "Logging out, see you soon !", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        requireActivity().startActivity(intent);
+        requireActivity().overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+        requireActivity().finish();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Activity activity = (Activity) context;
+        try {
+            this.callbackToFragmentContainer = (iOnUserProfileClicked) activity;
+            this.onTicketSectionChosen = (iOnTicketSectionChosen) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + "is not implementing onUserProfileCalledListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (this.callbackToFragmentContainer != null) {
+            this.callbackToFragmentContainer = null;
+            this.onTicketSectionChosen = null;
+        }
+    }
+
+
+
+
+}

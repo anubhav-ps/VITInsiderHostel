@@ -10,9 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anubhav.vitinsiderhostel.R;
-import com.anubhav.vitinsiderhostel.models.NotifyStatus;
 import com.anubhav.vitinsiderhostel.models.Ticket;
-import com.anubhav.vitinsiderhostel.models.TicketStatus;
+import com.anubhav.vitinsiderhostel.enums.TicketStatus;
+import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -49,7 +49,12 @@ public class RoomTicketsAdapter extends RecyclerView.Adapter<RoomTicketsAdapter.
         SimpleDateFormat formatToString = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
         String dateString = formatToString.format(model.getItemTimeStamp().toDate());
         final String raisedOn = "Raised on : " + dateString;
-        final String raisedBy = "Raised by : " + model.getUploaderMailId();
+        String raisedBy = "Raised by : ";
+        if (model.getUploaderMailId().equalsIgnoreCase(User.getInstance().getUserMailID())){
+            raisedBy = raisedBy+"You";
+        }else{
+            raisedBy = raisedBy + model.getUploaderMailId();
+        }
 
         holder.serviceNameTxt.setText(serviceName);
         holder.descriptionTxt.setText(description);

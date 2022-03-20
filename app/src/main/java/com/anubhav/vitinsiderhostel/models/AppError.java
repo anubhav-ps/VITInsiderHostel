@@ -1,5 +1,6 @@
 package com.anubhav.vitinsiderhostel.models;
 
+import com.anubhav.vitinsiderhostel.enums.ErrorCode;
 import com.google.firebase.Timestamp;
 
 public class AppError {

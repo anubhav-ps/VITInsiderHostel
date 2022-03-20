@@ -31,8 +31,8 @@
 
 
     /* account fragment */
-    <string name="account_frag_username_txt">Chirag Rathore</string>
-    <string name="account_frag_user_mail_id">chirag.rathore2019@vitstudent.ac.in</string>
+    <string name="account_frag_username_txt">Anubhav.P.S</string>
+    <string name="account_frag_user_mail_id">anubhav.purusottam2019@vitstudent.ac.in</string>
     <string name="account_frag_account_settings_lbl">Account Settings</string>
     <string name="account_frag_user_profile_txt">User Profile</string>
     <string name="account_frag_ticket_history_txt">Ticket History</string>

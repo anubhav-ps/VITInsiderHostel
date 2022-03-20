@@ -18,26 +18,27 @@
         android:theme="@style/Theme.VITInsiderHostel"
         tools:ignore="Instantiatable">
         <activity
-            android:name=".TicketHistoryActivity"
-            android:exported="false" />
+            android:name=".activities.TicketHistoryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".UserProfileActivity"
+            android:name=".activities.UserProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".HomePageActivity"
+            android:name=".activities.HomePageActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activities.RegisterActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SplashScreenActivity"
+            android:name=".activities.SplashScreenActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

@@ -1,5 +1,6 @@
 package com.anubhav.vitinsiderhostel.models;
 
+import com.anubhav.vitinsiderhostel.enums.TicketStatus;
 import com.google.firebase.Timestamp;
 
 public class Ticket {

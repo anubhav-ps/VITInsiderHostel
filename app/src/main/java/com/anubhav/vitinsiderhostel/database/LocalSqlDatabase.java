@@ -8,7 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-import com.anubhav.vitinsiderhostel.models.NotifyStatus;
+import com.anubhav.vitinsiderhostel.enums.NotifyStatus;
+import com.anubhav.vitinsiderhostel.interfaces.iOnNotifyDbProcess;
 import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.User;
 
@@ -43,21 +44,19 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
     private static final String ROOM_TYPE = "ROOM_TYPE";
     private static final String IS_ADMIN = "IS_ADMIN";
     public static int tenantCollectionSize;
+    public static ExecutorService executors;
     private static int totalTenants;
     private static List<Tenant> tenantList;
     private static List<Tenant> updatedTenantList;
-
-
-    public static ExecutorService executors;
     private final int N = 2;
 
-    iNotify notify;
+    iOnNotifyDbProcess notify;
 
     public LocalSqlDatabase(@Nullable Context context) {
         super(context, "INSIDER_HOSTEL_SQL_DB", null, 1);
     }
 
-    public LocalSqlDatabase(@Nullable Context context, int tenants, iNotify notify) {
+    public LocalSqlDatabase(@Nullable Context context, int tenants, iOnNotifyDbProcess notify) {
         super(context, "INSIDER_HOSTEL_SQL_DB", null, 1);
 
         this.notify = notify;
@@ -301,10 +300,5 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
         return false;
     }
 
-    public interface iNotify {
-        void onNotifyCompleteListDownload(NotifyStatus notifyStatus);
-
-        void onNotifyCompleteDataDownload(NotifyStatus notifyStatus);
-    }
 
 }

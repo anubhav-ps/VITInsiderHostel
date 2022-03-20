@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_fill_colour"
-    tools:context=".UserProfileActivity">
+    tools:context=".activities.UserProfileActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarUserProfile"

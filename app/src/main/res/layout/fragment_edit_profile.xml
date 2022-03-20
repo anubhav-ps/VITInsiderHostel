@@ -7,7 +7,7 @@
     android:background="@color/background_fill_colour"
     android:orientation="vertical"
     android:paddingTop="48dp"
-    tools:context=".EditProfileFragment">
+    tools:context=".fragments.EditProfileFragment">
 
 
     <ImageView
