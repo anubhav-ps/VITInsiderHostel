@@ -13,4 +13,7 @@
     <color name="theme_pink">#FF6D6D</color>
     <color name="navy_blue">#194350</color>
     <color name="background_fill_colour">#EEEEEE</color>
+    <color name="text_01">#737373</color>
+    <color name="text_02">#7F7F7F</color>
+    <color name="text_03">#8E8E8E</color>
 </resources>

@@ -420,7 +420,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-
     // snack bar method
     private void callSnackBar(String message) {
         Snackbar snackbar = Snackbar
