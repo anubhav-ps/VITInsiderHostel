@@ -63,20 +63,22 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
 
     private final ArrayList<RoomService> roomServices1 = new ArrayList<>() {
         {
-            add(new RoomService(R.drawable.furniture_card_bg, ServiceType.FURNITURE.toString()));
-            add(new RoomService(R.drawable.lighting_card_bg, ServiceType.LIGHTING.toString()));
-            add(new RoomService(R.drawable.fan_card_bg, ServiceType.CEILING_FAN.toString()));
-            add(new RoomService(R.drawable.other_card_bg, ServiceType.OTHERS.toString()));
+            add(new RoomService(R.drawable.furniture_icon, ServiceType.FURNITURE.toString()));
+            add(new RoomService(R.drawable.light_icon, ServiceType.LIGHTING.toString()));
+            add(new RoomService(R.drawable.fan_icon, ServiceType.CEILING_FAN.toString()));
+            add(new RoomService(R.drawable.pest_icon, ServiceType.PEST.toString()));
+            add(new RoomService(R.drawable.other_icon, ServiceType.OTHERS.toString()));
         }
     };
 
     private final ArrayList<RoomService> roomServices2 = new ArrayList<>() {
         {
-            add(new RoomService(R.drawable.furniture_card_bg, ServiceType.FURNITURE.toString()));
-            add(new RoomService(R.drawable.lighting_card_bg, ServiceType.LIGHTING.toString()));
-            add(new RoomService(R.drawable.fan_card_bg, ServiceType.CEILING_FAN.toString()));
-            add(new RoomService(R.drawable.ac_card_bg, ServiceType.AC.toString()));
-            add(new RoomService(R.drawable.other_card_bg, ServiceType.OTHERS.toString()));
+            add(new RoomService(R.drawable.furniture_icon, ServiceType.FURNITURE.toString()));
+            add(new RoomService(R.drawable.light_icon, ServiceType.LIGHTING.toString()));
+            add(new RoomService(R.drawable.fan_icon, ServiceType.CEILING_FAN.toString()));
+            add(new RoomService(R.drawable.ac_ser_icon, ServiceType.AC.toString()));
+            add(new RoomService(R.drawable.pest_icon, ServiceType.PEST.toString()));
+            add(new RoomService(R.drawable.other_icon, ServiceType.OTHERS.toString()));
         }
     };
 

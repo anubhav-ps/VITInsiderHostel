@@ -111,7 +111,7 @@
     <string name="dialog_outing_till_lbl">Close Time :</string>
     <string name="dialog_outing_duration_lbl">Duration :</string>
     <string name="dialog_outing_from_txt">10:00</string>
-    <string name="dialog_outing_till_txt">17:00</string>
+    <string name="dialog_outing_till_txt">14:00</string>
     <string name="dialog_outing_duration_txt">4 hrs</string>
 
 

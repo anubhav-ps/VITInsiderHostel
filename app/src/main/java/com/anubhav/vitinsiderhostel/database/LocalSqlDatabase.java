@@ -73,6 +73,38 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
         executors.shutdown();
     }
 
+    public void addTenant(Tenant tenant) {
+        tenantList.add(tenant);
+        if (tenantList.size() == totalTenants) {
+            Future<String> result = executors.submit(runParallelTenantInsertion(), "Done");
+            executors.submit(hasTaskCompleted(result, NotifyStatus.ROOM_MATE_LIST_DOWNLOADED));
+        }
+    }
+
+    public void updateTenant(Tenant tenant) {
+        updatedTenantList.add(tenant);
+        if (updatedTenantList.size() == tenantCollectionSize) {
+            Future<String> result = executors.submit(runParallelTenantUpdates(), "Done");
+            executors.submit(hasTaskCompleted(result, NotifyStatus.ROOM_MATE_COMPLETE_DATA_DOWNLOADED));
+        }
+    }
+
+    private Runnable hasTaskCompleted(Future<String> result, NotifyStatus notifyStatus) {
+        return () -> {
+            while (!result.isDone()) {
+
+            }
+            tenantList.clear();
+            updatedTenantList.clear();
+            if (notifyStatus == NotifyStatus.ROOM_MATE_LIST_DOWNLOADED) {
+                notify.onNotifyCompleteListDownload(notifyStatus);
+            } else if (notifyStatus == NotifyStatus.ROOM_MATE_COMPLETE_DATA_DOWNLOADED) {
+                notify.onNotifyCompleteDataDownload(notifyStatus);
+            }
+        };
+    }
+
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         createUserTable(db);
@@ -119,13 +151,6 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
 
     }
 
-    public void addTenant(Tenant tenant) {
-        tenantList.add(tenant);
-        if (tenantList.size() == totalTenants) {
-            Future<String> result = executors.submit(runParallelTenantInsertion(), "Done");
-            executors.submit(hasTaskCompleted(result, NotifyStatus.ROOM_MATE_LIST_DOWNLOADED));
-        }
-    }
 
     private Runnable runParallelTenantInsertion() {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -142,14 +167,6 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
         };
     }
 
-    public void updateTenant(Tenant tenant) {
-        updatedTenantList.add(tenant);
-        if (updatedTenantList.size() == tenantCollectionSize) {
-            Future<String> result = executors.submit(runParallelTenantUpdates(), "Done");
-            executors.submit(hasTaskCompleted(result, NotifyStatus.ROOM_MATE_COMPLETE_DATA_DOWNLOADED));
-        }
-    }
-
     private Runnable runParallelTenantUpdates() {
         SQLiteDatabase db = this.getWritableDatabase();
         return () -> {
@@ -163,21 +180,6 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
                 db.update(TENANT_TABLE, cv, "MAIL_ID = ?", new String[]{tenant.getTenantMailID()});
             }
             db.close();
-        };
-    }
-
-    private Runnable hasTaskCompleted(Future<String> result, NotifyStatus notifyStatus) {
-        return () -> {
-            while (!result.isDone()) {
-
-            }
-            tenantList.clear();
-            updatedTenantList.clear();
-            if (notifyStatus == NotifyStatus.ROOM_MATE_LIST_DOWNLOADED) {
-                notify.onNotifyCompleteListDownload(notifyStatus);
-            } else if (notifyStatus == NotifyStatus.ROOM_MATE_COMPLETE_DATA_DOWNLOADED) {
-                notify.onNotifyCompleteDataDownload(notifyStatus);
-            }
         };
     }
 

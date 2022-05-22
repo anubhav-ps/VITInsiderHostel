@@ -1,6 +1,7 @@
 package com.anubhav.vitinsiderhostel.models;
 
 import com.anubhav.vitinsiderhostel.enums.Urgency;
+import com.google.firebase.Timestamp;
 
 public class Notice {
 
@@ -8,23 +9,21 @@ public class Notice {
     private String shortDescription;
     private String brief;
     private String postedBy;
-    private String postedOn;
+    private Timestamp postedOn;
     private String siteLink;
-    private int autoClose;
     private String docID;
     private String urgency;
 
     public Notice() {
     }
 
-    public Notice(String title, String shortDescription, String brief, String postedBy, String postedOn, String siteLink, int autoClose, String docID, String urgency) {
+    public Notice(String title, String shortDescription, String brief, String postedBy, Timestamp postedOn, String siteLink, String docID, String urgency) {
         this.title = title;
         this.shortDescription = shortDescription;
         this.brief = brief;
         this.postedBy = postedBy;
         this.postedOn = postedOn;
         this.siteLink = siteLink;
-        this.autoClose = autoClose;
         this.docID = docID;
         this.urgency = urgency;
     }
@@ -62,11 +61,11 @@ public class Notice {
         this.postedBy = postedBy;
     }
 
-    public String getPostedOn() {
+    public Timestamp getPostedOn() {
         return postedOn;
     }
 
-    public void setPostedOn(String postedOn) {
+    public void setPostedOn(Timestamp postedOn) {
         this.postedOn = postedOn;
     }
 
@@ -76,14 +75,6 @@ public class Notice {
 
     public void setSiteLink(String siteLink) {
         this.siteLink = siteLink;
-    }
-
-    public int getAutoClose() {
-        return autoClose;
-    }
-
-    public void setAutoClose(int autoClose) {
-        this.autoClose = autoClose;
     }
 
     public String getDocID() {

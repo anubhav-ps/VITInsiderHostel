@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.models.RoomService;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
@@ -35,9 +36,9 @@ public class RoomServiceRecyclerAdapter extends RecyclerView.Adapter<RoomService
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.backgroundImage.setImageResource(roomServiceArrayList.get(position).getImageUrl());
+        holder.icon.setImageResource(roomServiceArrayList.get(position).getImageUrl());
         holder.serviceName.setText(roomServiceArrayList.get(position).getServiceName());
-        holder.backgroundImage.setOnClickListener(v -> {
+        holder.cardView.setOnClickListener(v -> {
             recyclerCardViewClickListener.onCardItemClickListener(position);
         });
     }
@@ -53,12 +54,15 @@ public class RoomServiceRecyclerAdapter extends RecyclerView.Adapter<RoomService
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView backgroundImage;
+        MaterialCardView cardView;
+        ImageView icon;
         MaterialTextView serviceName;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            backgroundImage = itemView.findViewById(R.id.roomServiceCardImage);
+
+            cardView = itemView.findViewById(R.id.roomServiceCard);
+            icon = itemView.findViewById(R.id.roomServiceCardImage);
             serviceName = itemView.findViewById(R.id.roomServiceCardText);
         }
 

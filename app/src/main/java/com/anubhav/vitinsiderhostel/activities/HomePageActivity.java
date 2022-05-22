@@ -64,7 +64,7 @@ public class HomePageActivity extends AppCompatActivity implements iOnUserProfil
 
         // bottom view navigation setup
         chipNavigationBar = findViewById(R.id.bottom_navigation_view);
-        chipNavigationBar.setItemSelected(R.id.menu_room, true);
+        chipNavigationBar.setItemSelected(R.id.menu_block, true);
         // toolbar views
         toolBarAccountText = findViewById(R.id.tool_bar_account_txt);
         logo = findViewById(R.id.tool_bar_logo);
@@ -74,10 +74,10 @@ public class HomePageActivity extends AppCompatActivity implements iOnUserProfil
 
         // placing the room fragment on initial entry
         if (savedInstanceState == null) {
-            RoomFragment roomFragment = new RoomFragment();
+            BlockFragment blockFragment = new BlockFragment();
             toolBarAccountText.setVisibility(View.INVISIBLE);
             logo.setVisibility(View.VISIBLE);
-            makeTransaction(roomFragment);
+            makeTransaction(blockFragment);
         }
 
 

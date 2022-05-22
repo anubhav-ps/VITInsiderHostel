@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="18dp">
+        android:padding="12dp">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -220,18 +220,18 @@
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="14dp"
             android:fontFamily="@font/asap_medium"
             android:text="@string/room_pge_room_service_txt"
             android:textColor="#7F7F7F"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/roomPgeRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="4dp"
             android:orientation="horizontal"
             android:padding="2dp">

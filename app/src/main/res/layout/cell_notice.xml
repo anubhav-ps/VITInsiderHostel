@@ -1,60 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cellNoticeCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="10dp"
-    android:longClickable="true"
     android:clickable="true"
-    app:rippleColor="#9CB888"
-    android:id="@+id/cellNoticeCard"
+    android:focusable="true"
+    app:cardElevation="2dp"
+    android:longClickable="true"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="6dp"
     app:cardUseCompatPadding="true"
-    android:focusable="true">
+    app:rippleColor="#1B303030">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingTop="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="4dp">
 
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/cellNoticeTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:layout_marginTop="6dp"
             android:fontFamily="sans-serif-medium"
             android:text="Hostel Fees"
+            android:maxLines="2"
             android:textColor="@color/medium_theme_green"
-            android:textSize="22sp" />
+            android:textSize="24sp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/cellNoticePostedOn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:layout_gravity="start"
+            android:text="Posted On : 12th May 2022"
+            android:textColor="#7F7F7F"
+            android:textSize="10sp" />
 
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/cellNoticeShortDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:layout_marginTop="12dp"
             android:fontFamily="sans-serif-light"
+            android:maxLength="300"
             android:text="Lorem ipsum dolor sit amet, consect? Aborum mollitia omnis quae quia ullam unde. Adipisci animi asperiores corporis dignissimos ducimus eius eligendi enim ipsum, iste magnam minus neque nisi possimus provident ven explica"
             android:textColor="#7F7F7F"
             android:textSize="14sp" />
 
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/cellNoticePostedOn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="12dp"
-            android:gravity="right"
-            android:text="Posted On : 12th May 2022"
-            android:fontFamily="sans-serif-light"
-            android:textColor="#7F7F7F"
-            android:textSize="12sp" />
+        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+            android:id="@+id/noticeSliderIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="14dp"
+            app:dotsColor="@color/light_theme_green"
+            app:dotsSize="12dp"
+            app:dotsSpacing="5dp"
+            app:progressMode="true"
+            app:dotsCornerRadius="8dp"
+            android:visibility="visible"
+            app:selectedDotColor="@color/dark_theme_green" />
 
     </LinearLayout>
+
+
 </com.google.android.material.card.MaterialCardView>

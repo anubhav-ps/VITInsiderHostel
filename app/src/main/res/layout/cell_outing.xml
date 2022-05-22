@@ -2,12 +2,13 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cell_outing_card_view"
-    android:layout_width="74dp"
-    android:layout_height="100dp"
-    app:cardBackgroundColor="#F8F6F6"
+    android:layout_width="60dp"
+    android:layout_height="85dp"
+    android:layout_margin="4dp"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="6dp"
-    app:cardElevation="4dp"
-    app:cardUseCompatPadding="true">
+    app:cardElevation="2dp"
+    app:rippleColor="#87C7EAAF">
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -1,51 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="146dp"
-    android:layout_height="146dp"
+    android:layout_width="100dp"
+    android:layout_height="120dp"
+    android:layout_margin="2dp"
+    android:clickable="true"
     android:clipToPadding="true"
-    app:cardCornerRadius="24dp"
-    android:layout_margin="3dp"
+    android:focusable="true"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="4dp"
     app:cardElevation="4dp"
-    app:cardPreventCornerOverlap="false"
-    app:cardUseCompatPadding="true"
-   >
+    app:rippleColor="#1B303030"
+    android:id="@+id/roomServiceCard">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="6dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="2dp">
 
         <ImageView
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:id="@+id/roomServiceCardImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/furniture_card_bg"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:focusable="true" />
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/furniture_icon" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:layout_margin="10dp"
             android:id="@+id/roomServiceCardText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/secular_one"
+            android:layout_marginTop="14dp"
+            android:fontFamily="sans-serif"
             android:text="@string/room_service_name_txt"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/roomServiceCardImage"
-            app:layout_constraintEnd_toEndOf="@id/roomServiceCardImage"
-            app:layout_constraintHorizontal_bias="0.636"
-            app:layout_constraintStart_toStartOf="@id/roomServiceCardImage"
-            app:layout_constraintTop_toTopOf="@id/roomServiceCardImage"
-            app:layout_constraintVertical_bias="0.742" />
+            android:textColor="@color/text_01"
+            android:textSize="14sp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+
+</com.google.android.material.card.MaterialCardView>

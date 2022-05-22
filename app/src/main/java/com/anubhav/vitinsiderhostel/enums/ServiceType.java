@@ -5,5 +5,13 @@ public enum ServiceType {
     LIGHTING,
     CEILING_FAN,
     AC,
-    OTHERS
+    PEST,
+    OTHERS,
+    MESS,
+    TV,
+    DRINKING_WATER,
+    CLEANING,
+    RESTROOM,
+    WASHING_MACHINE,
+    WIFI,
 }
