@@ -29,7 +29,7 @@ public class RoomServiceRecyclerAdapter extends RecyclerView.Adapter<RoomService
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.room_service_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_room_service, parent, false);
         return new ViewHolder(view);
     }
 

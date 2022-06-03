@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="100dp"
-    android:layout_height="120dp"
+    android:layout_height="130dp"
     android:layout_margin="2dp"
     android:clickable="true"
     android:clipToPadding="true"
@@ -25,7 +25,7 @@
             android:id="@+id/roomServiceCardImage"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="16dp"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/furniture_icon" />
 
@@ -37,7 +37,7 @@
             android:fontFamily="sans-serif"
             android:text="@string/room_service_name_txt"
             android:textColor="@color/text_01"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
     </LinearLayout>
 

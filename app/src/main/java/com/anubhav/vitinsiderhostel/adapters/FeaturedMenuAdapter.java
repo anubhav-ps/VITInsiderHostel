@@ -10,7 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anubhav.vitinsiderhostel.R;
+import com.anubhav.vitinsiderhostel.interfaces.iOnFeaturedMenuClicked;
 import com.anubhav.vitinsiderhostel.models.Featured;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.List;
@@ -18,13 +20,15 @@ import java.util.List;
 public class FeaturedMenuAdapter extends RecyclerView.Adapter<FeaturedMenuAdapter.ViewHolder> {
 
 
+    private iOnFeaturedMenuClicked onFeaturedMenuClicked;
     private List<Featured> list;
     private Context context;
 
 
-    public FeaturedMenuAdapter(List<Featured> list, Context context) {
+    public FeaturedMenuAdapter(List<Featured> list, Context context, iOnFeaturedMenuClicked onFeaturedMenuClicked) {
         this.list = list;
         this.context = context;
+        this.onFeaturedMenuClicked = onFeaturedMenuClicked;
     }
 
     @NonNull
@@ -40,9 +44,10 @@ public class FeaturedMenuAdapter extends RecyclerView.Adapter<FeaturedMenuAdapte
 
         holder.icon.setImageResource(list.get(position).getIconId());
         holder.title.setText(list.get(position).getTitle());
-
-        holder.icon.setOnClickListener(v -> {
-
+        holder.cardView.setOnClickListener(v -> {
+            if (list.get(position).getTitle().equalsIgnoreCase("Outing Request")){
+                onFeaturedMenuClicked.onOutingRequestClicked();
+            }
         });
 
     }
@@ -56,11 +61,13 @@ public class FeaturedMenuAdapter extends RecyclerView.Adapter<FeaturedMenuAdapte
 
         ImageView icon;
         MaterialTextView title;
+        MaterialCardView cardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             icon = itemView.findViewById(R.id.middle_menu_icon);
             title = itemView.findViewById(R.id.middle_menu_title);
+            cardView = itemView.findViewById(R.id.featuredMenuCardView);
         }
 
     }

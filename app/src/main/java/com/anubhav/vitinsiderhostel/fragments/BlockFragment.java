@@ -1,6 +1,8 @@
 package com.anubhav.vitinsiderhostel.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -16,12 +18,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.anubhav.vitinsiderhostel.R;
+import com.anubhav.vitinsiderhostel.adapters.BlockServiceRecyclerAdapter;
 import com.anubhav.vitinsiderhostel.adapters.FeaturedMenuAdapter;
 import com.anubhav.vitinsiderhostel.adapters.NoticeAdapter;
 import com.anubhav.vitinsiderhostel.adapters.OutingAdapter;
 import com.anubhav.vitinsiderhostel.enums.OutingStatus;
+import com.anubhav.vitinsiderhostel.enums.ServiceType;
+import com.anubhav.vitinsiderhostel.interfaces.iOnFeaturedMenuClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnNoticeReceived;
+import com.anubhav.vitinsiderhostel.interfaces.iOnOutingSectionChosen;
 import com.anubhav.vitinsiderhostel.interfaces.iOnOutingStatusReceived;
+import com.anubhav.vitinsiderhostel.interfaces.iOnTicketSectionChosen;
+import com.anubhav.vitinsiderhostel.interfaces.iOnUserProfileClicked;
+import com.anubhav.vitinsiderhostel.models.BlockService;
 import com.anubhav.vitinsiderhostel.models.Featured;
 import com.anubhav.vitinsiderhostel.models.Notice;
 import com.anubhav.vitinsiderhostel.models.Outing;
@@ -43,11 +52,12 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOutingCardViewClickListener, iOnOutingStatusReceived, iOnNoticeReceived {
+public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOutingCardViewClickListener, BlockServiceRecyclerAdapter.RecyclerBlockServiceCardClickListener, iOnOutingStatusReceived, iOnNoticeReceived ,iOnFeaturedMenuClicked{
 
 
     private final List<Outing> outingList = new ArrayList<>();
     private final List<Notice> noticeList = new ArrayList<>();
+
     private final List<Featured> featuredMenu = new ArrayList<>() {
         {
             add(new Featured(R.drawable.mess_icon, "Mess Food"));
@@ -58,16 +68,37 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
             add(new Featured(R.drawable.hostel_rules_icon, "Hostel Rules"));
         }
     };
+
+    private final List<BlockService> blockServiceList = new ArrayList<>() {
+        {
+            add(new BlockService(R.drawable.cleaning_icon, ServiceType.CLEANING.toString()));
+            add(new BlockService(R.drawable.potable_water_icon, ServiceType.WATER.toString()));
+            add(new BlockService(R.drawable.wifi_icon, ServiceType.WIFI.toString()));
+            add(new BlockService(R.drawable.mess_service_icon, ServiceType.MESS.toString()));
+            add(new BlockService(R.drawable.tv_icon, ServiceType.TV.toString()));
+            add(new BlockService(R.drawable.elevator_icon, ServiceType.ELEVATOR.toString()));
+            add(new BlockService(R.drawable.restroom_icon, ServiceType.RESTROOM.toString()));
+            add(new BlockService(R.drawable.pest_icon, ServiceType.PEST.toString()));
+            add(new BlockService(R.drawable.washing_machine_icon, ServiceType.LAUNDRY.toString()));
+            add(new BlockService(R.drawable.other_icon, ServiceType.OTHERS.toString()));
+        }
+    };
+
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference outingStatusCR = db.collection("OutingStatus");
     private final CollectionReference noticeCR = db.collection("Notice");
+
     iOnOutingStatusReceived onOutingStatusReceived;
     iOnNoticeReceived onNoticeReceived;
+    iOnOutingSectionChosen onOutingSectionChosen;
+
     private View rootView;
     private RecyclerView outingRecyclerView;
     private ViewPager noticeViewPager;
     private NoticeAdapter noticeAdapter;
     private OutingAdapter outingAdapter;
+    private BlockServiceRecyclerAdapter blockServiceAdapter;
+
     private Outing outingData;
     private Dialog dialog;
 
@@ -95,15 +126,14 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
         onNoticeReceived = this;
 
         outingData = new Outing();
+        dialog = new Dialog(getContext());
 
         noticeViewPager = rootView.findViewById(R.id.noticePager);
 
         generateOutingDays();
         fetchNoticeData();
         initialiseFeaturedMenu(rootView);
-
-        dialog = new Dialog(getContext());
-
+        initialiseBlockServiceAdapter(rootView);
 
         return rootView;
     }
@@ -138,7 +168,7 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
 
         FeaturedMenuAdapter featuredMenuAdapter;
 
-        featuredMenuAdapter = new FeaturedMenuAdapter(featuredMenu, getContext());
+        featuredMenuAdapter = new FeaturedMenuAdapter(featuredMenu, getContext(),this);
         recyclerView.setAdapter(featuredMenuAdapter);
 
     }
@@ -192,6 +222,16 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
 
         }
         initialiseOutingAdapter(outingList);
+    }
+
+    private void initialiseBlockServiceAdapter(View view) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView recyclerView = view.findViewById(R.id.blockServiceRecyclerView);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        BlockServiceRecyclerAdapter blockServiceAdapter;
+
+        blockServiceAdapter = new BlockServiceRecyclerAdapter(blockServiceList, this);
+        recyclerView.setAdapter(blockServiceAdapter);
     }
 
     private void initialiseOutingAdapter(List<Outing> outingList) {
@@ -254,4 +294,71 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
         dialog.show();
     }
 
+    @Override
+    public void onBlockServiceCardClickListener(int pos) {
+
+    }
+
+
+    @Override
+    public void onMessFoodClicked() {
+
+    }
+
+    @Override
+    public void onOutingRequestClicked() {
+        dialog.setContentView(R.layout.choose_outing_section_view);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
+        MaterialTextView applyORA = dialog.findViewById(R.id.chooseApplyORASection);
+        MaterialTextView oraHistory = dialog.findViewById(R.id.chooseORAHistorySection);
+
+        applyORA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                openApplyOraFragments();
+            }
+        });
+
+        oraHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                openOraHistoryFragment();
+            }
+        });
+
+        dialog.show();
+
+    }
+
+    private void openOraHistoryFragment() {
+        onOutingSectionChosen.onOraHistorySectionClicked();
+    }
+
+    private void openApplyOraFragments() {
+        onOutingSectionChosen.onApplyOraSectionClicked();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Activity activity = (Activity) context;
+        try {
+            this.onOutingSectionChosen = (iOnOutingSectionChosen) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + "is not implementing on iOnOutingSectionChosen");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (this.onOutingSectionChosen != null) {
+            this.onOutingSectionChosen = null;
+        }
+
+    }
 }

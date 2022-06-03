@@ -18,9 +18,12 @@
         android:theme="@style/Theme.VITInsiderHostel"
         tools:ignore="Instantiatable">
         <activity
+            android:name=".activities.FeaturedActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.TicketHistoryActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.UserProfileActivity"
             android:exported="false"

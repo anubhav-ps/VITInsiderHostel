@@ -9,9 +9,10 @@ public enum ServiceType {
     OTHERS,
     MESS,
     TV,
-    DRINKING_WATER,
+    WATER,
+    ELEVATOR,
     CLEANING,
     RESTROOM,
-    WASHING_MACHINE,
+    LAUNDRY,
     WIFI,
 }

@@ -9,17 +9,21 @@
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/drawable/rounded_edit_button.xml" value="0.3347222222222222" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/drawable/rounded_layout.xml" value="0.3347222222222222" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/drawable/rounded_navigation.xml" value="0.3347222222222222" />
+        <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/activity_featured.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/activity_home_page.xml" value="0.33" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/activity_login.xml" value="0.33" />
+        <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/activity_outing.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/activity_register.xml" value="0.264" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/activity_splash_screen.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/activity_ticket_history.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/activity_user_profile.xml" value="0.31666666666666665" />
+        <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/cell_block_service.xml" value="0.25" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/cell_menu_mess_food.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/cell_menus.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/cell_notice.xml" value="0.33" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/cell_outing.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/cell_room_ticket.xml" value="0.5" />
+        <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/choose_outing_section_view.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/choose_ticket_section_view.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/close_account_dialog.xml" value="0.33" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/dialog_outing_status.xml" value="0.33" />
@@ -34,6 +38,7 @@
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/fragment_block_ticket.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/fragment_delete_account.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/fragment_edit_profile.xml" value="0.3013888888888889" />
+        <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/fragment_outing_request.xml" value="0.22" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/fragment_room.xml" value="0.33" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/fragment_room_ticket.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/fragment_ticket_history.xml" value="0.31666666666666665" />

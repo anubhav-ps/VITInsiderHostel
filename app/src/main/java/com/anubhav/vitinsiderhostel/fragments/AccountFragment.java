@@ -175,11 +175,11 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         super.onDetach();
         if (this.callbackToFragmentContainer != null) {
             this.callbackToFragmentContainer = null;
+        }
+        if (this.onTicketSectionChosen != null) {
             this.onTicketSectionChosen = null;
         }
     }
-
-
 
 
 }
