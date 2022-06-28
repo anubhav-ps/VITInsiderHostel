@@ -63,7 +63,6 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
             add(new Featured(R.drawable.mess_icon, "Mess Food"));
             add(new Featured(R.drawable.lost_found_icon, "Lost & Found"));
             add(new Featured(R.drawable.ride_share_icon, "Ride Share"));
-            add(new Featured(R.drawable.buy_sell_icon, "Buy & Sell"));
             add(new Featured(R.drawable.outing_request_icon, "Outing Request"));
             add(new Featured(R.drawable.hostel_rules_icon, "Hostel Rules"));
         }
@@ -76,7 +75,6 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
             add(new BlockService(R.drawable.wifi_icon, ServiceType.WIFI.toString()));
             add(new BlockService(R.drawable.mess_service_icon, ServiceType.MESS.toString()));
             add(new BlockService(R.drawable.tv_icon, ServiceType.TV.toString()));
-            add(new BlockService(R.drawable.elevator_icon, ServiceType.ELEVATOR.toString()));
             add(new BlockService(R.drawable.restroom_icon, ServiceType.RESTROOM.toString()));
             add(new BlockService(R.drawable.pest_icon, ServiceType.PEST.toString()));
             add(new BlockService(R.drawable.washing_machine_icon, ServiceType.LAUNDRY.toString()));
@@ -98,6 +96,7 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
     private NoticeAdapter noticeAdapter;
     private OutingAdapter outingAdapter;
     private BlockServiceRecyclerAdapter blockServiceAdapter;
+    private String studentBlock;
 
     private Outing outingData;
     private Dialog dialog;
@@ -130,6 +129,10 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
 
         noticeViewPager = rootView.findViewById(R.id.noticePager);
 
+        if (User.getInstance()!=null){
+            studentBlock = User.getInstance().getStudentBlock();
+        }
+
         generateOutingDays();
         fetchNoticeData();
         initialiseFeaturedMenu(rootView);
@@ -141,7 +144,7 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
 
     private void fetchNoticeData() {
 
-        noticeCR.document(User.getInstance().getStudentBlock())
+        noticeCR.document(studentBlock)
                 .collection("Notice")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

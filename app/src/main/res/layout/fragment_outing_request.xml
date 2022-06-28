@@ -34,7 +34,7 @@
                 android:textSize="20sp" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/orfUserNameTxt"
+                android:id="@+id/oraUserNameTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -84,7 +84,7 @@
                 android:fontFamily="@font/average_sans"
                 android:padding="2dp"
                 android:text="Student Details"
-                android:textColor="@color/light_olive_green"
+                android:textColor="@color/light_theme_green"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -110,10 +110,11 @@
                 app:hintTextColor="@color/light_theme_green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/orsStudentNameEt"
+                    android:id="@+id/oraStudentNameEt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName">
+                    android:inputType="textPersonName"
+                    android:textColor="@color/text_02">
 
                 </com.google.android.material.textfield.TextInputEditText>
 
@@ -153,11 +154,12 @@
                 app:hintTextColor="@color/light_theme_green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/orsStudentRegisterNumberEt"
+                    android:id="@+id/oraStudentRegisterNumberEt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:maxLength="9">
+                    android:inputType="textCapCharacters"
+                    android:maxLength="9"
+                    android:textColor="@color/text_02">
 
                 </com.google.android.material.textfield.TextInputEditText>
 
@@ -188,6 +190,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="false"
+                android:longClickable="false"
                 android:textColorHint="#878787"
                 app:boxStrokeColor="@color/light_theme_green"
                 app:endIconMode="clear_text"
@@ -196,11 +199,14 @@
                 app:hintTextColor="@color/light_theme_green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/orsStudentMailIdEt"
+                    android:id="@+id/oraStudentMailIdEt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:focusable="false"
-                    android:inputType="textEmailAddress">
+                    android:inputType="textEmailAddress"
+                    android:longClickable="false"
+                    android:textColor="@color/text_03"
+                    android:textIsSelectable="false">
 
                 </com.google.android.material.textfield.TextInputEditText>
 
@@ -221,6 +227,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="false"
+                android:longClickable="false"
                 android:textColorHint="#878787"
                 app:boxStrokeColor="@color/light_theme_green"
                 app:endIconMode="clear_text"
@@ -229,11 +236,14 @@
                 app:hintTextColor="@color/light_theme_green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/orsStudentContactNumberEt"
+                    android:id="@+id/oraStudentContactNumberEt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:focusable="false"
-                    android:inputType="phone">
+                    android:inputType="phone"
+                    android:longClickable="false"
+                    android:textColor="@color/text_03"
+                    android:textIsSelectable="false">
 
                 </com.google.android.material.textfield.TextInputEditText>
 
@@ -249,11 +259,13 @@
                 android:textColor="@color/text_04"
                 android:textSize="16sp" />
 
+
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="false"
+                android:longClickable="false"
                 android:textColorHint="#878787"
                 app:boxStrokeColor="@color/light_theme_green"
                 app:endIconMode="clear_text"
@@ -262,11 +274,14 @@
                 app:hintTextColor="@color/light_theme_green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/orsStudentRoomDetailEt"
+                    android:id="@+id/oraStudentRoomDetailEt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:focusable="false"
-                    android:inputType="text">
+                    android:inputType="phone"
+                    android:longClickable="false"
+                    android:textColor="@color/text_03"
+                    android:textIsSelectable="false">
 
                 </com.google.android.material.textfield.TextInputEditText>
 
@@ -287,6 +302,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Prefix Country Code (Ex: +91)"
+                android:maxLength="14"
                 android:textColorHint="#878787"
                 app:boxStrokeColor="@color/light_theme_green"
                 app:endIconMode="clear_text"
@@ -295,10 +311,12 @@
                 app:hintTextColor="@color/light_theme_green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/orsStudentParentContactNumberEt"
+                    android:id="@+id/oraStudentParentContactNumberEt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="phone">
+                    android:inputType="phone"
+                    android:maxLength="14"
+                    android:textColor="@color/text_02">
 
                 </com.google.android.material.textfield.TextInputEditText>
 
@@ -319,6 +337,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Prefix Country Code (Ex: +91)"
+                android:maxLength="15"
                 android:textColorHint="#878787"
                 app:boxStrokeColor="@color/light_theme_green"
                 app:endIconMode="clear_text"
@@ -327,10 +346,12 @@
                 app:hintTextColor="@color/light_theme_green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/orsStudentProctorContactNumberEt"
+                    android:id="@+id/oraStudentProctorContactNumberEt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="phone">
+                    android:inputType="phone"
+                    android:maxLength="15"
+                    android:textColor="@color/text_02">
 
                 </com.google.android.material.textfield.TextInputEditText>
 
@@ -340,12 +361,12 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="40dp"
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/average_sans"
                 android:padding="2dp"
                 android:text="Visit Details"
-                android:textColor="@color/light_olive_green"
+                android:textColor="@color/light_theme_green"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -367,41 +388,44 @@
 
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:layout_weight="80"
-                    android:gravity="center_horizontal"
-                    android:hint="Pick Location"
-                    android:textAlignment="center"
-                    android:textColor="#E64C4C4C"
-                    android:textColorHint="#E6626161"
-                    app:boxBackgroundColor="@color/background_fill_colour"
-                    app:boxCornerRadiusTopEnd="4dp"
-                    app:boxCornerRadiusTopStart="4dp"
+                    android:focusable="false"
+                    android:hint="Enter Address"
+                    android:textColorHint="#878787"
                     app:boxStrokeColor="@color/light_theme_green"
                     app:endIconMode="clear_text"
-                    app:endIconTint="@color/black">
+                    app:counterMaxLength="60"
+                    app:counterTextColor="@color/text_04"
+                    app:counterEnabled="true"
+                    app:endIconTint="@color/light_theme_green"
+                    app:endIconTintMode="src_atop"
+                    app:hintTextColor="@color/light_theme_green">
 
-                    <!--this is the actual edit text which takes the input-->
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/orsVisitLocationEt"
+                        android:id="@+id/oraVisitLocationEt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxLength="500"
-                        android:textIsSelectable="true" />
+                        android:layout_height="match_parent"
+                        android:inputType="text"
+                        android:maxLength="60"
+                        android:textColor="@color/text_03">
+
+                    </com.google.android.material.textfield.TextInputEditText>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <ImageButton
-                    android:id="@+id/orsVisitLocationPickerBtn"
+
+                <ImageView
+                    android:id="@+id/oraVisitLocationPickerBtn"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="20"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/pick_location" />
+                    android:layout_height="26dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20dp"
+                    android:layout_weight="8"
+                    android:background="?attr/selectableItemBackground"
+                    android:src="@drawable/location_picker" />
 
             </LinearLayout>
 
@@ -416,40 +440,41 @@
                 android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_horizontal"
-                android:hint="State Purpose of Visit"
-                android:textAlignment="center"
-                android:textColor="#E64C4C4C"
-                android:textColorHint="#E6626161"
-                app:boxBackgroundColor="@color/background_fill_colour"
-                app:boxCornerRadiusTopEnd="4dp"
-                app:boxCornerRadiusTopStart="4dp"
+                android:layout_height="match_parent"
+                android:focusable="false"
+                android:hint="State Purpose Of Visit"
+                android:inputType="text|textMultiLine|textCapSentences"
+                android:scrollbars="vertical"
+                android:textColorHint="#878787"
                 app:boxStrokeColor="@color/light_theme_green"
                 app:counterEnabled="true"
-                app:counterMaxLength="800"
+                app:counterMaxLength="600"
                 app:counterTextColor="@color/text_04"
                 app:endIconMode="clear_text"
-                app:endIconTint="@color/black">
+                app:endIconTint="@color/light_theme_green"
+                app:endIconTintMode="src_atop"
+                app:hintTextColor="@color/light_theme_green">
 
-                <!--this is the actual edit text which takes the input-->
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/orsVisitPurposeEt"
+                    android:id="@+id/oraVisitPurposeEt"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:lines="6"
-                    android:maxLength="800"
-                    android:textIsSelectable="true" />
+                    android:layout_height="200dp"
+                    android:inputType="text|textMultiLine|textCapSentences"
+                    android:maxLength="600"
+                    android:maxLines="10"
+                    android:textColor="@color/text_03"
+                    android:textIsSelectable="true">
+
+                </com.google.android.material.textfield.TextInputEditText>
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="12dp"
                 android:fontFamily="sans-serif"
                 android:padding="2dp"
                 android:paddingStart="5dp"
@@ -457,187 +482,185 @@
                 android:textColor="@color/text_04"
                 android:textSize="16sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="140dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="5dp">
+                android:focusable="false"
+                android:hint="DD/MM/YYYY"
+                android:longClickable="false"
+                android:textColorHint="#878787"
+                app:boxStrokeColor="@color/light_theme_green"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/light_theme_green"
+                app:endIconTintMode="src_atop"
+                app:hintTextColor="@color/light_theme_green">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/orsVisitDateEt"
-                    android:layout_width="150dp"
-                    android:layout_height="38dp"
-                    android:background="@color/background_fill_colour"
-                    android:gravity="center_vertical|start"
-                    android:paddingStart="20dp"
-                    android:text="18/06/2022"
-                    android:textColor="#E6626161"
-                    android:textSize="18sp" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/oraVisitDateEt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:focusable="false"
+                    android:inputType="date"
+                    android:longClickable="false"
+                    android:textColor="@color/text_03"
+                    android:textIsSelectable="false">
 
+                </com.google.android.material.textfield.TextInputEditText>
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/orsVisitLocationPickBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="30dp"
-                    android:clickable="true"
-                    android:elevation="4dp"
-                    android:focusable="true"
-                    app:cardBackgroundColor="#2C2C2C"
-                    app:cardCornerRadius="6dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="8dp"
-                        android:paddingTop="4dp"
-                        android:paddingEnd="8dp"
-                        android:paddingBottom="4dp"
-                        android:text="Pick Date"
-                        android:textColor="@color/white"
-                        android:textSize="14sp" />
-                </com.google.android.material.card.MaterialCardView>
-
-            </LinearLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
-                    android:fontFamily="sans-serif"
-                    android:padding="2dp"
-                    android:text="Check Out"
-                    android:textColor="@color/text_04"
-                    android:textSize="16sp" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="30"
+                    android:orientation="vertical"
+                    android:paddingEnd="10dp">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:fontFamily="sans-serif"
+                        android:padding="2dp"
+                        android:text="Check Out"
+                        android:textColor="@color/text_04"
+                        android:textSize="16sp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:hint="24 Hr Format"
+                        android:longClickable="false"
+                        android:textColorHint="#878787"
+                        app:boxStrokeColor="@color/light_theme_green"
+                        app:endIconMode="clear_text"
+                        app:endIconTint="@color/light_theme_green"
+                        app:endIconTintMode="src_atop"
+                        app:hintTextColor="@color/light_theme_green">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/oraVisitCheckOutEt"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:focusable="false"
+                            android:inputType="time"
+                            android:longClickable="false"
+                            android:textColor="@color/text_03"
+                            android:textIsSelectable="false">
+
+                        </com.google.android.material.textfield.TextInputEditText>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="30"
                     android:gravity="center|start"
-                    android:orientation="horizontal"
-                    android:paddingTop="6dp">
+                    android:orientation="vertical"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp">
+
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/orsVisitCheckOutEt"
-                        android:layout_width="110dp"
-                        android:layout_height="38dp"
-                        android:background="@color/background_fill_colour"
-                        android:gravity="center_vertical|start"
-                        android:paddingStart="20dp"
-                        android:text="10:00"
-                        android:textColor="#E6626161"
-                        android:textSize="18sp" />
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/orsVisitPickCheckOutBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="30dp"
-                        android:clickable="true"
-                        android:elevation="4dp"
-                        android:focusable="true"
-                        app:cardBackgroundColor="#2C2C2C"
-                        app:cardCornerRadius="6dp">
+                        android:layout_marginTop="18dp"
+                        android:fontFamily="sans-serif"
+                        android:padding="2dp"
+                        android:text="Check In"
+                        android:textColor="@color/text_04"
+                        android:textSize="16sp" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingStart="8dp"
-                            android:paddingTop="4dp"
-                            android:paddingEnd="8dp"
-                            android:paddingBottom="4dp"
-                            android:text="Pick Time"
-                            android:textColor="@color/white"
-                            android:textSize="14sp" />
-                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:hint="24 Hr Format"
+                        android:longClickable="false"
+                        android:textColorHint="#878787"
+                        app:boxStrokeColor="@color/light_theme_green"
+                        app:endIconMode="clear_text"
+                        app:endIconTint="@color/light_theme_green"
+                        app:endIconTintMode="src_atop"
+                        app:hintTextColor="@color/light_theme_green">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/oraVisitCheckInEt"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:focusable="false"
+                            android:inputType="time"
+                            android:longClickable="false"
+                            android:textColor="@color/text_03"
+                            android:textIsSelectable="false">
+
+                        </com.google.android.material.textfield.TextInputEditText>
+
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
             </LinearLayout>
 
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:fontFamily="sans-serif-light"
+                android:paddingEnd="4dp"
+                android:text="*Possible Check Out Time is from 05:00 to 20:59"
+                android:textColor="@color/text_01"
+                android:textSize="14sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:fontFamily="sans-serif-light"
+                android:paddingEnd="4dp"
+                android:text="*Possible Check In Time is from 06:00 to 21:59"
+                android:textColor="@color/text_01"
+                android:textSize="14sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:fontFamily="sans-serif-light"
+                android:paddingEnd="4dp"
+                android:text="*Minimum 1hr time interval between checkin &amp; checkout"
+                android:textColor="@color/text_01"
+                android:textSize="14sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center|start"
-                android:orientation="vertical">
-
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
-                    android:fontFamily="sans-serif"
-                    android:padding="2dp"
-                    android:text="Check In"
-                    android:textColor="@color/text_04"
-                    android:textSize="16sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="6dp">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/orsVisitCheckInEt"
-                        android:layout_width="110dp"
-                        android:layout_height="38dp"
-                        android:background="@color/background_fill_colour"
-                        android:gravity="center_vertical|start"
-                        android:paddingStart="20dp"
-                        android:text="18:00"
-                        android:textColor="#E6626161"
-                        android:textSize="18sp" />
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/orsVisitPickCheckInBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="30dp"
-                        android:clickable="true"
-                        android:elevation="4dp"
-                        android:focusable="true"
-                        app:cardBackgroundColor="#2C2C2C"
-                        app:cardCornerRadius="6dp"
-                        app:rippleColor="#EBA8A8A8">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingStart="8dp"
-                            android:paddingTop="4dp"
-                            android:paddingEnd="8dp"
-                            android:paddingBottom="4dp"
-                            android:text="Pick Time"
-                            android:textColor="@color/white"
-                            android:textSize="14sp" />
-                    </com.google.android.material.card.MaterialCardView>
-                </LinearLayout>
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="52dp"
+                android:layout_marginTop="40dp"
                 android:gravity="center_vertical|end"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
 
                 <ProgressBar
-                    android:id="@+id/orsProgressBar"
+                    android:id="@+id/oraProgressBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
@@ -645,7 +668,7 @@
 
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/orsApplyButton"
+                    android:id="@+id/oraApplyButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/light_theme_green"
@@ -656,9 +679,10 @@
 
             </LinearLayout>
 
+
         </LinearLayout>
 
-
     </LinearLayout>
+
 
 </ScrollView>

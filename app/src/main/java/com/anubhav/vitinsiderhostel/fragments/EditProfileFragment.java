@@ -43,6 +43,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
@@ -330,16 +332,21 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 final String contactNumber = contactNumberEt.getText().toString().trim();
-                final String pattern = "\\d{10}";
+
+                if (TextUtils.isEmpty(contactNumber)) {
+                    contactNumberEt.setError("Contact number is required");
+                    return;
+                }
+
+                final String pattern = "[+][0-9]{11,14}";
                 Pattern p = Pattern.compile(pattern);
-                if (contactNumber.length() != 10) {
-                    contactNumberEt.setError("Contact number should be 10 digits");
+                Matcher m = p.matcher(contactNumber);
+
+                if (!m.matches()) {
+                    contactNumberEt.setError("Invalid or Incorrect Number");
                     return;
                 }
-                if (!p.matcher(contactNumber).matches()) {
-                    contactNumberEt.setError("Contact number should not contain any special symbols");
-                    return;
-                }
+
                 setTextFieldValue(contactNumberTxt, contactNumber);
                 closeEditView();
             }

@@ -15,21 +15,22 @@
         android:layout_height="90dp"
         android:src="@drawable/logo" />
 
-    <com.anubhav.vitinsiderhostel.adapters.TypeWriter
-        android:id="@+id/splashScreenPgeText"
-        android:layout_width="wrap_content"
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_marginTop="2dp"
-        android:layout_marginRight="70dp"
-        android:fontFamily="@font/bad_script"
-        android:text=" "
-        android:textColor="?android:textColorPrimary"
-        android:textStyle="bold"
-        tools:ignore="RtlHardcoded" />
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/average_sans"
+        android:paddingEnd="70dp"
+        android:textSize="14sp"
+        android:text="Don't Move, Just Tap"
+        android:textColor="@color/text_04"
+        android:textAlignment="viewEnd">
+
+    </com.google.android.material.textview.MaterialTextView>
 
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="300dp"

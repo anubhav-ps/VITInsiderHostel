@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="340dp"
+    android:layout_height="700dp"
+    android:clipToPadding="true"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="12dp"
+    app:cardUseCompatPadding="true">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="18dp"
+            android:paddingStart="16dp"
+            android:text="Terms &amp; Condition"
+            android:textColor="@color/medium_theme_green"
+            android:textSize="28sp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="30dp"
+            android:fadeScrollbars="false"
+            android:paddingEnd="10dp"
+            android:paddingBottom="6dp"
+            android:scrollbarSize="4dp"
+            android:scrollIndicators="right"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbars="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp">
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="22dp"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:text="1. Once DOP (Digital Outing Passport)  is generated,Student will be able to view the validity status of the DOP in it ."
+                    android:textColor="@color/text_01"
+                    android:textSize="16sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:text="2. DOP Validity Status"
+                    android:textColor="@color/text_01"
+                    android:textSize="16sp" />
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="4dp"
+                    android:text="Inactive"
+                    android:textColor="@color/text_01"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="4dp"
+                    android:text="DOP will be inactive till the student check out from campus"
+                    android:textColor="@color/text_01"
+                    android:textSize="16sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="4dp"
+                    android:text="Active"
+                    android:textColor="@color/text_01"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="4dp"
+                    android:text="DOP will be active from time of check out till the check in time specified."
+                    android:textColor="@color/text_01"
+                    android:textSize="16sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="4dp"
+                    android:text="Expired"
+                    android:textColor="@color/text_01"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="4dp"
+                    android:text="DOP will expire after the check in time,
+    irrespective of student has checked in or not at the specified check in time."
+                    android:textColor="@color/text_01"
+                    android:textSize="16sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="4dp"
+                    android:text="Cancelled"
+                    android:textColor="@color/text_01"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="4dp"
+                    android:text="If the Name and Register Number in DOP does not match the details in Student Id Card (or)
+ Student has failed to check out even 1 hr past the check out time specified.
+"
+                    android:textColor="@color/text_01"
+                    android:textSize="16sp" />
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:text="3. Minimum 1 hr time interval between check in and check out is required to apply for Outing.
+"
+                    android:textColor="@color/text_01"
+                    android:textSize="16sp" />
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:text="4. Even after outing is approved it can be rejected by managment citing student misconduct or other reasons.
+"
+                    android:textColor="@color/text_01"
+                    android:textSize="16sp" />
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:text="5. Misuse of outing request feature for play or fun will lead to suspension of outing for 2 month for student who applied."
+                    android:textColor="@color/text_01"
+                    android:textSize="16sp" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:text="@string/ticket_dialog_captcha_txt"
+                        android:textColor="#E6626161" />
+
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/outingTnCCaptchaTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/background_fill_colour"
+                        android:text="@string/ticket_dialog_captcha_num_txt"
+                        android:textColor="#E6626161"
+                        android:textSize="16sp" />
+
+
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="22dp"
+                    android:gravity="center_horizontal"
+                    android:hint="@string/ticket_dialog_captcha_hint_txt"
+                    android:textAlignment="center"
+                    android:textColor="#E64C4C4C"
+                    android:textColorHint="#E6626161"
+                    app:boxBackgroundColor="@color/background_fill_colour"
+                    app:boxCornerRadiusTopEnd="4dp"
+                    app:boxCornerRadiusTopStart="4dp"
+                    app:boxStrokeColor="#E64C4C4C"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/black">
+
+                    <!--this is the actual edit text which takes the input-->
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/outingTnCInputCaptchaEt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:maxLength="6"
+                        android:textIsSelectable="true" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/outingTnCAcceptTxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingStart="4dp"
+                    android:textStyle="bold"
+                    android:paddingEnd="4dp"
+                    android:visibility="gone"
+                    android:text="By entering the captcha I declare, I have read and I accept the terms &amp; condition mentioned above."
+                    android:textColor="#EC4747"
+                    android:textSize="16sp" />
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/outingTnCProceedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginBottom="18dp"
+                    android:text="Proceed"
+                    android:textColor="@color/white"
+                    app:backgroundTint="@color/medium_theme_green" />
+
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

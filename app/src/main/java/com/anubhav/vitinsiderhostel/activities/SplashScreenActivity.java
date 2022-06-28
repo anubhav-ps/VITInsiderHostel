@@ -8,7 +8,6 @@ import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.anubhav.vitinsiderhostel.R;
-import com.anubhav.vitinsiderhostel.adapters.TypeWriter;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,14 +49,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
         };
 
-        TypeWriter typeWriter = findViewById(R.id.splashScreenPgeText);
-        typeWriter.setText("");
-        typeWriter.setCharacterDelay(120);
-
-        int WAIT_TIME = 1800;
-        new Handler().postDelayed(() -> typeWriter.animateText("I miss your maggi :("), WAIT_TIME);
-
-        int SPLASH_SCREEN = 4400;
+        int SPLASH_SCREEN = 600;
 
         new Handler().postDelayed(() -> {
             if (proceed) {

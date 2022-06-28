@@ -148,14 +148,14 @@ public class HomePageActivity extends AppCompatActivity implements iOnUserProfil
     @Override
     public void onApplyOraSectionClicked() {
         Intent intent = new Intent(HomePageActivity.this, FeaturedActivity.class);
-        intent.putExtra("Section", "Apply");
+        intent.putExtra("Section", "ApplyOuting");
         activityResultLauncher.launch(intent);
     }
 
     @Override
     public void onOraHistorySectionClicked() {
         Intent intent = new Intent(HomePageActivity.this, FeaturedActivity.class);
-        intent.putExtra("Section", "History");
+        intent.putExtra("Section", "OutingHistory");
         activityResultLauncher.launch(intent);
     }
 

@@ -1,20 +1,36 @@
 package com.anubhav.vitinsiderhostel.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.anubhav.vitinsiderhostel.R;
+import com.anubhav.vitinsiderhostel.fragments.OutingHistoryFragment;
 import com.anubhav.vitinsiderhostel.fragments.OutingRequestFragment;
-import com.google.android.material.textview.MaterialTextView;
+import com.anubhav.vitinsiderhostel.interfaces.iOnDopClicked;
 
-public class FeaturedActivity extends AppCompatActivity implements View.OnClickListener {
+public class FeaturedActivity extends AppCompatActivity implements View.OnClickListener, iOnDopClicked {
+
+
+    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+
+            if (result.getResultCode() == 90) {
+                OutingHistoryFragment outingHistoryFragment = new OutingHistoryFragment();
+                makeTransaction(outingHistoryFragment);
+            }
+        }
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,19 +38,19 @@ public class FeaturedActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_featured);
 
 
-        final  String section = getIntent().getStringExtra("Section");
+        final String section = getIntent().getStringExtra("Section");
         if (savedInstanceState == null) {
-            if (section.equalsIgnoreCase("Apply")){
+            if (section.equalsIgnoreCase("ApplyOuting")) {
                 OutingRequestFragment outingRequestFragment = new OutingRequestFragment();
                 makeTransaction(outingRequestFragment);
+            } else if (section.equalsIgnoreCase("OutingHistory")) {
+                OutingHistoryFragment outingHistoryFragment = new OutingHistoryFragment();
+                makeTransaction(outingHistoryFragment);
             }
         }
 
-
-
         ImageButton backArrowToBlockFragment = findViewById(R.id.featuredActivityBackArrow);
         backArrowToBlockFragment.setOnClickListener(this);
-
 
     }
 
@@ -46,7 +62,7 @@ public class FeaturedActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id==R.id.featuredActivityBackArrow){
+        if (id == R.id.featuredActivityBackArrow) {
             Intent intent = new Intent();
             setResult(88, intent);
             finish();
@@ -57,5 +73,16 @@ public class FeaturedActivity extends AppCompatActivity implements View.OnClickL
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.featuredMenuContainer, fragment);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onViewDopClicked(String b, String y, String m, String d, String reqDocId) {
+        Intent intent = new Intent(FeaturedActivity.this, DOPActivity.class);
+        intent.putExtra("Block", b);
+        intent.putExtra("Year", y);
+        intent.putExtra("Month", m);
+        intent.putExtra("Date", d);
+        intent.putExtra("DocId", reqDocId);
+        activityResultLauncher.launch(intent);
     }
 }

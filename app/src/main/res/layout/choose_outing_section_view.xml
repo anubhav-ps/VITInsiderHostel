@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="240dp"
+    android:layout_width="200dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     app:cardBackgroundColor="@color/white"
@@ -13,7 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
@@ -34,7 +36,7 @@
             android:background="?attr/selectableItemBackground"
             android:gravity="center"
             android:padding="6dp"
-            android:text="Apply ORA"
+            android:text="Apply OREK"
             android:textColor="#E6626161"
             android:textSize="18sp" />
 
@@ -47,7 +49,7 @@
             android:background="?attr/selectableItemBackground"
             android:gravity="center"
             android:padding="6dp"
-            android:text="ORA History"
+            android:text="OREK History"
             android:textColor="#E6626161"
             android:textSize="18sp" />
 
