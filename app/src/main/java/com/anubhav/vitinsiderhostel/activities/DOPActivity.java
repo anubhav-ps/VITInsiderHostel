@@ -11,9 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.anubhav.vitinsiderhostel.R;
+import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.anubhav.vitinsiderhostel.interfaces.iOnIssuedOReqFetched;
 import com.anubhav.vitinsiderhostel.models.IssuedOREK;
 import com.anubhav.vitinsiderhostel.models.LinkEnds;
+import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textview.MaterialTextView;
@@ -26,6 +28,7 @@ import java.util.Locale;
 
 public class DOPActivity extends AppCompatActivity implements iOnIssuedOReqFetched {
 
+    private LocalSqlDatabase localSqlDatabase ;
 
     iOnIssuedOReqFetched onIssuedOReqFetched;
     private MaterialTextView issuedOnTxt, validityTxt, registerNumTxt, studentNameTxt, visitDateTxt, checkOutTxt, checkInTxt, checkedOutAtTxt, checkedInAtTxt;
@@ -39,6 +42,8 @@ public class DOPActivity extends AppCompatActivity implements iOnIssuedOReqFetch
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dopactivity);
+
+        localSqlDatabase = new LocalSqlDatabase(DOPActivity.this);
 
         final String block = getIntent().getStringExtra("Block");
         final String year = getIntent().getStringExtra("Year");
@@ -127,4 +132,14 @@ public class DOPActivity extends AppCompatActivity implements iOnIssuedOReqFetch
 
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (User.getInstance()==null){
+            User user = null;
+            user = localSqlDatabase.getCurrentUser();
+        }
+    }
+
 }

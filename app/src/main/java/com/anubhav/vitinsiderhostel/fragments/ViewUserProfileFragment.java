@@ -20,15 +20,18 @@ import com.google.android.material.textview.MaterialTextView;
 public class ViewUserProfileFragment extends Fragment implements View.OnClickListener {
 
 
-    MaterialTextView userTypeTxt, userNameTxt, userMailIdTxt, userContactNumTxt, userNativeLanguageTxt, userBranchTxt;
+    MaterialTextView userTypeTxt, userNameTxt, userMailIdTxt, userContactNumTxt, userNativeLanguageTxt, userBranchTxt ,userRegisterNumTxt;
 
     private String userType;
     private String username;
     private String userMailId;
+    private String userRegisterNum;
+    private String avatar;
     private String userContactNum;
     private String userNativeLanguage;
     private String userBranch;
     private String strUserType;
+
 
     public ViewUserProfileFragment() {
         // Required empty public constructor
@@ -55,6 +58,7 @@ public class ViewUserProfileFragment extends Fragment implements View.OnClickLis
         userTypeTxt = view.findViewById(R.id.viewUserProfilePgeUserTypeTxt);
         userNameTxt = view.findViewById(R.id.viewUserProfilePgeUsernameTxt);
         userMailIdTxt = view.findViewById(R.id.viewUserProfilePgeUserMailIdTxt);
+        userRegisterNumTxt = view.findViewById(R.id.viewUserProfilePgeRegisterNumberTxt);
         userContactNumTxt = view.findViewById(R.id.viewUserProfilePgeContactNumberTxt);
         userNativeLanguageTxt = view.findViewById(R.id.viewUserProfilePgeNativeLanguageTxt);
         userBranchTxt = view.findViewById(R.id.viewUserProfilePgeBranchTxt);
@@ -66,18 +70,18 @@ public class ViewUserProfileFragment extends Fragment implements View.OnClickLis
             userType = User.getInstance().getUserType();
             username = User.getInstance().getUserName();
             userMailId = User.getInstance().getUserMailID();
+            userRegisterNum = User.getInstance().getStudentRegisterNumber();
             userContactNum = User.getInstance().getUserContactNumber();
             userNativeLanguage = User.getInstance().getStudentNativeLanguage();
             userBranch = User.getInstance().getStudentBranch();
         }
 
-        if (userType.equalsIgnoreCase("S")) strUserType = "STUDENT";
-        else if (userType.equalsIgnoreCase("F")) strUserType = "FACULTY";
-
+       strUserType = "STUDENT";
 
         userTypeTxt.setText(strUserType);
         userNameTxt.setText(username);
         userMailIdTxt.setText(userMailId);
+        userRegisterNumTxt.setText(userRegisterNum);
         userContactNumTxt.setText(userContactNum);
         userNativeLanguageTxt.setText(userNativeLanguage);
         userBranchTxt.setText(userBranch);

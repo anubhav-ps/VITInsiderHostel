@@ -12,8 +12,6 @@ public class User extends Application {
     // 12 data members
     private String user_Id;
 
-    private String doc_Id;
-
     private String userName;
 
     private String userMailID;
@@ -26,6 +24,8 @@ public class User extends Application {
 
     private String studentBranch;
 
+    private String studentRegisterNumber;
+
     private String studentNativeLanguage;
 
     private String roomNo;           //  block,RoomNo
@@ -34,8 +34,11 @@ public class User extends Application {
 
     private Boolean isAdmin = false;   // false = 0 , true = 1
 
+    private int avatar;
+
     public User() {
     }
+
 
     public static User getInstance() {
         if (instance == null)
@@ -53,14 +56,6 @@ public class User extends Application {
 
     public void setUser_Id(String userId) {
         this.user_Id = userId;
-    }
-
-    public String getDoc_Id() {
-        return doc_Id;
-    }
-
-    public void setDoc_Id(String docId) {
-        this.doc_Id = docId;
     }
 
     public String getUserName() {
@@ -143,4 +138,19 @@ public class User extends Application {
         isAdmin = admin;
     }
 
+    public int getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(int avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getStudentRegisterNumber() {
+        return studentRegisterNumber;
+    }
+
+    public void setStudentRegisterNumber(String studentRegisterNumber) {
+        this.studentRegisterNumber = studentRegisterNumber;
+    }
 }

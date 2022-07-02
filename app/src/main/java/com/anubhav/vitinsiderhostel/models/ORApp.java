@@ -10,7 +10,6 @@ public class ORApp {
     private String studentContactNumber;
     private String studentRoomDetails;
     private String parentNumber;
-    private String proctorNumber;
     private String visitLocation;
     private String visitPurpose;
     private String visitDate;
@@ -24,14 +23,13 @@ public class ORApp {
     public ORApp() {
     }
 
-    public ORApp(String studentName, String studentRegisterNumber, String studentMailId, String studentContactNumber, String studentRoomDetails, String parentNumber, String proctorNumber, String visitLocation, String visitPurpose, String visitDate, String checkOut, String checkIn, String oraDocId, String oraStatus, Timestamp uploadTimestamp) {
+    public ORApp(String studentName, String studentRegisterNumber, String studentMailId, String studentContactNumber, String studentRoomDetails, String parentNumber, String visitLocation, String visitPurpose, String visitDate, String checkOut, String checkIn, String oraDocId, String oraStatus, Timestamp uploadTimestamp) {
         this.studentName = studentName;
         this.studentRegisterNumber = studentRegisterNumber;
         this.studentMailId = studentMailId;
         this.studentContactNumber = studentContactNumber;
         this.studentRoomDetails = studentRoomDetails;
         this.parentNumber = parentNumber;
-        this.proctorNumber = proctorNumber;
         this.visitLocation = visitLocation;
         this.visitPurpose = visitPurpose;
         this.visitDate = visitDate;
@@ -88,14 +86,6 @@ public class ORApp {
 
     public void setParentNumber(String parentNumber) {
         this.parentNumber = parentNumber;
-    }
-
-    public String getProctorNumber() {
-        return proctorNumber;
-    }
-
-    public void setProctorNumber(String proctorNumber) {
-        this.proctorNumber = proctorNumber;
     }
 
     public String getVisitLocation() {

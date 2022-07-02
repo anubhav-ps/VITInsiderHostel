@@ -1,55 +1,46 @@
 package com.anubhav.vitinsiderhostel.models;
 
 import com.anubhav.vitinsiderhostel.enums.ErrorCode;
+import com.anubhav.vitinsiderhostel.enums.TicketStatus;
 import com.google.firebase.Timestamp;
 
 public class AppError {
 
     private String errorCode;
+    private String errorMessage;
     private String reporter;
     private String userType;
+
+
+    private String status;
+    private String userContactNumber;
     private Timestamp timestamp;
 
     public AppError() {
     }
 
-    public AppError(ErrorCode errorCode, String reporter, String userType, Timestamp timestamp) {
-        this.errorCode = errorCode.toString();
-        this.reporter = reporter;
-        this.userType = userType;
-        this.timestamp = timestamp;
-    }
 
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(String errorCode) {
+    public AppError(String errorCode, String reporter, Timestamp timestamp) {
         this.errorCode = errorCode;
-    }
-
-    public String getReporter() {
-        return reporter;
-    }
-
-    public void setReporter(String reporter) {
         this.reporter = reporter;
-    }
-
-    public String getUserType() {
-        return userType;
-    }
-
-    public void setUserType(String userType) {
-        this.userType = userType;
-    }
-
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
+
+        this.errorMessage = null;
+        this.userType = "STUDENT";
+        this.userContactNumber = null;
+        this.status = TicketStatus.BOOKED.toString();
     }
+
+    public AppError(String errorMessage, String reporter,String userContactNumber, Timestamp timestamp) {
+        this.errorMessage = errorMessage;
+        this.reporter = reporter;
+        this.userContactNumber = userContactNumber;
+        this.timestamp = timestamp;
+
+        this.errorCode = ErrorCode.OTH.getErrorCode();
+        this.userType = "STUDENT";
+        this.status = TicketStatus.BOOKED.toString();
+    }
+
 }
 

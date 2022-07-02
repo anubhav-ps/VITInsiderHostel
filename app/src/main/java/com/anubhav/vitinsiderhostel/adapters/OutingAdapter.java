@@ -51,12 +51,7 @@ public class OutingAdapter extends RecyclerView.Adapter<OutingAdapter.OutingView
         holder.dateTxt.setText(date);
         holder.dayTxt.setText(dayTxt);
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                recyclerOutingCardViewClickListener.onOutingCardItemClickListener(position);
-            }
-        });
+        holder.cardView.setOnClickListener(v -> recyclerOutingCardViewClickListener.onOutingCardItemClickListener(position));
 
 
     }

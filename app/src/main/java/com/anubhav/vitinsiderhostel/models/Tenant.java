@@ -16,6 +16,8 @@ public class Tenant {
 
     private String tenantBranch;
 
+    private int tenantAvatar;
+
     public Tenant() {
     }
 
@@ -23,9 +25,10 @@ public class Tenant {
         this.tenantMailID = tenantMailID;
     }
 
-    public Tenant(String tenantUserName, String tenantMailID, String tenantContactNumber, String tenantNativeLanguage, String tenantBranch) {
+    public Tenant(String tenantUserName, String tenantMailID,int tenantAvatar, String tenantContactNumber, String tenantNativeLanguage, String tenantBranch) {
         this.tenantUserName = tenantUserName;
         this.tenantMailID = tenantMailID;
+        this.tenantAvatar = tenantAvatar;
         this.tenantContactNumber = tenantContactNumber;
         this.tenantNativeLanguage = tenantNativeLanguage;
         this.tenantBranch = tenantBranch;
@@ -71,4 +74,11 @@ public class Tenant {
         this.tenantBranch = tenantBranch;
     }
 
+    public int getTenantAvatar() {
+        return tenantAvatar;
+    }
+
+    public void setTenantAvatar(int tenantAvatar) {
+        this.tenantAvatar = tenantAvatar;
+    }
 }

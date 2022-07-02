@@ -74,68 +74,6 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:orientation="horizontal">
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-            android:layout_width="140dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:hint="@string/register_pge_user_type_hint"
-            android:textColorHint="#878787"
-            app:boxBackgroundColor="#EEEEEE"
-            app:boxStrokeColor="@color/light_theme_green"
-            app:endIconTint="@color/light_theme_green"
-            app:endIconTintMode="src_atop"
-            app:hintTextColor="@color/light_theme_green">
-
-            <AutoCompleteTextView
-                android:id="@+id/registerPgeUserTypeTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:inputType="none"
-                tools:ignore="LabelFor">
-
-            </AutoCompleteTextView>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/registerPgeBlockTxtLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-            android:layout_width="140dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="38dp"
-            android:layout_marginEnd="32dp"
-            android:hint="@string/register_pge_gender_hint"
-            android:textColorHint="#878787"
-            android:visibility="invisible"
-            app:boxBackgroundColor="#EEEEEE"
-            app:boxStrokeColor="@color/light_theme_green"
-            app:endIconTint="@color/light_theme_green"
-            app:endIconTintMode="src_atop"
-            app:hintTextColor="@color/light_theme_green">
-
-            <AutoCompleteTextView
-                android:id="@+id/registerPgeBlockTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#EEEEEE"
-                android:gravity="center_vertical"
-                android:inputType="none"
-                tools:ignore="LabelFor">
-
-            </AutoCompleteTextView>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </LinearLayout>
-
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="320dp"

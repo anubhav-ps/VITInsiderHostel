@@ -1,8 +1,7 @@
 package com.anubhav.vitinsiderhostel.fragments;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -10,8 +9,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -24,52 +21,37 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.anubhav.vitinsiderhostel.R;
-import com.anubhav.vitinsiderhostel.activities.LoginActivity;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
-import com.anubhav.vitinsiderhostel.models.AppError;
 import com.anubhav.vitinsiderhostel.enums.ErrorCode;
+import com.anubhav.vitinsiderhostel.enums.Mod;
+import com.anubhav.vitinsiderhostel.interfaces.iOnUserAccountDeleted;
+import com.anubhav.vitinsiderhostel.interfaces.iOnUserAccountEdited;
+import com.anubhav.vitinsiderhostel.models.AlertDisplay;
+import com.anubhav.vitinsiderhostel.models.Scramble;
 import com.anubhav.vitinsiderhostel.models.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class EditProfileFragment extends Fragment implements View.OnClickListener {
 
-    private final List<String> branchList = new ArrayList<>() {
-        {
-            add("Pick your branch");
-            add("Computer Science and Engineering");
-            add("Mechanical Engineering");
-            add("Civil Engineering");
-            add("Electronics Engineering");
-            add("Fashion Institute of Technology");
-            add("Electrical Engineering");
-            add("Law");
-            add("Business School");
-            add("Advanced Sciences");
-        }
-    };
+
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference userSection = db.collection("Users");
-    private final CollectionReference tenantsBioSection = db.collection("TenantsBio");
-    private final CollectionReference reportSection = db.collection("Reports");
-    private ArrayAdapter<String> branchAdapter;
+    private final CollectionReference userDetailsSection = db.collection(Mod.USD.toString());
+    private final CollectionReference hostelDetailsSection = db.collection(Mod.HOD.toString());
+    private final CollectionReference reportSection = db.collection(Mod.RES.toString());
+
+
     private boolean hasChanged = false;
     private Dialog dialog;
     private MaterialTextView userNameTxt;
@@ -77,9 +59,17 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private MaterialTextView contactNumberTxt;
     private MaterialTextView nativeLanguageTxt;
     private MaterialTextView branchTxt;
+    private MaterialTextView registerNumberTxt;
+
     private ProgressBar progressBar;
 
-    private String branchInnerVal;
+    // firebase declaration
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener authStateListener;
+    private FirebaseUser user;
+
+
+    private iOnUserAccountEdited onUserAccountEdited;
 
     public EditProfileFragment() {
         // Required empty public constructor
@@ -98,6 +88,13 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
 
+        //firebase instantiation
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        //firebase authState listener definition
+        authStateListener = firebaseAuth -> user = firebaseAuth.getCurrentUser();
+
+
         MaterialTextView changeAvatarTxt = view.findViewById(R.id.editPgeAvatar);
         progressBar = view.findViewById(R.id.editPgeProgressBar);
         userNameTxt = view.findViewById(R.id.editPgeUserName);
@@ -105,8 +102,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         contactNumberTxt = view.findViewById(R.id.editPgeContactNumber);
         nativeLanguageTxt = view.findViewById(R.id.editPgeNativeLanguage);
         branchTxt = view.findViewById(R.id.editPgeBranch);
-
-        branchAdapter = new ArrayAdapter<>(getContext(), R.layout.drop_down_option, branchList);
+        registerNumberTxt = view.findViewById(R.id.editPgeRegisterNumber);
 
         ImageButton cancelBtn = view.findViewById(R.id.editPgeCancelBtn);
         MaterialButton saveBtn = view.findViewById(R.id.editPgeSaveBtn);
@@ -119,6 +115,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         contactNumberTxt.setOnClickListener(this);
         nativeLanguageTxt.setOnClickListener(this);
         branchTxt.setOnClickListener(this);
+        registerNumberTxt.setOnClickListener(this);
         cancelBtn.setOnClickListener(this);
         saveBtn.setOnClickListener(this);
 
@@ -128,6 +125,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             contactNumberTxt.setText(User.getInstance().getUserContactNumber());
             nativeLanguageTxt.setText(User.getInstance().getStudentNativeLanguage());
             branchTxt.setText(User.getInstance().getStudentBranch());
+            registerNumberTxt.setText(User.getInstance().getStudentRegisterNumber());
         }
 
 
@@ -137,7 +135,9 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         int id = v.getId();
+
         if (id == R.id.editPgeAvatarIcon) {
+            hasChanged = true;
 
         } else if (id == R.id.editPgeAvatar) {
             hasChanged = true;
@@ -146,6 +146,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             hasChanged = true;
             openEditUserNameView();
         } else if (id == R.id.editPgeMailId) {
+            hasChanged = false;
             openEditMailIdView();
         } else if (id == R.id.editPgeContactNumber) {
             hasChanged = true;
@@ -154,108 +155,105 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             hasChanged = true;
             openEditNativeLanguageView();
         } else if (id == R.id.editPgeBranch) {
-            hasChanged = true;
+            hasChanged = false;
             openEditBranchView();
+        } else if (id == R.id.editPgeRegisterNumber) {
+            hasChanged = false;
+            openEditRegisterNumberView();
         } else if (id == R.id.editPgeCancelBtn) {
             if (hasChanged) {
                 new AlertDialog.Builder(requireContext())
                         .setTitle("Unsaved changes")
                         .setMessage("You have unsaved changes. Are you sure you want to cancel?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                editCancelBtn();
-                            }
-                        })
+                        .setPositiveButton("Yes", (dialog, which) -> editCancelBtn())
                         .setNegativeButton("No", null)
                         .show();
             } else {
                 editCancelBtn();
             }
         } else if (id == R.id.editPgeSaveBtn) {
-            editSaveBtn();
-        } else if (id == R.id.editNameViewCancelBtn || id == R.id.editContactNumberViewCancelBtn || id == R.id.editNativeLangViewCancelBtn || id == R.id.editBranchViewCancelBtn) {
+            try {
+                editSaveBtn();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+        } else if (id == R.id.editNameViewCancelBtn || id == R.id.editContactNumberViewCancelBtn || id == R.id.editNativeLangViewCancelBtn) {
             closeEditView();
         }
+    }
+
+    private void openEditRegisterNumberView() {
+        Toast.makeText(getContext(), "Cannot update register number", Toast.LENGTH_LONG).show();
     }
 
     private void closeEditView() {
         dialog.dismiss();
     }
 
-    private void editSaveBtn() {
+    private void editSaveBtn() throws NoSuchAlgorithmException {
 
-        progressBar.setVisibility(View.VISIBLE);
-        final String userName = userNameTxt.getText().toString().trim();
-        final String userContactNumber = contactNumberTxt.getText().toString().trim();
-        final String userNativeLanguage = nativeLanguageTxt.getText().toString().trim();
-        final String userBranch = branchTxt.getText().toString().trim();
+        if (hasChanged) {
 
-        DocumentReference documentReferenceToUserDetails = userSection
-                .document("S")
-                .collection(User.getInstance().getStudentBlock())
-                .document(User.getInstance().getDoc_Id());
 
-        DocumentReference documentReferenceToTenantBio = tenantsBioSection
-                .document(User.getInstance().getStudentBlock())
-                .collection(User.getInstance().getRoomNo())
-                .document(User.getInstance().getUserMailID().toLowerCase(Locale.ROOT));
+            progressBar.setVisibility(View.VISIBLE);
+            final String userName = userNameTxt.getText().toString().trim();
+            final String userContactNumber = contactNumberTxt.getText().toString().trim();
+            final String userNativeLanguage = nativeLanguageTxt.getText().toString().trim();
+            final int avatar = 100;
 
-        documentReferenceToUserDetails
-                .update(
-                        "userName", userName,
-                        "userContactNumber", userContactNumber,
-                        "studentNativeLanguage", userNativeLanguage,
-                        "studentBranch", userBranch
-                ).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    documentReferenceToTenantBio.update(
-                            "tenantUserName", userName,
-                            "tenantContactNumber", userContactNumber,
-                            "tenantNativeLanguage", userNativeLanguage,
-                            "tenantBranch", userBranch
-                    ).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(getContext(), "Successfully updated, Login Again....", Toast.LENGTH_LONG).show();
-                                progressBar.setVisibility(View.GONE);
-                                hasChanged = false;
-                                FirebaseAuth.getInstance().signOut();
-                                LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getActivity());
-                                localSqlDatabase.deleteCurrentUser();
-                                localSqlDatabase.deleteAllTenants();
-                                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                                requireActivity().startActivity(intent);
-                                requireActivity().overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
-                                requireActivity().finish();
+            final String scrambleValue = Scramble.getScramble(User.getInstance().getUserMailID());
 
-                            } else {
-                                progressBar.setVisibility(View.GONE);
-                                AppError appError = new AppError(
-                                        ErrorCode.EPF002,
-                                        User.getInstance().getUserMailID(),
-                                        User.getInstance().getUserType(),
-                                        new Timestamp(new Date()));
-                                reportSection.document().set(appError);
-                                Toast.makeText(getContext(), "Error-EPF002", Toast.LENGTH_LONG).show();
-                            }
+            DocumentReference docUserRef = userDetailsSection
+                    .document(Mod.USSTU.toString())
+                    .collection(Mod.DET.toString())
+                    .document(User.getInstance().getUser_Id());
+
+            DocumentReference docTenantRef = hostelDetailsSection
+                    .document(Mod.TED.toString())
+                    .collection(Mod.DET.toString())
+                    .document(scrambleValue);
+
+            docUserRef.update(
+                    "userName", userName,
+                    "userContactNumber", userContactNumber,
+                    "studentNativeLanguage", userNativeLanguage,
+                    "avatar", avatar)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            docTenantRef.update(
+                                    "tenantUserName", userName,
+                                    "tenantContactNumber", userContactNumber,
+                                    "tenantNativeLanguage", userNativeLanguage,
+                                    "tenantAvatar", avatar
+                            ).addOnCompleteListener(task1 -> {
+                                if (task1.isSuccessful()) {
+                                    Toast.makeText(getContext(), "Successfully updated, Login Again....", Toast.LENGTH_LONG).show();
+                                    progressBar.setVisibility(View.GONE);
+                                    hasChanged = false;
+                                    FirebaseAuth.getInstance().signOut();
+                                    LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getActivity());
+                                    localSqlDatabase.deleteCurrentUser();
+                                    localSqlDatabase.deleteAllTenants();
+                                    onUserAccountEdited.onUserAccountEdited();
+                                } else {
+                                    progressBar.setVisibility(View.GONE);
+                                    AlertDisplay alertDisplay = new AlertDisplay(ErrorCode.EPF002.getErrorCode(), ErrorCode.EPF002.getErrorMessage(), getContext());
+                                    alertDisplay.displayAlert();
+                                    // TODO: 02-07-2022 report error
+                                }
+                            });
+                        } else {
+                            progressBar.setVisibility(View.GONE);
+                            AlertDisplay alertDisplay = new AlertDisplay(ErrorCode.EPF001.getErrorCode(), ErrorCode.EPF001.getErrorMessage(), getContext());
+                            alertDisplay.displayAlert();
+                            // TODO: 02-07-2022 report error
                         }
+
                     });
-                } else {
-                    progressBar.setVisibility(View.GONE);
-                    AppError appError = new AppError(
-                            ErrorCode.EPF001,
-                            User.getInstance().getUserMailID(),
-                            User.getInstance().getUserType(),
-                            new Timestamp(new Date()));
-                    reportSection.document().set(appError);
-                    Toast.makeText(getContext(), "Error-EPF001", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+
+        } else {
+            Toast.makeText(getContext(), "No Changes were made", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -268,32 +266,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     }
 
     private void openEditBranchView() {
-        dialog.setContentView(R.layout.edit_branch_view);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        AutoCompleteTextView branchEt = dialog.findViewById(R.id.editBranchViewEt);
-        ImageButton cancelBtn = dialog.findViewById(R.id.editBranchViewCancelBtn);
-        ImageButton saveBtn = dialog.findViewById(R.id.editBranchViewSaveBtn);
-        branchEt.setAdapter(branchAdapter);
-
-        branchEt.setOnItemClickListener((adapterView, view, i, l) -> {
-            String val = adapterView.getItemAtPosition(i).toString();
-            String branchName = "N/A";
-            if (val.equalsIgnoreCase("Pick your branch")) {
-                branchName = "N/A";
-            } else {
-                branchName = val;
-            }
-            branchInnerVal = branchName;
-        });
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTextFieldValue(branchTxt, branchInnerVal);
-                closeEditView();
-            }
-        });
-        cancelBtn.setOnClickListener(this);
-        dialog.show();
+        Toast.makeText(getContext(), "Cannot update branch", Toast.LENGTH_LONG).show();
     }
 
     private void openEditNativeLanguageView() {
@@ -303,17 +276,14 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         ImageButton cancelBtn = dialog.findViewById(R.id.editNativeLangViewCancelBtn);
         ImageButton saveBtn = dialog.findViewById(R.id.editNativeLangViewSaveBtn);
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String nativeLanguage = nativeLanguageEt.getText().toString().trim();
-                if (TextUtils.isEmpty(nativeLanguage)) {
-                    nativeLanguageEt.setError("Language cannot be empty");
-                    return;
-                }
-                setTextFieldValue(nativeLanguageTxt, nativeLanguage);
-                closeEditView();
+        saveBtn.setOnClickListener(v -> {
+            final String nativeLanguage = nativeLanguageEt.getText().toString().trim();
+            if (TextUtils.isEmpty(nativeLanguage)) {
+                nativeLanguageEt.setError("Language cannot be empty");
+                return;
             }
+            setTextFieldValue(nativeLanguageTxt, nativeLanguage);
+            closeEditView();
         });
 
 
@@ -328,28 +298,25 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         ImageButton cancelBtn = dialog.findViewById(R.id.editContactNumberViewCancelBtn);
         ImageButton saveBtn = dialog.findViewById(R.id.editContactNumberViewSaveBtn);
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String contactNumber = contactNumberEt.getText().toString().trim();
+        saveBtn.setOnClickListener(v -> {
+            final String contactNumber = contactNumberEt.getText().toString().trim();
 
-                if (TextUtils.isEmpty(contactNumber)) {
-                    contactNumberEt.setError("Contact number is required");
-                    return;
-                }
-
-                final String pattern = "[+][0-9]{11,14}";
-                Pattern p = Pattern.compile(pattern);
-                Matcher m = p.matcher(contactNumber);
-
-                if (!m.matches()) {
-                    contactNumberEt.setError("Invalid or Incorrect Number");
-                    return;
-                }
-
-                setTextFieldValue(contactNumberTxt, contactNumber);
-                closeEditView();
+            if (TextUtils.isEmpty(contactNumber)) {
+                contactNumberEt.setError("Contact number is required");
+                return;
             }
+
+            final String pattern = "[+][0-9]{11,14}";
+            Pattern p = Pattern.compile(pattern);
+            Matcher m = p.matcher(contactNumber);
+
+            if (!m.matches()) {
+                contactNumberEt.setError("Invalid or Incorrect Number");
+                return;
+            }
+
+            setTextFieldValue(contactNumberTxt, contactNumber);
+            closeEditView();
         });
         cancelBtn.setOnClickListener(this);
         dialog.show();
@@ -365,23 +332,20 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         EditText usernameEt = dialog.findViewById(R.id.editNameViewNameEt);
         ImageButton cancelBtn = dialog.findViewById(R.id.editNameViewCancelBtn);
         ImageButton saveBtn = dialog.findViewById(R.id.editNameViewSaveBtn);
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String username = usernameEt.getText().toString().trim();
-                if (username.length() < 10 || username.length() > 20) {
-                    usernameEt.setError("Username should be minimum 10 characters wide and   20 characters maximum");
+        saveBtn.setOnClickListener(v -> {
+            final String username = usernameEt.getText().toString().trim();
+            if (username.length() < 10 || username.length() > 20) {
+                usernameEt.setError("Username should be minimum 10 characters wide and   20 characters maximum");
+                return;
+            }
+            if (!TextUtils.isEmpty(username)) {
+                if (Character.isDigit(username.toCharArray()[0])) {
+                    usernameEt.setError("Username cannot begin with digits");
                     return;
                 }
-                if (!TextUtils.isEmpty(username)) {
-                    if (Character.isDigit(username.toCharArray()[0])) {
-                        usernameEt.setError("Username cannot begin with digits");
-                        return;
-                    }
-                }
-                setTextFieldValue(userNameTxt, username);
-                closeEditView();
             }
+            setTextFieldValue(userNameTxt, username);
+            closeEditView();
         });
         cancelBtn.setOnClickListener(this);
         dialog.show();
@@ -390,5 +354,38 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private void setTextFieldValue(MaterialTextView textView, String value) {
         textView.setText(value);
     }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof iOnUserAccountDeleted) {
+            this.onUserAccountEdited = (iOnUserAccountEdited) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (this.onUserAccountEdited != null) {
+            this.onUserAccountEdited = null;
+        }
+    }
+
+    //process 0 and process 1 functions
+    @Override
+    public void onStart() {
+        super.onStart();
+        user = firebaseAuth.getCurrentUser();
+        firebaseAuth.addAuthStateListener(authStateListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (firebaseAuth != null) {
+            firebaseAuth.removeAuthStateListener(authStateListener);
+        }
+    }
+
 
 }

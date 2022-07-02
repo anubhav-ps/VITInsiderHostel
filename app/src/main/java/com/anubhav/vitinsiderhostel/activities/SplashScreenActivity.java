@@ -1,5 +1,6 @@
 package com.anubhav.vitinsiderhostel.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,15 +15,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+@SuppressLint("CustomSplashScreen")
 public class SplashScreenActivity extends AppCompatActivity {
 
-
-    //firebase fire store declaration
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     //firebase declarations
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener authStateListener;
     FirebaseUser firebaseUser;
+
     private boolean proceed = false;
 
     private LocalSqlDatabase localSqlDatabase ;
@@ -33,6 +33,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash_screen);
+
         localSqlDatabase = new LocalSqlDatabase(SplashScreenActivity.this);
 
         //firebase auth instantiation
@@ -84,6 +85,15 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onPause();
         if (firebaseAuth != null) {
             firebaseAuth.removeAuthStateListener(authStateListener);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (User.getInstance()==null){
+            User user = null;
+            user = localSqlDatabase.getCurrentUser();
         }
     }
 

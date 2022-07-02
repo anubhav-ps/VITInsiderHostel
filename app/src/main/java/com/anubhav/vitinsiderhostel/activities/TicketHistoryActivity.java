@@ -9,16 +9,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.anubhav.vitinsiderhostel.fragments.BlockTicketFragment;
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.fragments.RoomTicketFragment;
+import com.anubhav.vitinsiderhostel.models.User;
 
 public class TicketHistoryActivity extends AppCompatActivity implements View.OnClickListener{
+
+
+    private LocalSqlDatabase localSqlDatabase ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ticket_history);
+
+        localSqlDatabase = new LocalSqlDatabase(TicketHistoryActivity.this);
 
         final  String section = getIntent().getStringExtra("Section");
         if (savedInstanceState == null) {
@@ -30,6 +37,8 @@ public class TicketHistoryActivity extends AppCompatActivity implements View.OnC
                 makeTransaction(blockTicketFragment);
             }
         }
+
+
 
         ImageButton backArrowToAccount = findViewById(R.id.ticketHistoryBackArrow);
         backArrowToAccount.setOnClickListener(this);
@@ -56,6 +65,15 @@ public class TicketHistoryActivity extends AppCompatActivity implements View.OnC
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.ticketHistoryContainer, fragment);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (User.getInstance()==null){
+            User user = null;
+            user = localSqlDatabase.getCurrentUser();
+        }
     }
 
 

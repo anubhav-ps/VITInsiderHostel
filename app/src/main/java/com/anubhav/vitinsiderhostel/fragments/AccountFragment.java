@@ -24,6 +24,7 @@ import com.anubhav.vitinsiderhostel.interfaces.iOnUserProfileClicked;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class AccountFragment extends Fragment implements View.OnClickListener {
 
@@ -35,6 +36,12 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     private Dialog dialog;
     //when user profile activity is called
     private iOnUserProfileClicked callbackToFragmentContainer;
+
+    // firebase declaration
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener authStateListener;
+    private FirebaseUser user;
+
 
     public AccountFragment() {
         // Required empty public constructor
@@ -53,6 +60,13 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
 
         dialog = new Dialog(getContext());
+
+        //firebase instantiation
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        //firebase authState listener definition
+        authStateListener = firebaseAuth -> user = firebaseAuth.getCurrentUser();
+
 
         // view declarations
         MaterialTextView userNameTxt = view.findViewById(R.id.accountPgeUserName);
@@ -178,6 +192,22 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         }
         if (this.onTicketSectionChosen != null) {
             this.onTicketSectionChosen = null;
+        }
+    }
+
+    //process 0 and process 1 functions
+    @Override
+    public void onStart() {
+        super.onStart();
+        user = firebaseAuth.getCurrentUser();
+        firebaseAuth.addAuthStateListener(authStateListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (firebaseAuth != null) {
+            firebaseAuth.removeAuthStateListener(authStateListener);
         }
     }
 

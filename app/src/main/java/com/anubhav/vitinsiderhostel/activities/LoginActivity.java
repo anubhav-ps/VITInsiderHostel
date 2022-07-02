@@ -19,8 +19,10 @@ import androidx.core.content.ContextCompat;
 
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
+import com.anubhav.vitinsiderhostel.enums.Mod;
 import com.anubhav.vitinsiderhostel.enums.NotifyStatus;
 import com.anubhav.vitinsiderhostel.interfaces.iOnNotifyDbProcess;
+import com.anubhav.vitinsiderhostel.models.Scramble;
 import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,28 +36,26 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Locale;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, iOnNotifyDbProcess {
 
+    final List<Tenant> tenantList = new ArrayList<>();
     private final String studentMailPattern = "@vitstudent.ac.in";
-    private final String facultyMailPattern = "@vit.ac.in";
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference userSection = db.collection("Users");
-    private final CollectionReference tenantsSection = db.collection("Tenants");
-    private final CollectionReference tenantsBioSection = db.collection("TenantsBio");
-
+    private final CollectionReference userDetailsSection = db.collection(Mod.USD.toString());
+    private final CollectionReference hostelDetailsSection = db.collection(Mod.HOD.toString());
     //firebase declarations
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener authStateListener;
     FirebaseUser firebaseUser;
-
     private LocalSqlDatabase sqlDatabase;
     private String inputMail;
     private String inputPassword;
@@ -63,8 +63,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private boolean validPassword = false;
     private TextInputEditText mailEt, passwordEt;
     private ProgressBar progressBar;
-    private String globalBlock;
-    private String globalRoomNo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +105,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     mailEt.setError("Mail ID is required !");
                     validMail = false;
                 } else {
-                    validMail = inputMail.endsWith(studentMailPattern) || inputMail.endsWith(facultyMailPattern);
+                    validMail = inputMail.endsWith(studentMailPattern);
                 }
             }
 
@@ -194,7 +192,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String warning = "Mail ID is required";
                 new MaterialAlertDialogBuilder(this)
                         .setMessage(warning).show();
-            } else if ((value).endsWith(studentMailPattern) || (value).endsWith(facultyMailPattern)) {              //change this length
+            } else if ((value).endsWith(studentMailPattern)) {              //change this length
                 firebaseAuth.sendPasswordResetEmail(value)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
@@ -243,6 +241,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         progressBar.setVisibility(View.VISIBLE);
         loginUser(inputMail, inputPassword);
+
     }
 
 
@@ -260,109 +259,109 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     assert firebaseUser != null;
 
                                     final String currentUserMailId = firebaseUser.getEmail();
+                                    final String currentUserId = firebaseUser.getUid();
 
                                     assert currentUserMailId != null;
-                                    DocumentReference documentReference = db.collection("UserBlockRec").document(currentUserMailId.toLowerCase(Locale.ROOT));
-                                    documentReference
+
+                                    DocumentReference document = userDetailsSection.document(Mod.USSTU.toString()).collection(Mod.DET.toString()).document(currentUserId);
+                                    document
                                             .get()
-                                            .addOnSuccessListener(documentSnapshot -> {
-                                                if (documentSnapshot.exists()) {
-                                                    final String tempBlock = Objects.requireNonNull(documentSnapshot.get("block")).toString();
-                                                    final String tempUserType = Objects.requireNonNull(documentSnapshot.get("userType")).toString();
-                                                    final String tempDocID = Objects.requireNonNull(documentSnapshot.get("doc_id")).toString();
+                                            .addOnSuccessListener(documentSnapshot1 -> {
+                                                if (documentSnapshot1.exists()) {
 
-                                                    DocumentReference document = userSection.document(tempUserType).collection(tempBlock).document(tempDocID);
-                                                    document
+                                                    final String userID = Objects.requireNonNull(documentSnapshot1.get("user_Id")).toString();
+                                                    final String userName = Objects.requireNonNull(documentSnapshot1.get("userName")).toString();
+                                                    final String userMail = Objects.requireNonNull(documentSnapshot1.get("userMailID")).toString();
+                                                    final Long userAvatar = (Long) Objects.requireNonNull(documentSnapshot1.get("avatar"));
+
+                                                    final String userContactNum = Objects.requireNonNull(documentSnapshot1.get("userContactNumber")).toString();
+
+                                                    final String userType = Objects.requireNonNull(documentSnapshot1.get("userType")).toString();
+                                                    final String studentBlock = Objects.requireNonNull(documentSnapshot1.get("studentBlock")).toString();
+
+                                                    final String studentRegisterNumber = Objects.requireNonNull(documentSnapshot1.get("studentRegisterNumber")).toString();
+                                                    final String studentBranch = Objects.requireNonNull(documentSnapshot1.get("studentBranch")).toString();
+                                                    final String studentNativeLanguage = Objects.requireNonNull(documentSnapshot1.get("studentNativeLanguage")).toString();
+                                                    final String studentRoomNo = Objects.requireNonNull(documentSnapshot1.get("roomNo")).toString();
+                                                    final String studentRoomType = Objects.requireNonNull(documentSnapshot1.get("roomType")).toString();
+                                                    final String admin = Objects.requireNonNull(documentSnapshot1.get("isAdmin")).toString();
+
+                                                    User user = User.getInstance();
+                                                    user.setUser_Id(userID);
+                                                    user.setUserName(userName);
+                                                    user.setUserMailID(userMail);
+                                                    user.setAvatar(userAvatar.intValue());
+                                                    user.setStudentRegisterNumber(studentRegisterNumber);
+                                                    user.setUserContactNumber(userContactNum);
+                                                    user.setUserType(userType);
+                                                    user.setStudentBlock(studentBlock);
+                                                    user.setStudentBranch(studentBranch);
+                                                    user.setStudentNativeLanguage(studentNativeLanguage);
+                                                    user.setRoomNo(studentRoomNo);
+                                                    user.setRoomType(studentRoomType);
+                                                    boolean adminVal = false;
+                                                    if (admin.equalsIgnoreCase("1")) {
+                                                        adminVal = true;
+                                                    }
+                                                    user.setAdmin(adminVal);
+
+                                                    final String beds = studentRoomType.split("\\|")[0].trim();
+                                                    int tNum = Integer.parseInt(beds);
+
+                                                    //Toast.makeText(LoginActivity.this,tNum , Toast.LENGTH_SHORT).show();
+
+                                                    sqlDatabase = new LocalSqlDatabase(LoginActivity.this, tNum, LoginActivity.this);
+
+                                                    //todo insert user to database
+                                                    boolean userResult = sqlDatabase.addUser(user);
+
+                                                    if (!userResult) {
+                                                        //todo : Report user list download
+                                                    }
+
+
+                                                    String scrambleValue = "";
+                                                    try {
+                                                        scrambleValue = Scramble.getScramble(studentRoomNo);
+                                                    } catch (NoSuchAlgorithmException e) {
+                                                        e.printStackTrace();
+                                                    }
+
+                                                    hostelDetailsSection
+                                                            .document(Mod.HOT.toString())
+                                                            .collection(Mod.getBlock(studentBlock))
+                                                            .document(scrambleValue)
                                                             .get()
-                                                            .addOnSuccessListener(documentSnapshot1 -> {
-                                                                if (documentSnapshot1.exists()) {
-
-                                                                    final String userID = Objects.requireNonNull(documentSnapshot1.get("user_Id")).toString();
-                                                                    final String userDocId = Objects.requireNonNull(documentSnapshot1.get("doc_Id")).toString();
-
-                                                                    final String userName = Objects.requireNonNull(documentSnapshot1.get("userName")).toString();
-                                                                    final String userMail = Objects.requireNonNull(documentSnapshot1.get("userMailID")).toString();
-
-                                                                    final String userContactNum = Objects.requireNonNull(documentSnapshot1.get("userContactNumber")).toString();
-
-                                                                    final String userType = Objects.requireNonNull(documentSnapshot1.get("userType")).toString();
-                                                                    final String studentBlock = Objects.requireNonNull(documentSnapshot1.get("studentBlock")).toString();
-
-                                                                    final String studentBranch = Objects.requireNonNull(documentSnapshot1.get("studentBranch")).toString();
-                                                                    final String studentNativeLanguage = Objects.requireNonNull(documentSnapshot1.get("studentNativeLanguage")).toString();
-                                                                    final String studentRoomNo = Objects.requireNonNull(documentSnapshot1.get("roomNo")).toString();
-                                                                    final String studentRoomType = Objects.requireNonNull(documentSnapshot1.get("roomType")).toString();
-                                                                    final String admin = Objects.requireNonNull(documentSnapshot1.get("isAdmin")).toString();
-
-                                                                    User user = User.getInstance();
-                                                                    user.setUser_Id(userID);
-                                                                    user.setDoc_Id(userDocId);
-                                                                    user.setUserName(userName);
-                                                                    user.setUserMailID(userMail);
-                                                                    user.setUserContactNumber(userContactNum);
-                                                                    user.setUserType(userType);
-                                                                    user.setStudentBlock(studentBlock);
-                                                                    user.setStudentBranch(studentBranch);
-                                                                    user.setStudentNativeLanguage(studentNativeLanguage);
-                                                                    user.setRoomNo(studentRoomNo);
-                                                                    user.setRoomType(studentRoomType);
-                                                                    boolean adminVal = false;
-                                                                    if (admin.equalsIgnoreCase("1")) {
-                                                                        adminVal = true;
-                                                                    }
-                                                                    user.setAdmin(adminVal);
-
-                                                                    globalBlock = studentBlock;
-                                                                    globalRoomNo = studentRoomNo;
-
-                                                                    final String beds = studentRoomType.split("\\|")[0].trim();
-                                                                    int tNum = Integer.parseInt(beds);
-
-                                                                    //Toast.makeText(LoginActivity.this,tNum , Toast.LENGTH_SHORT).show();
-
-                                                                    sqlDatabase = new LocalSqlDatabase(LoginActivity.this, tNum, LoginActivity.this);
-
-                                                                    //todo insert user to database
-                                                                    boolean userResult = sqlDatabase.addUser(user);
-                                                                    if (!userResult) {
-                                                                        //todo : Report user list download
-                                                                    }
-
-                                                                    tenantsSection
-                                                                            .document(studentBlock)
-                                                                            .collection(studentRoomNo)
-                                                                            .document("Tenants")
-                                                                            .get()
-                                                                            .addOnSuccessListener(documentSnapshot2 -> {
-                                                                                if (documentSnapshot2.exists()) {
-                                                                                    final String tenantsRaw = Objects.requireNonNull(documentSnapshot2.get("list")).toString();
+                                                            .addOnCompleteListener(
+                                                                    new OnCompleteListener<DocumentSnapshot>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                            if (task.isSuccessful()) {
+                                                                                DocumentSnapshot documentSnapshot = task.getResult();
+                                                                                if (documentSnapshot.exists()) {
+                                                                                    final String tenantsRaw = Objects.requireNonNull(documentSnapshot.get("list")).toString();
                                                                                     final String[] tenantMailList = tenantsRaw.split("%");
                                                                                     for (String mId : tenantMailList) {
                                                                                         Tenant tenant = new Tenant(mId);
+                                                                                        tenantList.add(tenant);
                                                                                         sqlDatabase.addTenant(tenant);
                                                                                     }
-
-                                                                                } else {
-                                                                                    //todo report error -> no tenant list found
                                                                                 }
-                                                                            });
+                                                                            }
+                                                                        }
+                                                                    }
+                                                            );
 
-                                                                } else {
-                                                                    progressBar.setVisibility(View.INVISIBLE);
-                                                                    callSnackBar("User Record Not Found");
-                                                                }
-                                                            })
-                                                            .addOnFailureListener(e -> {
-                                                                progressBar.setVisibility(View.INVISIBLE);
-                                                                callSnackBar(e.getMessage());
-                                                            });
                                                 } else {
                                                     progressBar.setVisibility(View.INVISIBLE);
-                                                    FirebaseAuth.getInstance().signOut();
-                                                    final String msg = "User Record not found , Account must have been deleted";
-                                                    callSnackBar(msg);
+                                                    callSnackBar("User Record Not Found");
                                                 }
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                progressBar.setVisibility(View.INVISIBLE);
+                                                callSnackBar(e.getMessage());
                                             });
+
 
                                 } else {
                                     progressBar.setVisibility(View.INVISIBLE);
@@ -450,23 +449,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void onNotifyCompleteListDownload(NotifyStatus notifyStatus) {
-        tenantsBioSection
-                .document(globalBlock)
-                .collection(globalRoomNo)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            LocalSqlDatabase.tenantCollectionSize = task.getResult().size();
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                Tenant tenant = documentSnapshot.toObject(Tenant.class);
-                                sqlDatabase.updateTenant(tenant);
+    public void onNotifyCompleteListDownload() throws NoSuchAlgorithmException {
+        LocalSqlDatabase.tenantCollectionSize = tenantList.size();
+        for (Tenant tenant : tenantList) {
+            hostelDetailsSection
+                    .document(Mod.TED.toString())
+                    .collection(Mod.DET.toString())
+                    .document(Scramble.getScramble(tenant.getTenantMailID()))
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot documentSnapshot = task.getResult();
+                                if (documentSnapshot.exists()) {
+                                    Tenant updatedTenant = documentSnapshot.toObject(Tenant.class);
+                                    sqlDatabase.updateTenant(updatedTenant);
+                                } else {
+                                    sqlDatabase.updateTenant(tenant);
+                                }
                             }
                         }
-                    }
-                });
+                    });
+        }
     }
 
 

@@ -14,12 +14,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.anubhav.vitinsiderhostel.R;
+import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.anubhav.vitinsiderhostel.fragments.OutingHistoryFragment;
 import com.anubhav.vitinsiderhostel.fragments.OutingRequestFragment;
 import com.anubhav.vitinsiderhostel.interfaces.iOnDopClicked;
+import com.anubhav.vitinsiderhostel.models.User;
 
 public class FeaturedActivity extends AppCompatActivity implements View.OnClickListener, iOnDopClicked {
 
+
+    private LocalSqlDatabase localSqlDatabase ;
 
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<>() {
         @Override
@@ -37,7 +41,7 @@ public class FeaturedActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_featured);
 
-
+        localSqlDatabase = new LocalSqlDatabase(FeaturedActivity.this);
         final String section = getIntent().getStringExtra("Section");
         if (savedInstanceState == null) {
             if (section.equalsIgnoreCase("ApplyOuting")) {
@@ -85,4 +89,16 @@ public class FeaturedActivity extends AppCompatActivity implements View.OnClickL
         intent.putExtra("DocId", reqDocId);
         activityResultLauncher.launch(intent);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (User.getInstance()==null){
+            User user = null;
+            user = localSqlDatabase.getCurrentUser();
+        }
+    }
+
+
+
 }

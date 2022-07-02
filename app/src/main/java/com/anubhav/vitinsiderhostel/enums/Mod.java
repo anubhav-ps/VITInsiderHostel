@@ -2,13 +2,20 @@ package com.anubhav.vitinsiderhostel.enums;
 
 import androidx.annotation.NonNull;
 
-public enum MOD {
+public enum Mod {
 
     HOD("63126-1223682-24-108-43127-3280-85-7895-48100"),    //  HOSTEL DETAILS
     HOS("-14-36-119-8431-47-26-118-737321-6269-9211132"),    // HOSTEL STUDENTS
     HOR("72-10539-116-127310959121-8559369510714117"),    // HOSTEL ROOMS
     HOT("-1246263-7759-34-4-40-96-8367-80-72-92-28126"),    // HOSTEL TENANTS
     TED("-3079112-1121041121123219-102-12312377-814266"),    // TENANT DETAILS
+    DET("4932018116-650-8733119122765-26-3610"),             //DETAILS
+
+    BLA("76-5299-60-93-29561-15-91-917838121-3482"),
+    BLB("-77-7983776460-11918-70361104797-768-16"),
+    BLC("-10986-88-61-31-13101101-66-50-38-118-55-1-57-106"),
+    BLD("43-974-124-4456104369251-108-79107-97113-64"),
+
     USD("-48-73-134045-5-901770-81-122-2-51-52127-113"),    //  USER DETAILS
     USSTU("122321-287811396-97-1439-5644-3922-3341"),  //  STUDENT USER
     USFAC("5010586-4-105-71936439-1017121-7884-124-128"),  // FACULTY USER
@@ -18,11 +25,14 @@ public enum MOD {
     OUD("-20-50-108-28-10290-7018-4531123-9711611410-56"),    // OUTING DOP
     OUH("59-47-15-4-8824-5-11097-8929-9926-83120"),    // OUTING HISTORIES
     OUDE("-109125-3310561-35-12711664764887426481-127"),   // OUTING DEFAULTERS
-    OUSTA("641114967742111116-7455-36-4284-11170-124");  // OUTING STATUS
+    OUSTA("641114967742111116-7455-36-4284-11170-124"),  // OUTING STATUS
+
+    RES("-221065055-2086104-124-394074-31-56-26-11317"),
+    NOS("-69-113-5262-69-33-122-9466-65-81-79-12822120-8");
 
     public final String value;
 
-    MOD(String value) {
+    Mod(String value) {
         this.value = value;
     }
 
@@ -30,6 +40,19 @@ public enum MOD {
     @Override
     public String toString() {
         return this.value;
+    }
+
+
+    public static String getBlock(String value){
+        if (value.equalsIgnoreCase("A")){
+            return BLA.toString();
+        }else if (value.equalsIgnoreCase("B")){
+            return BLB.toString();
+        }else if (value.equalsIgnoreCase("C")){
+            return BLC.toString();
+        }else{
+            return BLD.toString();
+        }
     }
 
 }

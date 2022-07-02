@@ -23,31 +23,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anubhav.vitinsiderhostel.R;
-import com.anubhav.vitinsiderhostel.dialogViews.ViewTenantDialog;
 import com.anubhav.vitinsiderhostel.adapters.RoomServiceRecyclerAdapter;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
-import com.anubhav.vitinsiderhostel.models.AppError;
-import com.anubhav.vitinsiderhostel.enums.ErrorCode;
-import com.anubhav.vitinsiderhostel.models.RoomService;
+import com.anubhav.vitinsiderhostel.dialogViews.ViewTenantDialog;
 import com.anubhav.vitinsiderhostel.enums.ServiceType;
+import com.anubhav.vitinsiderhostel.models.RoomService;
 import com.anubhav.vitinsiderhostel.models.Tenant;
-import com.anubhav.vitinsiderhostel.models.Ticket;
-import com.anubhav.vitinsiderhostel.enums.TicketStatus;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textview.MaterialTextView;
-import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 
@@ -56,8 +50,8 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference roomTickets = db.collection("RoomTickets");
-    private final CollectionReference allTickets = db.collection("AllTickets");
-    private final CollectionReference ticketHistory = db.collection("TicketHistory");
+    /* private final CollectionReference allTickets = db.collection("AllTickets");
+     private final CollectionReference ticketHistory = db.collection("TicketHistory");*/
     private final CollectionReference reportSection = db.collection("Reports");
 
 
@@ -103,7 +97,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
 
     private LinearLayout secondRow;
     private LinearLayout p4;
-    private String beds;
+    private int beds;
 
     private List<Tenant> tenantList;
 
@@ -111,6 +105,11 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
     private String roomNo, roomType, block, userMail;
 
     private boolean ac = false;
+
+    // firebase declaration
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener authStateListener;
+    private FirebaseUser user;
 
 
     public RoomFragment() {
@@ -126,6 +125,14 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        //firebase instantiation
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        //firebase authState listener definition
+        authStateListener = firebaseAuth -> user = firebaseAuth.getCurrentUser();
+
+
         // Inflate the layout for this fragment
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_room, container, false);
@@ -166,7 +173,8 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
         secondRow = rootView.findViewById(R.id.roomPgeRow2LinearLayout);
         p4 = rootView.findViewById(R.id.roomPgeP4LinearLayout);
 
-        beds = roomType.split("\\|")[0];
+        beds = tenantList.size();
+        final String totalBeds = roomType.split("\\|")[0];
 
         final boolean isAc = roomType.split("\\|")[1].equalsIgnoreCase("AC");
         ac = isAc;
@@ -185,11 +193,11 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
         }
 
         roomDetailTxt.setText(roomDetail);
-        bedsTxt.setText(beds);
+        bedsTxt.setText(totalBeds);
         typeTxt.setText(typeStr);
 
         // assign names to the avatar
-        if (beds.equalsIgnoreCase("2")) {
+        if (beds == 2) {
             secondRow.setVisibility(View.GONE);
             p4.setVisibility(View.GONE);
 
@@ -203,7 +211,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
                 p2UserNameCardTxt.setText(t2.getTenantUserName());
             }
 
-        } else if (beds.equalsIgnoreCase("3")) {
+        } else if (beds == 3) {
             secondRow.setVisibility(View.VISIBLE);
             p4.setVisibility(View.GONE);
 
@@ -221,7 +229,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
                 p3UserNameCardTxt.setText(t3.getTenantUserName());
             }
 
-        } else if (beds.equalsIgnoreCase("4")) {
+        } else if (beds == 4) {
             secondRow.setVisibility(View.VISIBLE);
             p4.setVisibility(View.VISIBLE);
 
@@ -281,28 +289,24 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
             if (tenantList.get(0).getTenantUserName() != null) {
                 callTenantDialog(0);
             } else if (!tenantList.get(0).getTenantMailID().equalsIgnoreCase(userMail)) {
-                //todo invite user
                 inviteUser(0);
             }
         } else if (id == R.id.roomPgeP2Avatar) {
             if (tenantList.get(1).getTenantUserName() != null) {
                 callTenantDialog(1);
             } else if (!tenantList.get(1).getTenantMailID().equalsIgnoreCase(userMail)) {
-                //todo invite user
                 inviteUser(1);
             }
         } else if (id == R.id.roomPgeP3Avatar) {
             if (tenantList.get(2).getTenantUserName() != null) {
                 callTenantDialog(2);
             } else if (!tenantList.get(2).getTenantMailID().equalsIgnoreCase(userMail)) {
-                //todo invite user
                 inviteUser(2);
             }
         } else if (id == R.id.roomPgeP4Avatar) {
             if (tenantList.get(3).getTenantUserName() != null) {
                 callTenantDialog(3);
             } else if (!tenantList.get(3).getTenantMailID().equalsIgnoreCase(userMail)) {
-                //todo invite user
                 inviteUser(3);
             }
         }
@@ -312,9 +316,12 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
         dialog.setContentView(R.layout.invite_user_view);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         MaterialButton inviteUser = dialog.findViewById(R.id.inviteUserBtn);
+        MaterialTextView messageTxt = dialog.findViewById(R.id.inviteUserMessage);
         MaterialTextView mailNameTxt = dialog.findViewById(R.id.inviteUserMailName);
         final String mailName = tenantList.get(pos).getTenantMailID().split("@")[0];
+        final String message = "Your roommate from " + tenantList.get(pos).getTenantBranch() + " has not installed the app. Invite your roommate via mail to get their details";
         mailNameTxt.setText(mailName);
+        messageTxt.setText(message);
         inviteUser.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_SEND);
             final String mailTo = tenantList.get(pos).getTenantMailID();
@@ -377,7 +384,6 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
                         .get()
                         .addOnSuccessListener(documentSnapshot1 -> {
                             if (documentSnapshot1.exists()) {
-                                //todo already complaint exists
                                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
                                 builder.setTitle("Ticket Already Raised !");
                                 builder.setMessage("Ticket has been raised for this service already by you or your roommate.\n" +
@@ -387,7 +393,6 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
                                 });
                                 builder.show();
                             } else {
-                                //todo collect and upload ticket
                                 collectUploadTicket(documentReferenceToRoomTicket, serviceName);
                             }
 
@@ -396,7 +401,6 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
     }
 
     private void collectUploadTicket(DocumentReference documentReferenceToRoomTicket, String serviceName) {
-        //todo display entering of ticket description
         dialog.setContentView(R.layout.raise_ticket_view);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -442,7 +446,9 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
                 return;
             }
 
-            final String serviceDescription = descriptionEt.getText().toString();
+            Toast.makeText(getContext(), "Will be available from next update", Toast.LENGTH_SHORT).show();
+
+          /*  final String serviceDescription = descriptionEt.getText().toString();
             final Timestamp timestamp = new Timestamp(new Date());
             final String uploader = userMail;
 
@@ -453,14 +459,13 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
 
             final String docIdForTicket = documentReferenceToAllTicket.getId();
 
-            final Ticket ticket = new Ticket(docIdForTicket, roomNo, block, serviceName, serviceDescription, uploader, TicketStatus.BOOKED, timestamp);
+            final Ticket ticket = new Ticket(docIdForTicket, roomNo, block, serviceName, serviceDescription, uploader, TicketStatus.BOOKED, timestamp);*/
 
-            documentReferenceToAllTicket
+          /*  documentReferenceToAllTicket
                     .set(ticket)
                     .addOnCompleteListener(task -> {
 
                         if (task.isSuccessful()) {
-                            //todo push ticket into the room-ticket table
                             Map<String, String> map = new HashMap<>();
                             map.put("doc_ID", docIdForTicket);
                             documentReferenceToRoomTicket
@@ -470,7 +475,6 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
                                     .addOnCompleteListener(task1 -> {
 
                                         if (task1.isSuccessful()) {
-                                            // todo push ticket into ticket history table
                                             DocumentReference documentReferenceToTicketHistory = ticketHistory
                                                     .document("Room")
                                                     .collection(block)
@@ -519,7 +523,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
                             reportSection.document().set(appError);
                             dialog.dismiss();
                         }
-                    });
+                    });*/
         });
         dialog.show();
     }
@@ -533,5 +537,29 @@ public class RoomFragment extends Fragment implements View.OnClickListener, Room
         return String.valueOf(hr) + c1 + min + c2;
     }
 
+    //process 0 and process 1 functions
+    @Override
+    public void onStart() {
+        super.onStart();
+        user = firebaseAuth.getCurrentUser();
+        firebaseAuth.addAuthStateListener(authStateListener);
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (firebaseAuth != null) {
+            firebaseAuth.removeAuthStateListener(authStateListener);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (tenantList == null) {
+            localSqlDatabase = new LocalSqlDatabase(getContext());
+            tenantList = localSqlDatabase.getTenants();
+        }
+
+    }
 }

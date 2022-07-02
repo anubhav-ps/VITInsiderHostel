@@ -171,7 +171,6 @@
                     android:textColor="@color/text_01"
                     android:textSize="16sp" />
 
-
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -180,7 +179,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
-                    android:text="3. Minimum 1 hr time interval between check in and check out is required to apply for Outing.
+                    android:text="3. Even after outing is approved it can be rejected by managment citing student misconduct or other reasons.
 "
                     android:textColor="@color/text_01"
                     android:textSize="16sp" />
@@ -194,21 +193,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
-                    android:text="4. Even after outing is approved it can be rejected by managment citing student misconduct or other reasons.
-"
-                    android:textColor="@color/text_01"
-                    android:textSize="16sp" />
-
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:layout_marginTop="12dp"
-                    android:fontFamily="sans-serif-light"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
-                    android:text="5. Misuse of outing request feature for play or fun will lead to suspension of outing for 2 month for student who applied."
+                    android:text="4. Misuse of outing request feature for play or fun will lead to suspension of outing for 2 month for student who applied."
                     android:textColor="@color/text_01"
                     android:textSize="16sp" />
 

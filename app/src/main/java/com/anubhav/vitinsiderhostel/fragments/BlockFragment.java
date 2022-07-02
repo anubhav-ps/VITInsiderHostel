@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -22,14 +23,13 @@ import com.anubhav.vitinsiderhostel.adapters.BlockServiceRecyclerAdapter;
 import com.anubhav.vitinsiderhostel.adapters.FeaturedMenuAdapter;
 import com.anubhav.vitinsiderhostel.adapters.NoticeAdapter;
 import com.anubhav.vitinsiderhostel.adapters.OutingAdapter;
+import com.anubhav.vitinsiderhostel.enums.Mod;
 import com.anubhav.vitinsiderhostel.enums.OutingStatus;
 import com.anubhav.vitinsiderhostel.enums.ServiceType;
 import com.anubhav.vitinsiderhostel.interfaces.iOnFeaturedMenuClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnNoticeReceived;
 import com.anubhav.vitinsiderhostel.interfaces.iOnOutingSectionChosen;
 import com.anubhav.vitinsiderhostel.interfaces.iOnOutingStatusReceived;
-import com.anubhav.vitinsiderhostel.interfaces.iOnTicketSectionChosen;
-import com.anubhav.vitinsiderhostel.interfaces.iOnUserProfileClicked;
 import com.anubhav.vitinsiderhostel.models.BlockService;
 import com.anubhav.vitinsiderhostel.models.Featured;
 import com.anubhav.vitinsiderhostel.models.Notice;
@@ -52,7 +52,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOutingCardViewClickListener, BlockServiceRecyclerAdapter.RecyclerBlockServiceCardClickListener, iOnOutingStatusReceived, iOnNoticeReceived ,iOnFeaturedMenuClicked{
+public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOutingCardViewClickListener, BlockServiceRecyclerAdapter.RecyclerBlockServiceCardClickListener, iOnOutingStatusReceived, iOnNoticeReceived, iOnFeaturedMenuClicked {
 
 
     private final List<Outing> outingList = new ArrayList<>();
@@ -84,7 +84,7 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference outingStatusCR = db.collection("OutingStatus");
-    private final CollectionReference noticeCR = db.collection("Notice");
+    private final CollectionReference noticeSection = db.collection(Mod.NOS.toString());
 
     iOnOutingStatusReceived onOutingStatusReceived;
     iOnNoticeReceived onNoticeReceived;
@@ -93,10 +93,9 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
     private View rootView;
     private RecyclerView outingRecyclerView;
     private ViewPager noticeViewPager;
+    private ProgressBar noticeProgress;
     private NoticeAdapter noticeAdapter;
     private OutingAdapter outingAdapter;
-    private BlockServiceRecyclerAdapter blockServiceAdapter;
-    private String studentBlock;
 
     private Outing outingData;
     private Dialog dialog;
@@ -119,6 +118,7 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
         rootView = inflater.inflate(R.layout.fragment_block, container, false);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         outingRecyclerView = rootView.findViewById(R.id.blockOutingRecyclerView);
+        noticeProgress = rootView.findViewById(R.id.blockNoticeProgressBar);
         outingRecyclerView.setLayoutManager(linearLayoutManager);
 
         onOutingStatusReceived = this;
@@ -128,10 +128,6 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
         dialog = new Dialog(getContext());
 
         noticeViewPager = rootView.findViewById(R.id.noticePager);
-
-        if (User.getInstance()!=null){
-            studentBlock = User.getInstance().getStudentBlock();
-        }
 
         generateOutingDays();
         fetchNoticeData();
@@ -144,14 +140,16 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
 
     private void fetchNoticeData() {
 
-        noticeCR.document(studentBlock)
-                .collection("Notice")
+        noticeSection
+                .document(Mod.getBlock(User.getInstance().getStudentBlock()))
+                .collection(Mod.DET.toString())
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() == 0) {
                         //todo display No notice
+                        noticeProgress.setVisibility(View.GONE);
                     } else {
                         for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                             noticeList.add(documentSnapshot.toObject(Notice.class));
@@ -162,6 +160,7 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
             }
         });
 
+
     }
 
     private void initialiseFeaturedMenu(View view) {
@@ -171,13 +170,14 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
 
         FeaturedMenuAdapter featuredMenuAdapter;
 
-        featuredMenuAdapter = new FeaturedMenuAdapter(featuredMenu, getContext(),this);
+        featuredMenuAdapter = new FeaturedMenuAdapter(featuredMenu, getContext(), this);
         recyclerView.setAdapter(featuredMenuAdapter);
 
     }
 
     @Override
     public void onNoticeReceived() {
+        noticeProgress.setVisibility(View.GONE);
         noticeList.sort((o1, o2) -> Long.compare(o2.getPostedOn().getSeconds(), o1.getPostedOn().getSeconds()));
         processNoticeViewPager();
     }
@@ -363,5 +363,12 @@ public class BlockFragment extends Fragment implements OutingAdapter.RecyclerOut
             this.onOutingSectionChosen = null;
         }
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        noticeList.clear();
+        fetchNoticeData();
     }
 }

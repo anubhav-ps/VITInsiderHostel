@@ -109,7 +109,7 @@ public class ViewTenantDialog extends DialogFragment implements View.OnClickList
             String tenantContactNumber = args.getString("tenantContactNumber");
             String tenantNativeLanguage = args.getString("tenantNativeLanguage");
             String tenantBranch = args.getString("tenantBranch");
-            return new Tenant(tenantName, tenantMailId, tenantContactNumber, tenantNativeLanguage, tenantBranch);
+            return new Tenant(tenantName, tenantMailId,0, tenantContactNumber, tenantNativeLanguage, tenantBranch);
         }
         return new Tenant();
     }

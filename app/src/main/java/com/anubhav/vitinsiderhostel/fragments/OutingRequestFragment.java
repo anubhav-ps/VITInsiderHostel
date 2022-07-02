@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.enums.ORAStatus;
+import com.anubhav.vitinsiderhostel.interfaces.iOnUserAccountDeleted;
 import com.anubhav.vitinsiderhostel.models.LinkEnds;
 import com.anubhav.vitinsiderhostel.models.ORAStudentLink;
 import com.anubhav.vitinsiderhostel.models.ORApp;
@@ -32,15 +33,13 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,20 +47,25 @@ import java.util.regex.Pattern;
 public class OutingRequestFragment extends Fragment implements View.OnClickListener {
 
 
-    TextInputEditText studentNameEt, studentRegisterNumberEt, studentMailIdEt, studentContactNumberEt, studentRoomDetailsEt, parentContactNumberEt, proctorContactNumberEt, visitLocationEt, visitPurposeEt, checkInTimeEt, checkOutTimeEt, visitDateEt;
+    TextInputEditText studentNameEt, studentRegisterNumberEt, studentMailIdEt, studentContactNumberEt, studentRoomDetailsEt, parentContactNumberEt, visitLocationEt, visitPurposeEt, checkOutTimeEt, visitDateEt;
     MaterialTextView userNameTxt;
     ImageView locationPickerBtn;
     ProgressBar progressBar;
     MaterialButton applyBtn;
     LinkEnds coupleEnds = new LinkEnds();
     ORApp oraUpload = new ORApp();
-    private String userName, studentMailId, studentContactNumber, studentRoomNum, studentBlock;
+    private String userName, studentMailId, studentRegisterNumber, studentContactNumber, studentRoomNum, studentBlock;
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private TimePickerDialog.OnTimeSetListener timeSetListener;
-    private int outHr, outMin, inHr, inMin;
-    private boolean flagInTime = false, flagOutTime = false;
+    private int outHr;
+    private boolean flagOutTime = false;
     private String fdate = null;
     private Dialog dialog;
+
+    // firebase declaration
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener authStateListener;
+    private FirebaseUser user;
 
 
     public OutingRequestFragment() {
@@ -81,6 +85,13 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_outing_request, container, false);
 
+        //firebase instantiation
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        //firebase authState listener definition
+        authStateListener = firebaseAuth -> user = firebaseAuth.getCurrentUser();
+
+
         dialog = new Dialog(getContext());
         userNameTxt = rootView.findViewById(R.id.oraUserNameTxt);
         studentNameEt = rootView.findViewById(R.id.oraStudentNameEt);
@@ -89,14 +100,14 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
         studentRoomDetailsEt = rootView.findViewById(R.id.oraStudentRoomDetailEt);
         studentContactNumberEt = rootView.findViewById(R.id.oraStudentContactNumberEt);
         parentContactNumberEt = rootView.findViewById(R.id.oraStudentParentContactNumberEt);
-        proctorContactNumberEt = rootView.findViewById(R.id.oraStudentProctorContactNumberEt);
+
 
         visitLocationEt = rootView.findViewById(R.id.oraVisitLocationEt);
         locationPickerBtn = rootView.findViewById(R.id.oraVisitLocationPickerBtn);
         visitPurposeEt = rootView.findViewById(R.id.oraVisitPurposeEt);
         visitDateEt = rootView.findViewById(R.id.oraVisitDateEt);
         checkOutTimeEt = rootView.findViewById(R.id.oraVisitCheckOutEt);
-        checkInTimeEt = rootView.findViewById(R.id.oraVisitCheckInEt);
+
 
         progressBar = rootView.findViewById(R.id.oraProgressBar);
         applyBtn = rootView.findViewById(R.id.oraApplyButton);
@@ -104,6 +115,7 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
         if (User.getInstance() != null) {
             userName = User.getInstance().getUserName();
             studentMailId = User.getInstance().getUserMailID();
+            studentRegisterNumber = User.getInstance().getStudentRegisterNumber();
             studentContactNumber = User.getInstance().getUserContactNumber();
             studentRoomNum = User.getInstance().getRoomNo();
             studentBlock = User.getInstance().getStudentBlock();
@@ -111,11 +123,13 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
 
         userNameTxt.setText(userName);
         studentMailIdEt.setText(studentMailId);
+        studentRegisterNumberEt.setText(studentRegisterNumber);
         studentContactNumberEt.setText(studentContactNumber);
         final String roomDetail = studentRoomNum + "-" + studentBlock;
         studentRoomDetailsEt.setText(roomDetail);
 
         oraUpload.setStudentMailId(studentMailId);
+        oraUpload.setStudentRegisterNumber(studentRegisterNumber);
         oraUpload.setStudentContactNumber(studentContactNumber);
         oraUpload.setStudentRoomDetails(roomDetail);
 
@@ -123,7 +137,6 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
         locationPickerBtn.setOnClickListener(this);
         visitDateEt.setOnClickListener(this);
         checkOutTimeEt.setOnClickListener(this);
-        checkInTimeEt.setOnClickListener(this);
         applyBtn.setOnClickListener(this);
 
         return rootView;
@@ -139,8 +152,6 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
             processDateSelection();
         } else if (id == R.id.oraVisitCheckOutEt) {
             processCheckOutTimeSelection();
-        } else if (id == R.id.oraVisitCheckInEt) {
-            processCheckInTimeSelection();
         } else if (id == R.id.oraApplyButton) {
             validateAll();
         }
@@ -148,15 +159,13 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
 
     private void validateAll() {
         if (validateStudentName(studentNameEt)
-                && validateRegisterNumber(studentRegisterNumberEt)
-                && validateContactNumber(parentContactNumberEt) && validateContactNumber(proctorContactNumberEt)
+                && validateContactNumber(parentContactNumberEt)
                 && validateVisitLocation(visitLocationEt) && validateVisitPurpose(visitPurposeEt)
                 && validateDate(visitDateEt)
-                && validateTime(checkOutTimeEt) && validateTime(checkInTimeEt) && flagOutTime && flagInTime) {
+                && validateTime(checkOutTimeEt) && flagOutTime) {
 
-            if (validateTimeInterval(checkInTimeEt)) {
-                openTermsNCondition();
-            }
+            openTermsNCondition();
+
         }
     }
 
@@ -196,38 +205,6 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
         fdate = val;
     }
 
-    // function definition for the process to be performed when the select Time button is clicked
-    private void processCheckInTimeSelection() {
-
-        Calendar calendar;
-        int hours;
-        int min;
-        TimePickerDialog timePickerDialog;
-
-        calendar = Calendar.getInstance();
-        hours = calendar.get(Calendar.HOUR_OF_DAY);
-        min = calendar.get(Calendar.MINUTE);
-
-        timeSetListener = (view, hourOfDay, minute) -> {
-            inHr = hourOfDay;
-            inMin = minute;
-            if (inHr >= 6 && inHr < 22) {
-                checkInTimeEt.setError(null);
-                flagInTime = true;
-            } else {
-                checkInTimeEt.setError(" ");
-                flagInTime = false;
-            }
-            final String time = hourOfDay + ":" + minute;
-            checkInTimeEt.setText(time);
-        };
-
-        timePickerDialog = new TimePickerDialog(getContext(), android.R.style.Theme_Holo_Light_Dialog_MinWidth, timeSetListener, hours, min, true);
-        timePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        timePickerDialog.show();
-
-    }
-
     private void processCheckOutTimeSelection() {
 
         Calendar calendar;
@@ -241,7 +218,6 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
 
         timeSetListener = (view, hourOfDay, minute) -> {
             outHr = hourOfDay;
-            outMin = minute;
             if (outHr >= 5 && outHr < 20) {
                 checkOutTimeEt.setError(null);
                 flagOutTime = true;
@@ -271,6 +247,7 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
         final int min = java.util.Calendar.getInstance().get(java.util.Calendar.MINUTE);
         Random r = new Random();
         char c1 = (char) (r.nextInt(25) + 'a');
+
         char c2 = (char) (r.nextInt(25) + 'a');
         return String.valueOf(hr) + c1 + min + c2;
     }
@@ -330,6 +307,8 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
         DocumentReference oraDocRef = coupleEnds.insertOREK(studentBlock, splitDate[2], splitDate[1], splitDate[0]).document();
         final String docId = oraDocRef.getId();
         final Timestamp uploadTime = new Timestamp(new Date());
+        final String checkIn = "18:00";
+        oraUpload.setCheckIn(checkIn);
         oraUpload.setOraDocId(docId);
         oraUpload.setOraStatus(ORAStatus.APPLIED.toString());
         oraUpload.setUploadTimestamp(uploadTime);
@@ -340,7 +319,7 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             ORAStudentLink oraStudentLink = coupleEnds.getStudentLinkId(docId, uploadTime);
-                            DocumentReference studentLinkDocRef = coupleEnds.insertLinkStudentOREK(studentMailId ,studentBlock, splitDate[2], splitDate[1], splitDate[0], docId);
+                            DocumentReference studentLinkDocRef = coupleEnds.insertLinkStudentOREK(studentMailId, studentBlock, splitDate[2], splitDate[1], splitDate[0], docId);
                             studentLinkDocRef.set(oraStudentLink).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -399,40 +378,7 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
             return false;
         }
 
-        if (editText.getId() == R.id.oraStudentParentContactNumberEt) {
-            oraUpload.setParentNumber(number);
-        } else if (editText.getId() == R.id.oraStudentProctorContactNumberEt) {
-            oraUpload.setProctorNumber(number);
-        }
-
-        return true;
-    }
-
-    private boolean validateRegisterNumber(TextInputEditText editText) {
-        final String pattern = "[1-2][0-9][A-Z]{3}[0-9]{4}";
-        final String registerNum = Objects.requireNonNull(editText.getText()).toString().trim().toUpperCase(Locale.ROOT).trim();
-
-        if (TextUtils.isEmpty(registerNum)) {
-            editText.setError("Register Number is required");
-            editText.requestFocus();
-            return false;
-        }
-
-        if (registerNum.length() < 9) {
-            editText.setError("Invalid Register Number");
-            editText.requestFocus();
-            return false;
-        }
-
-        Pattern p = Pattern.compile(pattern);
-        Matcher m = p.matcher(registerNum);
-
-        if (!m.matches()) {
-            editText.setError("Incorrect Pattern");
-            editText.requestFocus();
-            return false;
-        }
-        oraUpload.setStudentRegisterNumber(registerNum);
+        oraUpload.setParentNumber(number);
         return true;
     }
 
@@ -477,11 +423,8 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
             editText.requestFocus();
             return false;
         }
-        if (editText.getId() == R.id.oraVisitCheckOutEt) {
-            oraUpload.setCheckOut(time);
-        } else if (editText.getId() == R.id.oraVisitCheckInEt) {
-            oraUpload.setCheckIn(time);
-        }
+        oraUpload.setCheckOut(time);
+
         editText.setError(null);
         return true;
     }
@@ -498,35 +441,20 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
         return true;
     }
 
-    private boolean validateTimeInterval(TextInputEditText editText) {
+    //process 0 and process 1 functions
+    @Override
+    public void onStart() {
+        super.onStart();
+        user = firebaseAuth.getCurrentUser();
+        firebaseAuth.addAuthStateListener(authStateListener);
+    }
 
-        final String inDate = inHr + ":" + inMin;
-        final String outDate = outHr + ":" + outMin;
-        long diffMin = 0;
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-
-        try {
-            Date dIn = simpleDateFormat.parse(inDate);
-            Date dOut = simpleDateFormat.parse(outDate);
-            assert dIn != null;
-            assert dOut != null;
-            long diff = dIn.getTime() - dOut.getTime();
-            diffMin = TimeUnit.MILLISECONDS.toMinutes(diff);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return false;
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (firebaseAuth != null) {
+            firebaseAuth.removeAuthStateListener(authStateListener);
         }
-
-        if (diffMin < 60) {
-            editText.setError(" ");
-            editText.requestFocus();
-            return false;
-        }
-
-        editText.setError(null);
-        return true;
-
     }
 
 

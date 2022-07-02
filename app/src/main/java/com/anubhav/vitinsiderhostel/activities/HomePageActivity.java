@@ -22,6 +22,7 @@ import com.anubhav.vitinsiderhostel.interfaces.iOnFeaturedMenuClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnOutingSectionChosen;
 import com.anubhav.vitinsiderhostel.interfaces.iOnTicketSectionChosen;
 import com.anubhav.vitinsiderhostel.interfaces.iOnUserProfileClicked;
+import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.textview.MaterialTextView;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
@@ -44,18 +45,26 @@ public class HomePageActivity extends AppCompatActivity implements iOnUserProfil
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
                 finish();
             } else if (result.getResultCode() == 86) {   // to come back to Home Page Activity and place the block fragment , if the back arrow or back pressed is called in ticket history activity
                 chipNavigationBar.setItemSelected(R.id.menu_account, true);
             } else if (result.getResultCode() == 88) {   // to come back to Home Page Activity and place the block fragment , if the back arrow or back pressed is called in outing activity
                 chipNavigationBar.setItemSelected(R.id.menu_block, true);
+            } else if (result.getResultCode() == 90){
+                Intent intent = new Intent(HomePageActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+                finish();
             }
         }
     });
 
     private MaterialTextView toolBarAccountText;
     private ImageView logo;
-
+    private LocalSqlDatabase localSqlDatabase ;
     // empty constructor
     public HomePageActivity() {
 
@@ -75,6 +84,7 @@ public class HomePageActivity extends AppCompatActivity implements iOnUserProfil
 
         bottomNavigationViewSetup();
 
+        localSqlDatabase = new LocalSqlDatabase(HomePageActivity.this);
 
         // placing the room fragment on initial entry
         if (savedInstanceState == null) {
@@ -157,6 +167,15 @@ public class HomePageActivity extends AppCompatActivity implements iOnUserProfil
         Intent intent = new Intent(HomePageActivity.this, FeaturedActivity.class);
         intent.putExtra("Section", "OutingHistory");
         activityResultLauncher.launch(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (User.getInstance()==null){
+            User user = null;
+            user = localSqlDatabase.getCurrentUser();
+        }
     }
 
 }

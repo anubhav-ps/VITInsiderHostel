@@ -19,6 +19,7 @@
         tools:ignore="RtlSymmetry">
 
         <ImageView
+            android:id="@+id/viewUserProfilePgeAvatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
@@ -67,7 +68,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingStart="40dp"
-        android:paddingTop="38dp"
+        android:paddingTop="20dp"
         android:paddingEnd="40dp"
         android:paddingBottom="24dp">
 
@@ -114,6 +115,33 @@
             android:fontFamily="sans-serif"
             android:padding="2dp"
             android:text="@string/user_profile_pge_user_mail_id_txt"
+            android:textColor="#E6626161"
+            android:textSize="14sp">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/darker_gray" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:fontFamily="@font/duru_sans"
+            android:padding="2dp"
+            android:text="Register Number"
+            android:textColor="#E6626161" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/viewUserProfilePgeRegisterNumberTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:padding="2dp"
+            android:text="00ABC1234"
             android:textColor="#E6626161"
             android:textSize="14sp">
 

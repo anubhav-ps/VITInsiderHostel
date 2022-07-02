@@ -75,23 +75,12 @@ public class Outing {
         return openTime;
     }
 
-    public void setOpenTime(String openTime) {
-        this.openTime = openTime;
-    }
-
     public String getCloseTime() {
         return closeTime;
-    }
-
-    public void setCloseTime(String closeTime) {
-        this.closeTime = closeTime;
     }
 
     public String getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
-        this.duration = duration;
-    }
 }

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_fill_colour"
     android:orientation="vertical"
-    android:paddingTop="48dp"
+    android:paddingTop="40dp"
     tools:context=".fragments.EditProfileFragment">
 
 
@@ -16,8 +16,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="6dp"
-        android:elevation="2dp"
+        android:elevation="4dp"
         android:padding="2dp"
+        style="@style/SelectableItemBackground"
+        android:background="?attr/selectableItemBackground"
         android:src="@drawable/avataar_1m"
         app:elevation="2dp">
 
@@ -31,10 +33,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
-        android:textSize="16sp"
         android:background="?attr/selectableItemBackground"
         android:text="Change Avatar"
-        android:textColor="#E65A5A5A" />
+        android:textColor="#E65A5A5A"
+        android:textSize="16sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -90,6 +92,34 @@
             android:fontFamily="sans-serif"
             android:padding="2dp"
             android:text="@string/user_profile_pge_user_mail_id_txt"
+            android:textColor="#E6626161"
+            android:textSize="14sp">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/darker_gray" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/duru_sans"
+            android:padding="2dp"
+            android:text="Register Number"
+            android:textColor="#E6626161" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/editPgeRegisterNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:padding="2dp"
+            android:text="19BEE1144"
             android:textColor="#E6626161"
             android:textSize="14sp">
 
@@ -171,7 +201,6 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/editPgeBranch"
-            style="@style/SelectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"

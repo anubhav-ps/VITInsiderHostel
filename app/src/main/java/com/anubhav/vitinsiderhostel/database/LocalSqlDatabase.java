@@ -13,6 +13,7 @@ import com.anubhav.vitinsiderhostel.interfaces.iOnNotifyDbProcess;
 import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.User;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -21,9 +22,9 @@ import java.util.concurrent.Future;
 
 public class LocalSqlDatabase extends SQLiteOpenHelper {
 
-
     private static final String TENANT_TABLE = "TENANT_TABLE";
     private static final String TENANT_MAIL_ID = "MAIL_ID";
+    private static final String TENANT_AVATAR = "AVATAR";
     private static final String TENANT_NAME = "NAME";
     private static final String TENANT_CONTACT_NUMBER = "CONTACT_NUMBER";
     private static final String TENANT_BRANCH = "BRANCH";
@@ -32,8 +33,9 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
 
     private static final String USER_TABLE = "USER_TABLE";
     private static final String USER_ID = "USER_ID";
-    private static final String DOC_ID = "DOC_ID";
+
     private static final String USER_MAIL_ID = "MAIL_ID";
+    private static final String STUDENT_REGISTER_NUMBER = "REGISTER_NUMBER";
     private static final String USER_NAME = "NAME";
     private static final String USER_CONTACT_NUMBER = "CONTACT_NUMBER";
     private static final String USER_TYPE = "USER_TYPE";
@@ -43,6 +45,8 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
     private static final String ROOM_NO = "ROOM_NO";
     private static final String ROOM_TYPE = "ROOM_TYPE";
     private static final String IS_ADMIN = "IS_ADMIN";
+    private static final String USER_AVATAR = "AVATAR";
+
     public static int tenantCollectionSize;
     public static ExecutorService executors;
     private static int totalTenants;
@@ -52,12 +56,14 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
 
     iOnNotifyDbProcess notify;
 
-    public LocalSqlDatabase(@Nullable Context context) {
-        super(context, "INSIDER_HOSTEL_SQL_DB", null, 1);
+    public
+    LocalSqlDatabase(@Nullable Context context) {
+        super(context, "INSIDER_HOSTEL_DB", null, 1);
+        assert context != null;
     }
 
     public LocalSqlDatabase(@Nullable Context context, int tenants, iOnNotifyDbProcess notify) {
-        super(context, "INSIDER_HOSTEL_SQL_DB", null, 1);
+        super(context, "INSIDER_HOSTEL_DB", null, 1);
 
         this.notify = notify;
 
@@ -97,7 +103,11 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
             tenantList.clear();
             updatedTenantList.clear();
             if (notifyStatus == NotifyStatus.ROOM_MATE_LIST_DOWNLOADED) {
-                notify.onNotifyCompleteListDownload(notifyStatus);
+                try {
+                    notify.onNotifyCompleteListDownload();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
             } else if (notifyStatus == NotifyStatus.ROOM_MATE_COMPLETE_DATA_DOWNLOADED) {
                 notify.onNotifyCompleteDataDownload(notifyStatus);
             }
@@ -116,8 +126,9 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
                 = "CREATE TABLE " + USER_TABLE +
                 " (" +
                 USER_ID + " TEXT PRIMARY KEY, " +
-                DOC_ID + " TEXT , " +
                 USER_MAIL_ID + " TEXT , " +
+                STUDENT_REGISTER_NUMBER + " TEXT , " +
+                USER_AVATAR + " INT, " +
                 USER_NAME + " TEXT , " +
                 USER_CONTACT_NUMBER + " TEXT ," +
                 USER_TYPE + " TEXT ," +
@@ -137,6 +148,7 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
                 = "CREATE TABLE " + TENANT_TABLE +
                 " ( " +
                 TENANT_MAIL_ID + " TEXT PRIMARY KEY, " +
+                TENANT_AVATAR + " INT , " +
                 TENANT_NAME + " TEXT , " +
                 TENANT_CONTACT_NUMBER + " TEXT ," +
                 TENANT_BRANCH + " TEXT , " +
@@ -148,7 +160,9 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + TENANT_TABLE);
+        onCreate(db);
     }
 
 
@@ -158,6 +172,7 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
             for (Tenant tenant : tenantList) {
                 ContentValues cv = new ContentValues();
                 cv.put(TENANT_MAIL_ID, tenant.getTenantMailID());
+                cv.put(TENANT_AVATAR, tenant.getTenantAvatar());
                 cv.put(TENANT_NAME, tenant.getTenantUserName());
                 cv.put(TENANT_CONTACT_NUMBER, tenant.getTenantContactNumber());
                 cv.put(TENANT_BRANCH, tenant.getTenantBranch());
@@ -173,6 +188,7 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
             for (Tenant tenant : updatedTenantList) {
                 ContentValues cv = new ContentValues();
                 cv.put(TENANT_MAIL_ID, tenant.getTenantMailID());
+                cv.put(TENANT_AVATAR, tenant.getTenantAvatar());
                 cv.put(TENANT_NAME, tenant.getTenantUserName());
                 cv.put(TENANT_CONTACT_NUMBER, tenant.getTenantContactNumber());
                 cv.put(TENANT_BRANCH, tenant.getTenantBranch());
@@ -194,11 +210,12 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
             do {
                 tenants.add(
                         new Tenant(
-                                cursor.getString(1),
-                                cursor.getString(0),
                                 cursor.getString(2),
-                                cursor.getString(4),
-                                cursor.getString(3)
+                                cursor.getString(0),
+                                cursor.getInt(1),
+                                cursor.getString(3),
+                                cursor.getString(5),
+                                cursor.getString(4)
                         ));
 
             } while (cursor.moveToNext());
@@ -213,8 +230,9 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
 
         cv.put(USER_ID, user.getUser_Id());
-        cv.put(DOC_ID, user.getDoc_Id());
         cv.put(USER_MAIL_ID, user.getUserMailID());
+        cv.put(STUDENT_REGISTER_NUMBER, user.getStudentRegisterNumber());
+        cv.put(USER_AVATAR, user.getAvatar());
         cv.put(USER_CONTACT_NUMBER, user.getUserContactNumber());
         cv.put(USER_NAME, user.getUserName());
         cv.put(USER_TYPE, user.getUserType());
@@ -235,9 +253,9 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
 
         cv.put(USER_NAME, user.getUserName());
+        cv.put(USER_AVATAR, user.getAvatar());
         cv.put(USER_CONTACT_NUMBER, user.getUserContactNumber());
         cv.put(STUDENT_NATIVE_LANGUAGE, user.getStudentNativeLanguage());
-        cv.put(STUDENT_BRANCH, user.getStudentBranch());
 
         db.update(USER_TABLE, cv, "USER_ID = ?", new String[]{user.getUser_Id()});
         db.close();
@@ -253,17 +271,18 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             user.setUser_Id(cursor.getString(0));
-            user.setDoc_Id(cursor.getString(1));
-            user.setUserMailID(cursor.getString(2));
-            user.setUserName(cursor.getString(3));
-            user.setUserContactNumber(cursor.getString(4));
-            user.setUserType(cursor.getString(5));
-            user.setStudentBlock(cursor.getString(6));
-            user.setStudentBranch(cursor.getString(7));
-            user.setStudentNativeLanguage(cursor.getString(8));
-            user.setRoomNo(cursor.getString(9));
-            user.setRoomType(cursor.getString(10));
-            user.setAdmin(cursor.getInt(11) == 1);
+            user.setUserMailID(cursor.getString(1));
+            user.setStudentRegisterNumber(cursor.getString(2));
+            user.setAvatar(cursor.getInt(3));
+            user.setUserName(cursor.getString(4));
+            user.setUserContactNumber(cursor.getString(5));
+            user.setUserType(cursor.getString(6));
+            user.setStudentBlock(cursor.getString(7));
+            user.setStudentBranch(cursor.getString(8));
+            user.setStudentNativeLanguage(cursor.getString(9));
+            user.setRoomNo(cursor.getString(10));
+            user.setRoomType(cursor.getString(11));
+            user.setAdmin(cursor.getInt(12) == 1);
         }
 
         cursor.close();
@@ -301,6 +320,5 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
         db.close();
         return false;
     }
-
 
 }

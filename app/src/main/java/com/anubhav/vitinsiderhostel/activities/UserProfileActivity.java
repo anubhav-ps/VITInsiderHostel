@@ -1,20 +1,28 @@
 package com.anubhav.vitinsiderhostel.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.anubhav.vitinsiderhostel.R;
+import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.anubhav.vitinsiderhostel.fragments.ViewUserProfileFragment;
 import com.anubhav.vitinsiderhostel.interfaces.iOnUserAccountDeleted;
+import com.anubhav.vitinsiderhostel.interfaces.iOnUserAccountEdited;
+import com.anubhav.vitinsiderhostel.models.User;
 
-public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener, iOnUserAccountDeleted {
+public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener, iOnUserAccountDeleted , iOnUserAccountEdited {
+
+
+    private LocalSqlDatabase localSqlDatabase ;
 
     public UserProfileActivity() {
 
@@ -24,6 +32,9 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
+
+        localSqlDatabase = new LocalSqlDatabase(UserProfileActivity.this);
+
 
         if (savedInstanceState == null) {
             ViewUserProfileFragment viewUserProfileFragment = new ViewUserProfileFragment();
@@ -59,11 +70,26 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void userAccountDeleted() {
-       // todo delete the user details from the database
         Toast.makeText(UserProfileActivity.this, "User Account Deleted", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         setResult(99, intent);
         finish();
+    }
+
+    @Override
+    public void onUserAccountEdited() {
+        Intent intent = new Intent();
+        setResult(90, intent);
+        finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (User.getInstance()==null){
+            User user = null;
+            user = localSqlDatabase.getCurrentUser();
+        }
     }
 
 }

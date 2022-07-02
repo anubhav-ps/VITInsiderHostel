@@ -211,7 +211,6 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryF
         MaterialTextView studentRoomDetail = dialog.findViewById(R.id.dialogViewOrekStudentRoomDetail);
         MaterialTextView studentContactNumber = dialog.findViewById(R.id.dialogViewOrekStudentNumber);
         MaterialTextView parentContactNumber = dialog.findViewById(R.id.dialogViewOrekParentNumber);
-        MaterialTextView proctorContactNumber = dialog.findViewById(R.id.dialogViewOrekProctorNumber);
 
         visitDate.setText(orApps.get(pos).getVisitDate());
         visitPurpose.setText(orApps.get(pos).getVisitPurpose().trim());
@@ -220,7 +219,6 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryF
         studentRoomDetail.setText(orApps.get(pos).getStudentRoomDetails());
         studentContactNumber.setText(orApps.get(pos).getStudentContactNumber());
         parentContactNumber.setText(orApps.get(pos).getParentNumber());
-        proctorContactNumber.setText(orApps.get(pos).getProctorNumber());
 
         dialog.show();
 

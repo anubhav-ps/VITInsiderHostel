@@ -98,7 +98,7 @@
 
 
     <string name="invite_dialog_invite_txt">Invite User</string>
-    <string name="invite_dialog_content_txt">Your roommate has not installed the app.Invite your roommate via mail to get their details</string>
+    <string name="invite_dialog_content_txt">Your roommate from Electrical &amp; Electronics branch has not installed the app. Invite your roommate via mail to get their details</string>
     <string name="invite_dialog_mail_txt">.vitstudent.ac.in</string>
     <string name="invite_dialog_btn_txt">Invite User</string>
     <string name="tenant_dialog_detail_txt">Detail</string>
