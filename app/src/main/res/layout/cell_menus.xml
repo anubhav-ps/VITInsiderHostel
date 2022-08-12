@@ -35,7 +35,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="8dp"
             android:textColor="@color/text_02"
-            android:text="Mess Food">
+            android:text="@string/cell_menu_title_lbl">
 
         </com.google.android.material.textview.MaterialTextView>
 

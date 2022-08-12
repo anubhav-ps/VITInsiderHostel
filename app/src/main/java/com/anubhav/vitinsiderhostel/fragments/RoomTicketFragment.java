@@ -16,11 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.adapters.RoomTicketsAdapter;
+import com.anubhav.vitinsiderhostel.enums.TicketStatus;
+import com.anubhav.vitinsiderhostel.interfaces.iOnRoomTicketCardClicked;
+import com.anubhav.vitinsiderhostel.interfaces.iOnTicketListDownloaded;
 import com.anubhav.vitinsiderhostel.models.Ticket;
 import com.anubhav.vitinsiderhostel.models.TicketIDs;
-import com.anubhav.vitinsiderhostel.enums.TicketStatus;
 import com.anubhav.vitinsiderhostel.models.User;
-import com.anubhav.vitinsiderhostel.interfaces.iOnTicketListReceived;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -33,12 +34,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class RoomTicketFragment extends Fragment implements iOnTicketListReceived, RoomTicketsAdapter.iOnRoomTicketLongPressed {
+public class RoomTicketFragment extends Fragment implements iOnTicketListDownloaded, iOnRoomTicketCardClicked {
 
     private final FirebaseFirestore dB = FirebaseFirestore.getInstance();
     private final CollectionReference collectionReferenceToTicketHistory = dB.collection("TicketHistory");
     private final CollectionReference collectionReferenceToAllTickets = dB.collection("AllTickets");
-    iOnTicketListReceived onTicketListReceived;
+    iOnTicketListDownloaded onTicketListDownloaded;
     private ProgressBar progressBar;
     private LinearLayout linearLayout;
     private RecyclerView recyclerView;
@@ -78,7 +79,7 @@ public class RoomTicketFragment extends Fragment implements iOnTicketListReceive
         raisedTicketList = new ArrayList<>();
         ticketIDsList = new ArrayList<>();
 
-        onTicketListReceived = this;
+        onTicketListDownloaded = this;
 
         //calling the recycler function
         processSearchTickets();
@@ -139,7 +140,7 @@ public class RoomTicketFragment extends Fragment implements iOnTicketListReceive
                                 raisedTicketList.add(ticket);
                                 assert ticket != null;
                             }
-                            onTicketListReceived.onListReceived();
+                            onTicketListDownloaded.listReceived();
                         }
                     });
 
@@ -149,7 +150,7 @@ public class RoomTicketFragment extends Fragment implements iOnTicketListReceive
     }
 
     @Override
-    public void onListReceived() {
+    public void listReceived() {
         raisedTicketList.sort((o1, o2) -> Long.compare(o2.getItemTimeStamp().getSeconds(), o1.getItemTimeStamp().getSeconds()));
         progressBar.setVisibility(View.GONE);
         linearLayout.setVisibility(View.GONE);
@@ -172,7 +173,7 @@ public class RoomTicketFragment extends Fragment implements iOnTicketListReceive
     }
 
     @Override
-    public void onRoomTicketClicked(int pos, String ticketStatus, String docID) {
+    public void onRoomTicketCardLongPressed(int pos, String ticketStatus, String docID) {
         if (ticketStatus.equalsIgnoreCase(TicketStatus.BOOKED.toString()) || ticketStatus.equalsIgnoreCase(TicketStatus.IN_REVIEW.toString())) {
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
             builder.setTitle("Ticket not closed yet");

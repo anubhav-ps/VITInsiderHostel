@@ -13,7 +13,6 @@ import com.anubhav.vitinsiderhostel.interfaces.iOnNotifyDbProcess;
 import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.User;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -47,74 +46,41 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
     private static final String IS_ADMIN = "IS_ADMIN";
     private static final String USER_AVATAR = "AVATAR";
 
-    public static int tenantCollectionSize;
-    public static ExecutorService executors;
-    private static int totalTenants;
+
+    private static ExecutorService executors;
     private static List<Tenant> tenantList;
-    private static List<Tenant> updatedTenantList;
+    private static List<Tenant> updateTenantList;
     private final int N = 2;
-
     iOnNotifyDbProcess notify;
+    private int totalTenants;
 
-    public
-    LocalSqlDatabase(@Nullable Context context) {
+    //constructors
+    public LocalSqlDatabase(@Nullable Context context) {
         super(context, "INSIDER_HOSTEL_DB", null, 1);
         assert context != null;
     }
 
-    public LocalSqlDatabase(@Nullable Context context, int tenants, iOnNotifyDbProcess notify) {
+    public LocalSqlDatabase(@Nullable Context context, iOnNotifyDbProcess notify) {
         super(context, "INSIDER_HOSTEL_DB", null, 1);
 
         this.notify = notify;
 
-        totalTenants = tenants;
-
         tenantList = new ArrayList<>();
-        updatedTenantList = new ArrayList<>();
+        updateTenantList = new ArrayList<>();
 
         executors = Executors.newFixedThreadPool(N);
+    }
+
+    //executor methods
+    public static ExecutorService getExecutors() {
+        return executors;
     }
 
     public static void stopExecutors() {
         executors.shutdown();
     }
 
-    public void addTenant(Tenant tenant) {
-        tenantList.add(tenant);
-        if (tenantList.size() == totalTenants) {
-            Future<String> result = executors.submit(runParallelTenantInsertion(), "Done");
-            executors.submit(hasTaskCompleted(result, NotifyStatus.ROOM_MATE_LIST_DOWNLOADED));
-        }
-    }
-
-    public void updateTenant(Tenant tenant) {
-        updatedTenantList.add(tenant);
-        if (updatedTenantList.size() == tenantCollectionSize) {
-            Future<String> result = executors.submit(runParallelTenantUpdates(), "Done");
-            executors.submit(hasTaskCompleted(result, NotifyStatus.ROOM_MATE_COMPLETE_DATA_DOWNLOADED));
-        }
-    }
-
-    private Runnable hasTaskCompleted(Future<String> result, NotifyStatus notifyStatus) {
-        return () -> {
-            while (!result.isDone()) {
-
-            }
-            tenantList.clear();
-            updatedTenantList.clear();
-            if (notifyStatus == NotifyStatus.ROOM_MATE_LIST_DOWNLOADED) {
-                try {
-                    notify.onNotifyCompleteListDownload();
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
-            } else if (notifyStatus == NotifyStatus.ROOM_MATE_COMPLETE_DATA_DOWNLOADED) {
-                notify.onNotifyCompleteDataDownload(notifyStatus);
-            }
-        };
-    }
-
-
+    // on create methods
     @Override
     public void onCreate(SQLiteDatabase db) {
         createUserTable(db);
@@ -158,6 +124,7 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
         db.execSQL(createTableStatement);
     }
 
+    //upgrade table method
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
@@ -165,66 +132,10 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    //update users
 
-    private Runnable runParallelTenantInsertion() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return () -> {
-            for (Tenant tenant : tenantList) {
-                ContentValues cv = new ContentValues();
-                cv.put(TENANT_MAIL_ID, tenant.getTenantMailID());
-                cv.put(TENANT_AVATAR, tenant.getTenantAvatar());
-                cv.put(TENANT_NAME, tenant.getTenantUserName());
-                cv.put(TENANT_CONTACT_NUMBER, tenant.getTenantContactNumber());
-                cv.put(TENANT_BRANCH, tenant.getTenantBranch());
-                cv.put(TENANT_NATIVE_LANGUAGE, tenant.getTenantNativeLanguage());
-                db.insert(TENANT_TABLE, null, cv);
-            }
-        };
-    }
-
-    private Runnable runParallelTenantUpdates() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return () -> {
-            for (Tenant tenant : updatedTenantList) {
-                ContentValues cv = new ContentValues();
-                cv.put(TENANT_MAIL_ID, tenant.getTenantMailID());
-                cv.put(TENANT_AVATAR, tenant.getTenantAvatar());
-                cv.put(TENANT_NAME, tenant.getTenantUserName());
-                cv.put(TENANT_CONTACT_NUMBER, tenant.getTenantContactNumber());
-                cv.put(TENANT_BRANCH, tenant.getTenantBranch());
-                cv.put(TENANT_NATIVE_LANGUAGE, tenant.getTenantNativeLanguage());
-                db.update(TENANT_TABLE, cv, "MAIL_ID = ?", new String[]{tenant.getTenantMailID()});
-            }
-            db.close();
-        };
-    }
-
-    public List<Tenant> getTenants() {
-
-        List<Tenant> tenants = new ArrayList<>();
-
-        final String query = "SELECT * FROM " + TENANT_TABLE;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            do {
-                tenants.add(
-                        new Tenant(
-                                cursor.getString(2),
-                                cursor.getString(0),
-                                cursor.getInt(1),
-                                cursor.getString(3),
-                                cursor.getString(5),
-                                cursor.getString(4)
-                        ));
-
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        db.close();
-        return tenants;
-    }
-
+    //user methods
+    //insert users
     public boolean addUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -244,25 +155,11 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
         cv.put(IS_ADMIN, user.getAdmin());
 
         long result = db.insert(USER_TABLE, null, cv);
+        db.close();
         return result != -1;
     }
 
-    public boolean updateUser(User user) {
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-
-        cv.put(USER_NAME, user.getUserName());
-        cv.put(USER_AVATAR, user.getAvatar());
-        cv.put(USER_CONTACT_NUMBER, user.getUserContactNumber());
-        cv.put(STUDENT_NATIVE_LANGUAGE, user.getStudentNativeLanguage());
-
-        db.update(USER_TABLE, cv, "USER_ID = ?", new String[]{user.getUser_Id()});
-        db.close();
-
-        return true;
-    }
-
+    //read users
     public User getCurrentUser() {
 
         User user = User.getInstance();
@@ -291,6 +188,123 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
 
     }
 
+
+    //tenant methods
+    //insert tenants
+
+    public void updateUserInBackground(User user) {
+        Future<String> result = executors.submit(runParallelUserUpdate(user), "Done");
+        executors.submit(hasTaskCompleted(result, NotifyStatus.USER_UPDATED));
+    }
+
+    private Runnable runParallelUserUpdate(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return () -> {
+            ContentValues cv = new ContentValues();
+
+            cv.put(USER_NAME, user.getUserName());
+            cv.put(USER_AVATAR, user.getAvatar());
+            cv.put(USER_CONTACT_NUMBER, user.getUserContactNumber());
+            cv.put(STUDENT_NATIVE_LANGUAGE, user.getStudentNativeLanguage());
+
+            db.update(USER_TABLE, cv, "USER_ID = ?", new String[]{user.getUser_Id()});
+            db.close();
+        };
+    }
+
+    //read tenants
+    public List<Tenant> getTenants() {
+
+        List<Tenant> tenants = new ArrayList<>();
+
+        final String query = "SELECT * FROM " + TENANT_TABLE;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                tenants.add(
+                        new Tenant(
+                                cursor.getString(2),
+                                cursor.getString(0),
+                                cursor.getInt(1),
+                                cursor.getString(3),
+                                cursor.getString(5),
+                                cursor.getString(4)
+                        ));
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return tenants;
+    }
+
+    public void addTenantInBackground(Tenant tenant) {
+        tenantList.add(tenant);
+        if (tenantList.size() == totalTenants) {
+            if (deleteAllTenants()) {
+                Future<String> result = executors.submit(runParallelTenantAddition(), "Done");
+                executors.submit(hasTaskCompleted(result, NotifyStatus.ROOM_MATE_COMPLETE_DATA_DOWNLOADED));
+            }
+        }
+    }
+
+    private Runnable runParallelTenantAddition() {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        return () -> {
+            for (Tenant tenant : tenantList) {
+                ContentValues cv = new ContentValues();
+                cv.put(TENANT_MAIL_ID, tenant.getTenantMailID());
+                cv.put(TENANT_AVATAR, tenant.getTenantAvatar());
+                cv.put(TENANT_NAME, tenant.getTenantUserName());
+                cv.put(TENANT_CONTACT_NUMBER, tenant.getTenantContactNumber());
+                cv.put(TENANT_BRANCH, tenant.getTenantBranch());
+                cv.put(TENANT_NATIVE_LANGUAGE, tenant.getTenantNativeLanguage());
+                db.insert(TENANT_TABLE, null, cv);
+            }
+            db.close();
+        };
+    }
+
+    public void updateTenantInBackground(Tenant tenant) {
+        updateTenantList.add(tenant);
+        if (updateTenantList.size() == totalTenants) {
+            Future<String> result = executors.submit(runParallelTenantUpdation(), "Done");
+            executors.submit(hasTaskCompleted(result, NotifyStatus.ROOM_MATE_COMPLETE_DATA_DOWNLOADED));
+        }
+    }
+
+    private Runnable runParallelTenantUpdation() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return () -> {
+            for (Tenant tenant : updateTenantList) {
+                ContentValues cv = new ContentValues();
+                cv.put(TENANT_AVATAR, tenant.getTenantAvatar());
+                cv.put(TENANT_NAME, tenant.getTenantUserName());
+                cv.put(TENANT_CONTACT_NUMBER, tenant.getTenantContactNumber());
+                cv.put(TENANT_NATIVE_LANGUAGE, tenant.getTenantNativeLanguage());
+                db.update(TENANT_TABLE, cv, "MAIL_ID = ?", new String[]{tenant.getTenantMailID()});
+            }
+            db.close();
+        };
+    }
+
+    public boolean isTenantPresent(Tenant tenant) {
+        Cursor cursor = this.getReadableDatabase().query(
+                TENANT_TABLE,
+                null,
+                TENANT_MAIL_ID + " = '" + tenant.getTenantMailID() + "'",
+                null, null, null, null);
+        if (cursor.moveToFirst()) {
+            cursor.close();
+            return true;
+        }
+        cursor.close();
+        return false;
+    }
+
+    //delete tables
     public boolean deleteCurrentUser() {
         final String query = "delete from " + USER_TABLE;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -314,11 +328,31 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             cursor.close();
             db.close();
-            return true;
+            return false;
         }
+
         cursor.close();
         db.close();
-        return false;
+        return true;
     }
 
+    private Runnable hasTaskCompleted(Future<String> result, NotifyStatus notifyStatus) {
+        return () -> {
+            while (!result.isDone()) {
+
+            }
+            if (notifyStatus == NotifyStatus.ROOM_MATE_COMPLETE_DATA_DOWNLOADED) {
+                tenantList.clear();
+                updateTenantList.clear();
+                notify.notifyCompleteDataDownload();
+            } else if (notifyStatus == NotifyStatus.USER_UPDATED) {
+                notify.notifyUserUpdated();
+            }
+        };
+    }
+
+    //field setters
+    public void setTotalTenants(int totalTenants) {
+        this.totalTenants = totalTenants;
+    }
 }

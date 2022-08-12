@@ -20,12 +20,12 @@
         <ImageButton
             android:id="@+id/dopActivityBackArrow"
             style="@style/ForArrowTheme"
-            android:layout_marginStart="20dp"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center"
+            android:layout_marginStart="20dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_baseline_arrow_back_24"/>
+            android:src="@drawable/ic_baseline_arrow_back_24" />
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
@@ -33,8 +33,8 @@
             android:layout_gravity="center"
             android:layout_marginStart="12dp"
             android:fontFamily="sans-serif"
+            android:text="@string/dop_toolbar_title_txt"
             android:textColor="@color/text_04"
-            android:text="Digital Outing Passport"
             android:textSize="22sp">
 
         </com.google.android.material.textview.MaterialTextView>
@@ -59,10 +59,11 @@
             android:layout_marginEnd="10dp"
             android:fontFamily="sans-serif-light"
             android:paddingStart="10dp"
-            android:text="Loading.."
+            android:text="@string/dop_loading_txt"
             android:textColor="@color/text_04"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="RtlSymmetry" />
 
         <ProgressBar
             android:id="@+id/dopActivityProgressBar"
@@ -83,8 +84,8 @@
             android:id="@+id/dopActivityCardLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="visible">
 
 
             <com.google.android.material.card.MaterialCardView
@@ -108,9 +109,10 @@
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/open_sans_semibold"
                         android:paddingStart="28dp"
-                        android:text="Digital Outing"
+                        android:text="@string/dop_digital_outing_txt"
                         android:textColor="#FFFFFF"
-                        android:textSize="32sp">
+                        android:textSize="32sp"
+                        tools:ignore="RtlSymmetry">
 
                     </com.google.android.material.textview.MaterialTextView>
 
@@ -120,9 +122,10 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/open_sans_semibold"
                         android:paddingStart="28dp"
-                        android:text="Passport"
+                        android:text="@string/dop_passport_txt"
                         android:textColor="@color/white"
-                        android:textSize="32sp">
+                        android:textSize="32sp"
+                        tools:ignore="RtlSymmetry">
 
                     </com.google.android.material.textview.MaterialTextView>
 
@@ -133,9 +136,10 @@
                         android:layout_marginTop="6dp"
                         android:fontFamily="sans-serif-light"
                         android:paddingStart="30dp"
-                        android:text="Issued On : 5 JUN 2022, 12:35"
+                        android:text="@string/dop_issued_on_txt"
                         android:textColor="@color/text_02"
-                        android:textSize="14sp">
+                        android:textSize="14sp"
+                        tools:ignore="RtlSymmetry">
 
                     </com.google.android.material.textview.MaterialTextView>
 
@@ -160,7 +164,7 @@
                             android:layout_weight="50"
                             android:fontFamily="sans-serif"
                             android:gravity="center_horizontal"
-                            android:text="EXPIRED"
+                            android:text="@string/dop_status_txt"
                             android:textColor="#57A1BC"
                             android:textSize="24sp">
 
@@ -181,9 +185,10 @@
                         android:layout_marginTop="12dp"
                         android:fontFamily="sans-serif-light"
                         android:paddingStart="30dp"
-                        android:text="Register Number"
+                        android:text="@string/dop_register_number_txt"
                         android:textColor="@color/text_04"
-                        android:textSize="14sp">
+                        android:textSize="14sp"
+                        tools:ignore="RtlSymmetry">
 
                     </com.google.android.material.textview.MaterialTextView>
 
@@ -193,9 +198,10 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
                         android:paddingStart="30dp"
-                        android:text="19BEE1144"
+                        android:text="@string/dop_register_number"
                         android:textColor="@color/text_04"
-                        android:textSize="22sp">
+                        android:textSize="22sp"
+                        tools:ignore="RtlSymmetry">
 
                     </com.google.android.material.textview.MaterialTextView>
 
@@ -206,9 +212,10 @@
                         android:layout_marginTop="10dp"
                         android:fontFamily="sans-serif-light"
                         android:paddingStart="30dp"
-                        android:text="Student Name"
+                        android:text="@string/dop_student_name_txt"
                         android:textColor="@color/text_04"
-                        android:textSize="14sp">
+                        android:textSize="14sp"
+                        tools:ignore="RtlSymmetry">
 
                     </com.google.android.material.textview.MaterialTextView>
 
@@ -218,9 +225,10 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
                         android:paddingStart="30dp"
-                        android:text="Anubhav.P.S"
+                        android:text="@string/dop_student_name"
                         android:textColor="@color/text_04"
-                        android:textSize="22sp">
+                        android:textSize="22sp"
+                        tools:ignore="RtlSymmetry">
 
                     </com.google.android.material.textview.MaterialTextView>
 
@@ -230,9 +238,10 @@
                         android:layout_marginTop="10dp"
                         android:fontFamily="sans-serif-light"
                         android:paddingStart="30dp"
-                        android:text="Visit Date"
+                        android:text="@string/dop_visit_date_txt"
                         android:textColor="@color/text_04"
-                        android:textSize="14sp">
+                        android:textSize="14sp"
+                        tools:ignore="RtlSymmetry">
 
                     </com.google.android.material.textview.MaterialTextView>
 
@@ -242,9 +251,10 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
                         android:paddingStart="30dp"
-                        android:text="06-06-2022"
+                        android:text="@string/dop_visit_date"
                         android:textColor="@color/text_04"
-                        android:textSize="22sp">
+                        android:textSize="22sp"
+                        tools:ignore="RtlSymmetry">
 
                     </com.google.android.material.textview.MaterialTextView>
 
@@ -271,7 +281,7 @@
                             android:gravity="start"
                             android:paddingStart="8dp"
                             android:paddingEnd="4dp"
-                            android:text="Check Out"
+                            android:text="@string/dop_check_out_txt"
                             android:textColor="#57A1BC"
                             android:textSize="24sp">
 
@@ -292,9 +302,10 @@
                         android:layout_marginTop="10dp"
                         android:fontFamily="sans-serif-light"
                         android:paddingStart="30dp"
-                        android:text="Campus Check Out"
+                        android:text="@string/dop_campus_check_out_txt"
                         android:textColor="@color/text_04"
-                        android:textSize="14sp">
+                        android:textSize="14sp"
+                        tools:ignore="RtlSymmetry">
 
                     </com.google.android.material.textview.MaterialTextView>
 
@@ -305,9 +316,10 @@
                         android:layout_marginTop="4dp"
                         android:fontFamily="sans-serif-light"
                         android:paddingStart="30dp"
-                        android:text="10:00"
+                        android:text="@string/dop_campus_check_out"
                         android:textColor="@color/text_04"
-                        android:textSize="16sp">
+                        android:textSize="16sp"
+                        tools:ignore="RtlSymmetry">
 
                     </com.google.android.material.textview.MaterialTextView>
 
@@ -323,9 +335,10 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-light"
                             android:paddingStart="30dp"
-                            android:text="Checked out at"
+                            android:text="@string/dop_checked_out_at_txt"
                             android:textColor="@color/text_04"
-                            android:textSize="16sp">
+                            android:textSize="16sp"
+                            tools:ignore="RtlSymmetry">
 
                         </com.google.android.material.textview.MaterialTextView>
 
@@ -335,9 +348,10 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-light"
                             android:paddingStart="30dp"
-                            android:text="10:20:39"
+                            android:text="@string/dop_checked_out_at"
                             android:textColor="@color/text_04"
-                            android:textSize="16sp">
+                            android:textSize="16sp"
+                            tools:ignore="RtlSymmetry">
 
                         </com.google.android.material.textview.MaterialTextView>
 
@@ -366,7 +380,7 @@
                             android:gravity="start"
                             android:paddingStart="8dp"
                             android:paddingEnd="4dp"
-                            android:text="Check In"
+                            android:text="@string/dop_check_in_txt"
                             android:textColor="#57A1BC"
                             android:textSize="24sp">
 
@@ -387,9 +401,10 @@
                         android:layout_marginTop="10dp"
                         android:fontFamily="sans-serif-light"
                         android:paddingStart="30dp"
-                        android:text="Campus Check In"
+                        android:text="@string/dop_campus_check_in_txt"
                         android:textColor="@color/text_04"
-                        android:textSize="14sp">
+                        android:textSize="14sp"
+                        tools:ignore="RtlSymmetry">
 
                     </com.google.android.material.textview.MaterialTextView>
 
@@ -400,9 +415,10 @@
                         android:layout_marginTop="4dp"
                         android:fontFamily="sans-serif-light"
                         android:paddingStart="30dp"
-                        android:text="18:00"
+                        android:text="@string/dop_check_in"
                         android:textColor="@color/text_04"
-                        android:textSize="16sp">
+                        android:textSize="16sp"
+                        tools:ignore="RtlSymmetry">
 
                     </com.google.android.material.textview.MaterialTextView>
 
@@ -418,9 +434,10 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-light"
                             android:paddingStart="30dp"
-                            android:text="Checked in at"
+                            android:text="@string/dop_checked_in_at_txt"
                             android:textColor="@color/text_04"
-                            android:textSize="16sp">
+                            android:textSize="16sp"
+                            tools:ignore="RtlSymmetry">
 
                         </com.google.android.material.textview.MaterialTextView>
 
@@ -430,9 +447,10 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-light"
                             android:paddingStart="30dp"
-                            android:text="17:37:12"
+                            android:text="@string/dop_checked_in_at"
                             android:textColor="@color/text_04"
-                            android:textSize="16sp">
+                            android:textSize="16sp"
+                            tools:ignore="RtlSymmetry">
 
                         </com.google.android.material.textview.MaterialTextView>
 
@@ -450,7 +468,7 @@
                 android:layout_marginBottom="8dp"
                 android:fontFamily="sans-serif"
                 android:gravity="center_horizontal"
-                android:text="Insider Hostel"
+                android:text="@string/dop_bottom_app_title_txt"
                 android:textColor="@color/text_04"
                 android:textSize="14sp">
 

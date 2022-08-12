@@ -36,7 +36,7 @@
             android:fontFamily="@font/cabin_medium"
             android:gravity="center_vertical"
             android:padding="2dp"
-            android:text="Ticket History"
+            android:text="@string/ticket_history_pge_toolbar_lbl"
             android:textColor="@color/medium_theme_green"
             android:textSize="24sp">
 

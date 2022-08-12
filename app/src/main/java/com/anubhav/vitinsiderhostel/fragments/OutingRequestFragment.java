@@ -15,27 +15,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.anubhav.vitinsiderhostel.R;
+import com.anubhav.vitinsiderhostel.enums.ErrorCode;
+import com.anubhav.vitinsiderhostel.enums.Mod;
 import com.anubhav.vitinsiderhostel.enums.ORAStatus;
-import com.anubhav.vitinsiderhostel.interfaces.iOnUserAccountDeleted;
+import com.anubhav.vitinsiderhostel.enums.TicketStatus;
+import com.anubhav.vitinsiderhostel.interfaces.iOnAppErrorCreated;
+import com.anubhav.vitinsiderhostel.models.AppError;
 import com.anubhav.vitinsiderhostel.models.LinkEnds;
 import com.anubhav.vitinsiderhostel.models.ORAStudentLink;
 import com.anubhav.vitinsiderhostel.models.ORApp;
 import com.anubhav.vitinsiderhostel.models.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
 import java.util.Objects;
@@ -44,28 +48,43 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class OutingRequestFragment extends Fragment implements View.OnClickListener {
+public class OutingRequestFragment extends Fragment implements View.OnClickListener, iOnAppErrorCreated {
 
 
-    TextInputEditText studentNameEt, studentRegisterNumberEt, studentMailIdEt, studentContactNumberEt, studentRoomDetailsEt, parentContactNumberEt, visitLocationEt, visitPurposeEt, checkOutTimeEt, visitDateEt;
-    MaterialTextView userNameTxt;
-    ImageView locationPickerBtn;
-    ProgressBar progressBar;
-    MaterialButton applyBtn;
-    LinkEnds coupleEnds = new LinkEnds();
-    ORApp oraUpload = new ORApp();
-    private String userName, studentMailId, studentRegisterNumber, studentContactNumber, studentRoomNum, studentBlock;
-    private DatePickerDialog.OnDateSetListener dateSetListener;
-    private TimePickerDialog.OnTimeSetListener timeSetListener;
-    private int outHr;
-    private boolean flagOutTime = false;
-    private String fdate = null;
-    private Dialog dialog;
+    //firebase fire store declaration
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final CollectionReference feedbackSection = db.collection(Mod.FBK.toString());
 
     // firebase declaration
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser user;
+
+    //views
+    private View rootView;
+    private TextInputEditText studentNameEt, studentRegisterNumberEt, studentMailIdEt, studentContactNumberEt, studentRoomDetailsEt, parentContactNumberEt, visitLocationEt, visitPurposeEt, checkOutTimeEt, visitDateEt;
+    private MaterialTextView userNameTxt;
+    private ImageView locationPickerBtn;
+    private ProgressBar progressBar;
+    private MaterialButton applyBtn;
+    private Dialog dialog;
+
+    //objects
+    private LinkEnds coupleEnds = new LinkEnds();
+    private ORApp oraUpload = new ORApp();
+
+    //string objects
+    private String userName, studentMailId, studentRegisterNumber, studentContactNumber, studentRoomNum, studentBlock, fdate = null;
+    private int outHr;
+
+    //listeners
+    private DatePickerDialog.OnDateSetListener dateSetListener;
+    private TimePickerDialog.OnTimeSetListener timeSetListener;
+    private iOnAppErrorCreated onAppErrorCreated;
+
+
+    //flags
+    private boolean flagOutTime = false;
 
 
     public OutingRequestFragment() {
@@ -83,7 +102,7 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_outing_request, container, false);
+        rootView = inflater.inflate(R.layout.fragment_outing_request, container, false);
 
         //firebase instantiation
         firebaseAuth = FirebaseAuth.getInstance();
@@ -100,15 +119,11 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
         studentRoomDetailsEt = rootView.findViewById(R.id.oraStudentRoomDetailEt);
         studentContactNumberEt = rootView.findViewById(R.id.oraStudentContactNumberEt);
         parentContactNumberEt = rootView.findViewById(R.id.oraStudentParentContactNumberEt);
-
-
         visitLocationEt = rootView.findViewById(R.id.oraVisitLocationEt);
         locationPickerBtn = rootView.findViewById(R.id.oraVisitLocationPickerBtn);
         visitPurposeEt = rootView.findViewById(R.id.oraVisitPurposeEt);
         visitDateEt = rootView.findViewById(R.id.oraVisitDateEt);
         checkOutTimeEt = rootView.findViewById(R.id.oraVisitCheckOutEt);
-
-
         progressBar = rootView.findViewById(R.id.oraProgressBar);
         applyBtn = rootView.findViewById(R.id.oraApplyButton);
 
@@ -134,6 +149,8 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
         oraUpload.setStudentRoomDetails(roomDetail);
 
 
+        //listeners
+        onAppErrorCreated = this;
         locationPickerBtn.setOnClickListener(this);
         visitDateEt.setOnClickListener(this);
         checkOutTimeEt.setOnClickListener(this);
@@ -170,7 +187,7 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
     }
 
     private void openGoogleMap() {
-        Toast.makeText(getContext(), "Will be available from next app update", Toast.LENGTH_LONG).show();
+        callSnackBar("Will be available from next app update");
     }
 
     //function to be performed when the select Date button is clicked
@@ -253,7 +270,6 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
     }
 
     private void openTermsNCondition() {
-        //todo display entering of ticket description
 
         dialog.setContentView(R.layout.outing_terms_n_condition);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -292,12 +308,7 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
 
             }
         });
-        proceedBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                initiateUploadingToAllBucket();
-            }
-        });
+        proceedBtn.setOnClickListener(v -> initiateUploadingToAllBucket());
         dialog.show();
     }
 
@@ -308,33 +319,32 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
         final String docId = oraDocRef.getId();
         final Timestamp uploadTime = new Timestamp(new Date());
         final String checkIn = "18:00";
+
         oraUpload.setCheckIn(checkIn);
         oraUpload.setOraDocId(docId);
         oraUpload.setOraStatus(ORAStatus.APPLIED.toString());
         oraUpload.setUploadTimestamp(uploadTime);
 
         oraDocRef.set(oraUpload)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            ORAStudentLink oraStudentLink = coupleEnds.getStudentLinkId(docId, uploadTime);
-                            DocumentReference studentLinkDocRef = coupleEnds.insertLinkStudentOREK(studentMailId, studentBlock, splitDate[2], splitDate[1], splitDate[0], docId);
-                            studentLinkDocRef.set(oraStudentLink).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(getContext(), "Successfully submitted your application.Check OREK history for application status.", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(getContext(), "Couldn't submit your application for outing! :(", Toast.LENGTH_LONG).show();
-                                        oraDocRef.delete();
-                                    }
-                                }
-                            });
-                        } else {
-                            Toast.makeText(getContext(), "Couldn't submit your application for outing! :(", Toast.LENGTH_LONG).show();
-                            //todo report outing form couldn't be applied
-                        }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ORAStudentLink oraStudentLink = coupleEnds.getStudentLinkId(docId, uploadTime);
+                        DocumentReference studentLinkDocRef = coupleEnds.insertLinkStudentOREK(studentMailId, studentBlock, splitDate[2], splitDate[1], splitDate[0], docId);
+                        studentLinkDocRef.set(oraStudentLink).addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                callSnackBar("Successfully Submitted Your Application.Check OREK History For Application Status.");
+                            } else {
+                                callSnackBar("Couldn't Submit Your Application For Outing! :(");
+                                oraDocRef.delete();
+                                AppError appError = new AppError(ErrorCode.ORF001.getErrorCode(), studentMailId);
+                                onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported");
+
+                            }
+                        });
+                    } else {
+                        callSnackBar("Couldn't Submit Your Application For Outing! :(");
+                        AppError appError = new AppError(ErrorCode.ORF002.getErrorCode(), studentMailId);
+                        onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported");
                     }
                 });
 
@@ -440,6 +450,59 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
         oraUpload.setVisitDate(date);
         return true;
     }
+
+
+    @Override
+    public void checkIfAlreadyReported(AppError appError, String message) {
+        feedbackSection
+                .document(Mod.REPISSU.toString())
+                .collection(Mod.USSTU.toString()).whereEqualTo("errorCode", appError.getErrorCode()).whereEqualTo("reporter", appError.getReporter()).whereEqualTo("status", TicketStatus.BOOKED.toString())
+                .get().addOnCompleteListener(task -> {
+            boolean flag = false;
+            if (task.isSuccessful()) {
+                flag = task.getResult().size() > 0;
+            }
+            onAppErrorCreated.getQueryResult(appError, message, flag);
+        });
+    }
+
+    @Override
+    public void getQueryResult(AppError appError, String message, boolean flag) {
+        if (flag) {
+            callSnackBar("Issue has already been reported");
+        } else {
+            reportIssue(appError, message);
+        }
+    }
+
+
+    private void reportIssue(AppError appError, String message) {
+        feedbackSection
+                .document(Mod.REPISSU.toString())
+                .collection(Mod.USSTU.toString())
+                .document()
+                .set(appError).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                onAppErrorCreated.IssueReported(message);
+            }
+        });
+    }
+
+    @Override
+    public void IssueReported(String message) {
+        callSnackBar(message);
+    }
+
+    // snack bar method
+    private void callSnackBar(String message) {
+        Snackbar snackbar = Snackbar
+                .make(requireContext(), rootView.findViewById(R.id.outingRequestFragment), message, Snackbar.LENGTH_LONG);
+        snackbar.setTextColor(Color.WHITE);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.navy_blue));
+        snackbar.show();
+    }
+
 
     //process 0 and process 1 functions
     @Override

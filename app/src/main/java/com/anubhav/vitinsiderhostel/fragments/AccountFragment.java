@@ -13,35 +13,45 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.anubhav.vitinsiderhostel.BuildConfig;
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.activities.LoginActivity;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
-import com.anubhav.vitinsiderhostel.interfaces.iOnTicketSectionChosen;
+import com.anubhav.vitinsiderhostel.interfaces.iOnTicketSectionClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnUserProfileClicked;
 import com.anubhav.vitinsiderhostel.models.User;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class AccountFragment extends Fragment implements View.OnClickListener {
 
-
-    private iOnTicketSectionChosen onTicketSectionChosen;
-    // user instance values
-    private String username;
-    private String userMailId;
-    private Dialog dialog;
-    //when user profile activity is called
-    private iOnUserProfileClicked callbackToFragmentContainer;
-
     // firebase declaration
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser user;
 
+    //view declaration
+    private View rootView;
+    private MaterialTextView userNameTxt, userMailIdTxt;
+    private Dialog dialog;
+
+    //listeners
+    private iOnTicketSectionClicked onTicketSectionChosen;
+
+    //string object
+    private String username, userMailId;
+
+
+    //listeners
+    private iOnUserProfileClicked callbackToFragmentContainer;
+
+    //local database
+    private LocalSqlDatabase localSqlDatabase;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -57,7 +67,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_account, container, false);
+        rootView = inflater.inflate(R.layout.fragment_account, container, false);
 
         dialog = new Dialog(getContext());
 
@@ -67,28 +77,40 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         //firebase authState listener definition
         authStateListener = firebaseAuth -> user = firebaseAuth.getCurrentUser();
 
+        localSqlDatabase = new LocalSqlDatabase(getContext());
+
 
         // view declarations
-        MaterialTextView userNameTxt = view.findViewById(R.id.accountPgeUserName);
-        MaterialTextView userMailIdTxt = view.findViewById(R.id.accountPgeUserMail);
+        userNameTxt = rootView.findViewById(R.id.accountPgeUserName);
+        userMailIdTxt = rootView.findViewById(R.id.accountPgeUserMail);
 
-        MaterialTextView userProfileTxt = view.findViewById(R.id.accountPgeViewUserProfile);
-        MaterialTextView ticketHistoryTxt = view.findViewById(R.id.accountPgeViewTicketHistory);
-        MaterialTextView aboutAppTxt = view.findViewById(R.id.accountPgeViewAbout);
-        MaterialTextView shareAppTxt = view.findViewById(R.id.accountPgeViewShareApp);
-        MaterialTextView reportIssueTxt = view.findViewById(R.id.accountPgeViewReportIssue);
+        MaterialTextView userProfileTxt = rootView.findViewById(R.id.accountPgeViewUserProfile);
+        MaterialTextView ticketHistoryTxt = rootView.findViewById(R.id.accountPgeViewTicketHistory);
+        MaterialTextView aboutAppTxt = rootView.findViewById(R.id.accountPgeViewAbout);
+        MaterialTextView shareAppTxt = rootView.findViewById(R.id.accountPgeViewShareApp);
+        MaterialTextView reportIssueTxt = rootView.findViewById(R.id.accountPgeViewReportIssue);
 
-        MaterialTextView signOutTxt = view.findViewById(R.id.accountPgeSignOut);
-        MaterialTextView versionCodeTxt = view.findViewById(R.id.accountPgeAppVersion);
+        MaterialTextView signOutTxt = rootView.findViewById(R.id.accountPgeSignOut);
+        MaterialTextView versionCodeTxt = rootView.findViewById(R.id.accountPgeAppVersion);
 
         String versionName = "v ";
         try {
             versionName = versionName + BuildConfig.VERSION_NAME;
         } catch (Exception exception) {
-            Toast.makeText(getContext(), "Error fetching version name", Toast.LENGTH_SHORT).show();
+            callSnackBar("Error fetching version name");
         }
         versionCodeTxt.setText(versionName);
 
+        setUserDetails();
+
+        signOutTxt.setOnClickListener(this);
+        userProfileTxt.setOnClickListener(this);
+        ticketHistoryTxt.setOnClickListener(this);
+
+        return rootView;
+    }
+
+    private void setUserDetails() {
         if (User.getInstance() != null) {
             username = User.getInstance().getUserName();
             userMailId = User.getInstance().getUserMailID();
@@ -96,12 +118,6 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
         userNameTxt.setText(username);
         userMailIdTxt.setText(userMailId);
-
-        signOutTxt.setOnClickListener(this);
-        userProfileTxt.setOnClickListener(this);
-        ticketHistoryTxt.setOnClickListener(this);
-
-        return view;
     }
 
     // on-click listeners onUserProfileCalledListener
@@ -125,20 +141,14 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         MaterialTextView roomTicket = dialog.findViewById(R.id.chooseTicketRoomTxt);
         MaterialTextView blockTicket = dialog.findViewById(R.id.chooseTicketBlockTxt);
 
-        roomTicket.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                openRoomTickets();
-            }
+        roomTicket.setOnClickListener(v -> {
+            dialog.dismiss();
+            openRoomTickets();
         });
 
-        blockTicket.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                openBlockTickets();
-            }
+        blockTicket.setOnClickListener(v -> {
+            dialog.dismiss();
+            openBlockTickets();
         });
 
         dialog.show();
@@ -147,16 +157,16 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     }
 
     private void openRoomTickets() {
-        onTicketSectionChosen.onRoomTicketClicked();
+        onTicketSectionChosen.roomTicketClicked();
     }
 
     private void openBlockTickets() {
-        onTicketSectionChosen.onBlockTicketClicked();
+        onTicketSectionChosen.blockTicketClicked();
     }
 
     // callback to
     private void openUserProfile() {
-        this.callbackToFragmentContainer.onUserProfileCalled();
+        this.callbackToFragmentContainer.userProfileCalled();
     }
 
     // method to handle the sign out process
@@ -172,13 +182,46 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         requireActivity().finish();
     }
 
+    // snack bar method
+    private void callSnackBar(String message) {
+        Snackbar snackbar = Snackbar
+                .make(requireContext(), rootView.findViewById(R.id.accountFragment), message, Snackbar.LENGTH_SHORT);
+        snackbar.setTextColor(Color.WHITE);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.navy_blue));
+        snackbar.show();
+    }
+
+
+    //process 0 and process 1 functions
+    @Override
+    public void onStart() {
+        super.onStart();
+        user = firebaseAuth.getCurrentUser();
+        firebaseAuth.addAuthStateListener(authStateListener);
+
+        if (User.getInstance() == null) {
+            User user = null;
+            user = localSqlDatabase.getCurrentUser();
+        }
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (firebaseAuth != null) {
+            firebaseAuth.removeAuthStateListener(authStateListener);
+        }
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         Activity activity = (Activity) context;
         try {
             this.callbackToFragmentContainer = (iOnUserProfileClicked) activity;
-            this.onTicketSectionChosen = (iOnTicketSectionChosen) activity;
+            this.onTicketSectionChosen = (iOnTicketSectionClicked) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + "is not implementing onUserProfileCalledListener");
         }
@@ -195,20 +238,10 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    //process 0 and process 1 functions
     @Override
-    public void onStart() {
-        super.onStart();
-        user = firebaseAuth.getCurrentUser();
-        firebaseAuth.addAuthStateListener(authStateListener);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (firebaseAuth != null) {
-            firebaseAuth.removeAuthStateListener(authStateListener);
-        }
+    public void onResume() {
+        super.onResume();
+        setUserDetails();
     }
 
 

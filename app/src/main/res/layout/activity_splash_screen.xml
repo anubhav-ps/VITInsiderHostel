@@ -23,9 +23,10 @@
         android:fontFamily="@font/average_sans"
         android:paddingEnd="70dp"
         android:textSize="14sp"
-        android:text="Don't Move, Just Tap"
+        android:text="@string/splash_screen_pge_tag_line_lbl"
         android:textColor="@color/text_04"
-        android:textAlignment="viewEnd">
+        android:textAlignment="viewEnd"
+        tools:ignore="RtlSymmetry">
 
     </com.google.android.material.textview.MaterialTextView>
 

@@ -20,9 +20,9 @@ import java.util.List;
 public class FeaturedMenuAdapter extends RecyclerView.Adapter<FeaturedMenuAdapter.ViewHolder> {
 
 
-    private iOnFeaturedMenuClicked onFeaturedMenuClicked;
-    private List<Featured> list;
-    private Context context;
+    private final iOnFeaturedMenuClicked onFeaturedMenuClicked;
+    private final List<Featured> list;
+    private final Context context;
 
 
     public FeaturedMenuAdapter(List<Featured> list, Context context, iOnFeaturedMenuClicked onFeaturedMenuClicked) {
@@ -46,7 +46,7 @@ public class FeaturedMenuAdapter extends RecyclerView.Adapter<FeaturedMenuAdapte
         holder.title.setText(list.get(position).getTitle());
         holder.cardView.setOnClickListener(v -> {
             if (list.get(position).getTitle().equalsIgnoreCase("Outing Request")){
-                onFeaturedMenuClicked.onOutingRequestClicked();
+                onFeaturedMenuClicked.outingRequestClicked();
             }
         });
 

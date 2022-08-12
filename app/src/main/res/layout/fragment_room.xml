@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_fill_colour"
     android:orientation="vertical"
+    android:id="@+id/roomFragment"
     tools:context=".fragments.RoomFragment">
 
     <LinearLayout
@@ -14,218 +15,233 @@
         android:orientation="vertical"
         android:padding="12dp">
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="#F5F5F5"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            app:cardPreventCornerOverlap="false"
-            app:cardUseCompatPadding="true">
 
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_marginTop="18dp"
-                android:orientation="vertical"
-                android:paddingBottom="20dp">
+                android:layout_height="match_parent"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="6dp"
+                android:layout_marginBottom="4dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="5dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/roomPgeUserAvatar"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/av_100" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical"
+                        android:paddingStart="16dp"
+                        tools:ignore="RtlSymmetry">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/roomPgeUserName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/secular_one"
+                            android:text="@string/room_pge_user_name_txt"
+                            android:textColor="@color/text_03"
+                            android:textSize="20sp">
+
+                        </com.google.android.material.textview.MaterialTextView>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/roomPgeUserRegNum"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/open_sans_semibold"
+                            android:text="@string/room_pge_user_reg_num_txt"
+                            android:textColor="@color/text_03"
+                            android:textSize="16sp">
+
+                        </com.google.android.material.textview.MaterialTextView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="120">
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="6dp"
+                android:layout_weight="40"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="5dp">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/roomPgeRoomNo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/open_sans_semibold"
-                    android:text="@string/room_pge_room_no"
-                    android:textColor="@color/light_theme_green"
-                    android:textSize="24sp" />
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/room_pge_room_no_txt"
+                    android:textColor="@color/text_02"
+                    android:textSize="14sp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                </com.google.android.material.textview.MaterialTextView>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_weight="40"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="5dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/roomPgeBeds"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/room_pge_beds_txt"
+                    android:textColor="@color/text_02"
+                    android:textSize="14sp">
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/bed_icon" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/roomPgeBeds"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:text="@string/room_pge_beds"
-                        android:textColor="#E6626161"
-                        android:textSize="16sp" />
+                </com.google.android.material.textview.MaterialTextView>
 
 
-                    <ImageView
-                        android:id="@+id/roomPgeTypeIcon"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="80dp"
-                        android:src="@drawable/non_ac_icon" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/roomPgeType"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:text="@string/room_pge_type"
-                        android:textColor="#E6626161"
-                        android:textSize="16sp" />
+            </com.google.android.material.card.MaterialCardView>
 
 
-                </LinearLayout>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="40"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="5dp">
 
-
-                <LinearLayout
-                    android:id="@+id/roomPgeRow1LinearLayout"
-                    android:layout_width="match_parent"
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/roomPgeType"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal">
+                    android:layout_gravity="center"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/room_pge_room_type_txt"
+                    android:textColor="@color/text_02"
+                    android:textSize="12sp">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="34dp"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical"
-                        android:padding="4dp">
+                </com.google.android.material.textview.MaterialTextView>
 
-                        <ImageButton
-                            android:id="@+id/roomPgeP1Avatar"
-                            style="@style/AvatarTheme"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:src="@drawable/avataar_1m" />
 
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/roomPgeP1Name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="@string/room_pge_p1_name"
-                            android:textColor="#E6626161" />
+            </com.google.android.material.card.MaterialCardView>
 
-                    </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="34dp"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical"
-                        android:padding="4dp">
+        </LinearLayout>
 
-                        <ImageButton
-                            android:id="@+id/roomPgeP2Avatar"
-                            style="@style/AvatarTheme"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:src="@drawable/avataar_1m" />
 
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/roomPgeP2Name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="@string/room_pge_p2_name"
-                            android:textColor="#E6626161" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="2dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
 
-                    </LinearLayout>
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/asap_medium"
+                android:text="@string/room_pge_room_mates_txt"
+                android:textColor="#7F7F7F"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
+                android:textSize="17sp" />
 
-                </LinearLayout>
+            <ProgressBar
+                android:id="@+id/roomPgeRoomMateProgressBar"
+                android:layout_marginStart="14dp"
+                android:visibility="invisible"
+                android:layout_gravity="center_vertical"
+                android:layout_width="18dp"
+                android:layout_height="18dp"/>
 
-                <LinearLayout
-                    android:id="@+id/roomPgeRow2LinearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+            <ImageButton
+                android:id="@+id/roomPgeRoomMateRefreshBtn"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                style="@style/ForArrowTheme"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="192dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_baseline_refresh_24">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical"
-                        android:padding="4dp">
+            </ImageButton>
 
-                        <ImageButton
-                            android:id="@+id/roomPgeP3Avatar"
-                            style="@style/AvatarTheme"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:src="@drawable/avataar_1m" />
+        </LinearLayout>
 
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/roomPgeP3Name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="@string/room_pge_p3_name"
-                            android:textColor="#E6626161" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/roomPgeRoomMateRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="185dp"
+            android:orientation="horizontal"
+            android:visibility="visible">
 
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/roomPgeP4LinearLayout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="68dp"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical"
-                        android:padding="4dp"
-                        android:visibility="gone">
-
-                        <ImageButton
-                            android:id="@+id/roomPgeP4Avatar"
-                            style="@style/AvatarTheme"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:src="@drawable/avataar_1m" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/roomPgeP4Name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="@string/room_pge_p4_name"
-                            android:textColor="#E6626161" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.recyclerview.widget.RecyclerView>
 
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="28dp"
             android:fontFamily="@font/asap_medium"
             android:text="@string/room_pge_room_service_txt"
             android:textColor="#7F7F7F"
-            android:textSize="16sp" />
+            android:textSize="17sp" />
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -233,6 +249,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="4dp"
+            android:layout_marginBottom="6dp"
             android:orientation="horizontal"
             android:padding="2dp">
 

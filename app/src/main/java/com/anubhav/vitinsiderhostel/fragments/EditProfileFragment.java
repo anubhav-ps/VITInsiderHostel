@@ -1,7 +1,6 @@
 package com.anubhav.vitinsiderhostel.fragments;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -12,10 +11,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -24,12 +22,15 @@ import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.anubhav.vitinsiderhostel.enums.ErrorCode;
 import com.anubhav.vitinsiderhostel.enums.Mod;
-import com.anubhav.vitinsiderhostel.interfaces.iOnUserAccountDeleted;
-import com.anubhav.vitinsiderhostel.interfaces.iOnUserAccountEdited;
+import com.anubhav.vitinsiderhostel.enums.TicketStatus;
+import com.anubhav.vitinsiderhostel.interfaces.iOnAppErrorCreated;
+import com.anubhav.vitinsiderhostel.interfaces.iOnNotifyDbProcess;
 import com.anubhav.vitinsiderhostel.models.AlertDisplay;
+import com.anubhav.vitinsiderhostel.models.AppError;
 import com.anubhav.vitinsiderhostel.models.Scramble;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,34 +43,35 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class EditProfileFragment extends Fragment implements View.OnClickListener {
+public class EditProfileFragment extends Fragment implements View.OnClickListener, iOnNotifyDbProcess , iOnAppErrorCreated {
 
 
-    //firebase fire store declaration
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference userDetailsSection = db.collection(Mod.USD.toString());
-    private final CollectionReference hostelDetailsSection = db.collection(Mod.HOD.toString());
-    private final CollectionReference reportSection = db.collection(Mod.RES.toString());
-
-
-    private boolean hasChanged = false;
-    private Dialog dialog;
-    private MaterialTextView userNameTxt;
-    private MaterialTextView userMailIdTxt;
-    private MaterialTextView contactNumberTxt;
-    private MaterialTextView nativeLanguageTxt;
-    private MaterialTextView branchTxt;
-    private MaterialTextView registerNumberTxt;
-
-    private ProgressBar progressBar;
 
     // firebase declaration
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser user;
 
+    //firebase fire store declaration
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final CollectionReference userDetailsSection = db.collection(Mod.USD.toString());
+    private final CollectionReference hostelDetailsSection = db.collection(Mod.HOD.toString());
+    private final CollectionReference feedbackSection = db.collection(Mod.FBK.toString());
 
-    private iOnUserAccountEdited onUserAccountEdited;
+
+    //views
+    private View rootView;
+    private MaterialTextView userNameTxt, userMailIdTxt, contactNumberTxt, nativeLanguageTxt, branchTxt, registerNumberTxt;
+    private ProgressBar progressBar;
+    private Dialog dialog;
+
+
+    //flags
+    private boolean hasChanged = false;
+
+    //listeners
+    iOnAppErrorCreated onAppErrorCreated;
+
 
     public EditProfileFragment() {
         // Required empty public constructor
@@ -86,7 +88,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+        rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
 
         //firebase instantiation
         firebaseAuth = FirebaseAuth.getInstance();
@@ -95,17 +97,17 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         authStateListener = firebaseAuth -> user = firebaseAuth.getCurrentUser();
 
 
-        MaterialTextView changeAvatarTxt = view.findViewById(R.id.editPgeAvatar);
-        progressBar = view.findViewById(R.id.editPgeProgressBar);
-        userNameTxt = view.findViewById(R.id.editPgeUserName);
-        userMailIdTxt = view.findViewById(R.id.editPgeMailId);
-        contactNumberTxt = view.findViewById(R.id.editPgeContactNumber);
-        nativeLanguageTxt = view.findViewById(R.id.editPgeNativeLanguage);
-        branchTxt = view.findViewById(R.id.editPgeBranch);
-        registerNumberTxt = view.findViewById(R.id.editPgeRegisterNumber);
+        MaterialTextView changeAvatarTxt = rootView.findViewById(R.id.editPgeAvatar);
+        progressBar = rootView.findViewById(R.id.editPgeProgressBar);
+        userNameTxt = rootView.findViewById(R.id.editPgeUserName);
+        userMailIdTxt = rootView.findViewById(R.id.editPgeMailId);
+        contactNumberTxt = rootView.findViewById(R.id.editPgeContactNumber);
+        nativeLanguageTxt = rootView.findViewById(R.id.editPgeNativeLanguage);
+        branchTxt = rootView.findViewById(R.id.editPgeBranch);
+        registerNumberTxt = rootView.findViewById(R.id.editPgeRegisterNumber);
 
-        ImageButton cancelBtn = view.findViewById(R.id.editPgeCancelBtn);
-        MaterialButton saveBtn = view.findViewById(R.id.editPgeSaveBtn);
+        ImageButton cancelBtn = rootView.findViewById(R.id.editPgeCancelBtn);
+        MaterialButton saveBtn = rootView.findViewById(R.id.editPgeSaveBtn);
 
         dialog = new Dialog(getContext());
 
@@ -128,8 +130,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             registerNumberTxt.setText(User.getInstance().getStudentRegisterNumber());
         }
 
-
-        return view;
+        return rootView;
     }
 
     @Override
@@ -183,7 +184,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     }
 
     private void openEditRegisterNumberView() {
-        Toast.makeText(getContext(), "Cannot update register number", Toast.LENGTH_LONG).show();
+        callSnackBar("Cannot update register number");
     }
 
     private void closeEditView() {
@@ -227,32 +228,37 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                                     "tenantAvatar", avatar
                             ).addOnCompleteListener(task1 -> {
                                 if (task1.isSuccessful()) {
-                                    Toast.makeText(getContext(), "Successfully updated, Login Again....", Toast.LENGTH_LONG).show();
+                                    callSnackBar("Successfully Updated");
                                     progressBar.setVisibility(View.GONE);
                                     hasChanged = false;
-                                    FirebaseAuth.getInstance().signOut();
-                                    LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getActivity());
-                                    localSqlDatabase.deleteCurrentUser();
-                                    localSqlDatabase.deleteAllTenants();
-                                    onUserAccountEdited.onUserAccountEdited();
+
+                                    User.getInstance().setUserName(userName);
+                                    User.getInstance().setUserContactNumber(userContactNumber);
+                                    User.getInstance().setStudentNativeLanguage(userNativeLanguage);
+                                    User.getInstance().setAvatar(avatar);
+
+                                    LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getContext(), EditProfileFragment.this);
+                                    localSqlDatabase.updateUserInBackground(User.getInstance());
+
                                 } else {
                                     progressBar.setVisibility(View.GONE);
                                     AlertDisplay alertDisplay = new AlertDisplay(ErrorCode.EPF002.getErrorCode(), ErrorCode.EPF002.getErrorMessage(), getContext());
                                     alertDisplay.displayAlert();
-                                    // TODO: 02-07-2022 report error
+                                    AppError appError = new AppError(ErrorCode.EPF002.getErrorCode(),User.getInstance().getUserMailID());
+                                    onAppErrorCreated.checkIfAlreadyReported(appError,"Issue Has Been Reported");
                                 }
                             });
                         } else {
                             progressBar.setVisibility(View.GONE);
                             AlertDisplay alertDisplay = new AlertDisplay(ErrorCode.EPF001.getErrorCode(), ErrorCode.EPF001.getErrorMessage(), getContext());
                             alertDisplay.displayAlert();
-                            // TODO: 02-07-2022 report error
+                            AppError appError = new AppError(ErrorCode.EPF001.getErrorCode(), User.getInstance().getUserMailID());
+                            onAppErrorCreated.checkIfAlreadyReported(appError,"Issue Has Been Reported,Will Be Looked Upon");
                         }
-
                     });
 
         } else {
-            Toast.makeText(getContext(), "No Changes were made", Toast.LENGTH_SHORT).show();
+            callSnackBar("No Changes were made");
         }
 
     }
@@ -266,7 +272,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     }
 
     private void openEditBranchView() {
-        Toast.makeText(getContext(), "Cannot update branch", Toast.LENGTH_LONG).show();
+        callSnackBar("Cannot update branch");
     }
 
     private void openEditNativeLanguageView() {
@@ -323,7 +329,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     }
 
     private void openEditMailIdView() {
-        Toast.makeText(getContext(), "Cannot update user mail ID", Toast.LENGTH_LONG).show();
+        callSnackBar("Cannot update user mail ID");
     }
 
     private void openEditUserNameView() {
@@ -344,7 +350,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                     return;
                 }
             }
-            setTextFieldValue(userNameTxt, username);
+            setTextFieldValue(userNameTxt, username.trim());
             closeEditView();
         });
         cancelBtn.setOnClickListener(this);
@@ -356,19 +362,53 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof iOnUserAccountDeleted) {
-            this.onUserAccountEdited = (iOnUserAccountEdited) context;
-        }
+    public void checkIfAlreadyReported(AppError appError, String message) {
+        feedbackSection
+                .document(Mod.REPISSU.toString())
+                .collection(Mod.USSTU.toString()).whereEqualTo("errorCode", appError.getErrorCode()).whereEqualTo("reporter", appError.getReporter()).whereEqualTo("status", TicketStatus.BOOKED.toString())
+                .get().addOnCompleteListener(task -> {
+            boolean flag = false;
+            if (task.isSuccessful()) {
+                flag = task.getResult().size() > 0;
+            }
+            onAppErrorCreated.getQueryResult(appError, message, flag);
+        });
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        if (this.onUserAccountEdited != null) {
-            this.onUserAccountEdited = null;
+    public void getQueryResult(AppError appError, String message, boolean flag) {
+        if (flag) {
+            callSnackBar("Issue has already been reported");
+        } else {
+            reportIssue(appError, message);
         }
+    }
+
+    private void reportIssue(AppError appError, String message) {
+        feedbackSection
+                .document(Mod.REPISSU.toString())
+                .collection(Mod.USSTU.toString())
+                .document()
+                .set(appError).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                onAppErrorCreated.IssueReported(message);
+            }
+        });
+    }
+
+    @Override
+    public void IssueReported(String message) {
+        callSnackBar(message);
+    }
+
+    // snack bar method
+    private void callSnackBar(String message) {
+        Snackbar snackbar = Snackbar
+                .make(requireContext(), rootView.findViewById(R.id.editProfileFragment), message, Snackbar.LENGTH_LONG);
+        snackbar.setTextColor(Color.WHITE);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.navy_blue));
+        snackbar.show();
     }
 
     //process 0 and process 1 functions
@@ -384,6 +424,20 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         super.onStop();
         if (firebaseAuth != null) {
             firebaseAuth.removeAuthStateListener(authStateListener);
+        }
+
+    }
+
+
+    @Override
+    public void notifyCompleteDataDownload() {
+
+    }
+
+    @Override
+    public void notifyUserUpdated() {
+        if (!LocalSqlDatabase.getExecutors().isTerminated()) {
+            LocalSqlDatabase.stopExecutors();
         }
     }
 

@@ -47,7 +47,6 @@ public class LinkEnds {
         }
 
         final String studentLinkId = block + "|" + y + "|" + m + "|" + d + "|" + reqDocId;
-
         return this.firebaseFirestore.collection(BE7825AM04CE).document(NH4793YN275D).collection(mailId).document(studentLinkId);
 
     }

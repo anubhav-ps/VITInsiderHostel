@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:fontFamily="sans-serif"
-            android:text="@string/room_service_name_txt"
+            android:text="@string/cell_room_service_title_lbl"
             android:textColor="@color/text_01"
             android:textSize="12sp" />
 

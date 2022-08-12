@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="340dp"
     android:layout_height="560dp"
     android:clipToPadding="true"
@@ -23,7 +24,8 @@
             android:paddingStart="16dp"
             android:text="OREK  DETAIL"
             android:textColor="@color/medium_theme_green"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            tools:ignore="RtlSymmetry" />
 
 
         <LinearLayout
@@ -41,7 +43,8 @@
                 android:paddingStart="16dp"
                 android:text="22-06-2022"
                 android:textColor="@color/text_04"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:ignore="RtlSymmetry" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
@@ -65,7 +68,8 @@
             android:scrollIndicators="right"
             android:scrollbarAlwaysDrawVerticalTrack="true"
             android:scrollbarSize="4dp"
-            android:scrollbars="vertical">
+            android:scrollbars="vertical"
+            tools:ignore="RtlSymmetry">
 
 
             <LinearLayout

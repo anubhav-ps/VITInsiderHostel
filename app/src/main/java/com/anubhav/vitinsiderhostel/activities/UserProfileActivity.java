@@ -1,14 +1,14 @@
 package com.anubhav.vitinsiderhostel.activities;
 
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -16,13 +16,11 @@ import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.anubhav.vitinsiderhostel.fragments.ViewUserProfileFragment;
 import com.anubhav.vitinsiderhostel.interfaces.iOnUserAccountDeleted;
-import com.anubhav.vitinsiderhostel.interfaces.iOnUserAccountEdited;
 import com.anubhav.vitinsiderhostel.models.User;
+import com.google.android.material.snackbar.Snackbar;
 
-public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener, iOnUserAccountDeleted , iOnUserAccountEdited {
+public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener, iOnUserAccountDeleted{
 
-
-    private LocalSqlDatabase localSqlDatabase ;
 
     public UserProfileActivity() {
 
@@ -32,9 +30,6 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-
-        localSqlDatabase = new LocalSqlDatabase(UserProfileActivity.this);
-
 
         if (savedInstanceState == null) {
             ViewUserProfileFragment viewUserProfileFragment = new ViewUserProfileFragment();
@@ -70,26 +65,23 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void userAccountDeleted() {
-        Toast.makeText(UserProfileActivity.this, "User Account Deleted", Toast.LENGTH_SHORT).show();
+        callSnackBar("User Account Deleted");
         Intent intent = new Intent();
         setResult(99, intent);
         finish();
     }
 
-    @Override
-    public void onUserAccountEdited() {
-        Intent intent = new Intent();
-        setResult(90, intent);
-        finish();
+    // snack bar method
+    private void callSnackBar(String message) {
+        Snackbar snackbar = Snackbar
+                .make(UserProfileActivity.this, findViewById(R.id.userProfileActivity), message, Snackbar.LENGTH_LONG);
+        snackbar.setTextColor(Color.WHITE);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(ContextCompat.getColor(UserProfileActivity.this, R.color.navy_blue));
+        snackbar.show();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (User.getInstance()==null){
-            User user = null;
-            user = localSqlDatabase.getCurrentUser();
-        }
-    }
+
+
 
 }

@@ -1,44 +1,35 @@
 package com.anubhav.vitinsiderhostel.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
-import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
-import com.anubhav.vitinsiderhostel.fragments.BlockTicketFragment;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.anubhav.vitinsiderhostel.R;
+import com.anubhav.vitinsiderhostel.fragments.BlockTicketFragment;
 import com.anubhav.vitinsiderhostel.fragments.RoomTicketFragment;
-import com.anubhav.vitinsiderhostel.models.User;
 
-public class TicketHistoryActivity extends AppCompatActivity implements View.OnClickListener{
-
-
-    private LocalSqlDatabase localSqlDatabase ;
+public class TicketHistoryActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ticket_history);
 
-        localSqlDatabase = new LocalSqlDatabase(TicketHistoryActivity.this);
-
-        final  String section = getIntent().getStringExtra("Section");
+        final String section = getIntent().getStringExtra("Section");
         if (savedInstanceState == null) {
-            if (section.equalsIgnoreCase("ROOM")){
+            if (section.equalsIgnoreCase("ROOM")) {
                 RoomTicketFragment roomTicketFragment = new RoomTicketFragment();
                 makeTransaction(roomTicketFragment);
-            }else if (section.equalsIgnoreCase("BLOCK")){
+            } else if (section.equalsIgnoreCase("BLOCK")) {
                 BlockTicketFragment blockTicketFragment = new BlockTicketFragment();
                 makeTransaction(blockTicketFragment);
             }
         }
-
-
 
         ImageButton backArrowToAccount = findViewById(R.id.ticketHistoryBackArrow);
         backArrowToAccount.setOnClickListener(this);
@@ -66,15 +57,5 @@ public class TicketHistoryActivity extends AppCompatActivity implements View.OnC
         fragmentTransaction.replace(R.id.ticketHistoryContainer, fragment);
         fragmentTransaction.commit();
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (User.getInstance()==null){
-            User user = null;
-            user = localSqlDatabase.getCurrentUser();
-        }
-    }
-
 
 }

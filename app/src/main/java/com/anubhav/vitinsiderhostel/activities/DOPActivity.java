@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
-import com.anubhav.vitinsiderhostel.interfaces.iOnIssuedOReqFetched;
+import com.anubhav.vitinsiderhostel.interfaces.iOnIssuedOReqDownloaded;
 import com.anubhav.vitinsiderhostel.models.IssuedOREK;
 import com.anubhav.vitinsiderhostel.models.LinkEnds;
 import com.anubhav.vitinsiderhostel.models.User;
@@ -26,11 +26,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Locale;
 
-public class DOPActivity extends AppCompatActivity implements iOnIssuedOReqFetched {
+public class DOPActivity extends AppCompatActivity implements iOnIssuedOReqDownloaded {
 
-    private LocalSqlDatabase localSqlDatabase ;
-
-    iOnIssuedOReqFetched onIssuedOReqFetched;
+    iOnIssuedOReqDownloaded onIssuedOReqDownloaded;
+    private LocalSqlDatabase localSqlDatabase;
     private MaterialTextView issuedOnTxt, validityTxt, registerNumTxt, studentNameTxt, visitDateTxt, checkOutTxt, checkInTxt, checkedOutAtTxt, checkedInAtTxt;
     private ProgressBar progressBar;
     private LinearLayout loadingLinearLayout, dopCardLinearLayout;
@@ -51,7 +50,7 @@ public class DOPActivity extends AppCompatActivity implements iOnIssuedOReqFetch
         final String date = getIntent().getStringExtra("Date");
         final String docId = getIntent().getStringExtra("DocId");
 
-        onIssuedOReqFetched = this;
+        onIssuedOReqDownloaded = this;
 
 
         progressBar = findViewById(R.id.dopActivityProgressBar);
@@ -86,7 +85,7 @@ public class DOPActivity extends AppCompatActivity implements iOnIssuedOReqFetch
                     progressBar.setVisibility(View.GONE);
                     loadingLinearLayout.setVisibility(View.GONE);
                 }
-                onIssuedOReqFetched.onIssuedOReqFetched(isThere);
+                onIssuedOReqDownloaded.issuedOReqDownloaded(isThere);
             }
         });
 
@@ -102,12 +101,12 @@ public class DOPActivity extends AppCompatActivity implements iOnIssuedOReqFetch
     }
 
     @Override
-    public void onIssuedOReqFetched(boolean flag) {
+    public void issuedOReqDownloaded(boolean flag) {
 
         loadingLinearLayout.setVisibility(View.GONE);
         dopCardLinearLayout.setVisibility(View.VISIBLE);
 
-        if (flag && issuedOREK!=null) {
+        if (flag && issuedOREK != null) {
 
             progressBar.setVisibility(View.GONE);
             final String issuedOn = "Issued on : " + issuedOREK.getIssuedOn();
@@ -136,7 +135,7 @@ public class DOPActivity extends AppCompatActivity implements iOnIssuedOReqFetch
     @Override
     protected void onResume() {
         super.onResume();
-        if (User.getInstance()==null){
+        if (User.getInstance() == null) {
             User user = null;
             user = localSqlDatabase.getCurrentUser();
         }

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anubhav.vitinsiderhostel.R;
+import com.anubhav.vitinsiderhostel.interfaces.iOnRoomServiceCardClicked;
 import com.anubhav.vitinsiderhostel.models.RoomService;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textview.MaterialTextView;
@@ -19,11 +20,11 @@ public class RoomServiceRecyclerAdapter extends RecyclerView.Adapter<RoomService
 
 
     private final ArrayList<RoomService> roomServiceArrayList;
-    private RecyclerCardViewClickListener recyclerCardViewClickListener;
+    private final iOnRoomServiceCardClicked onRoomServiceCardClicked;
 
-    public RoomServiceRecyclerAdapter(ArrayList<RoomService> roomServiceArrayList, RecyclerCardViewClickListener listener) {
+    public RoomServiceRecyclerAdapter(ArrayList<RoomService> roomServiceArrayList,iOnRoomServiceCardClicked  listener) {
         this.roomServiceArrayList = roomServiceArrayList;
-        recyclerCardViewClickListener = listener;
+        onRoomServiceCardClicked = listener;
     }
 
     @NonNull
@@ -39,17 +40,13 @@ public class RoomServiceRecyclerAdapter extends RecyclerView.Adapter<RoomService
         holder.icon.setImageResource(roomServiceArrayList.get(position).getImageUrl());
         holder.serviceName.setText(roomServiceArrayList.get(position).getServiceName());
         holder.cardView.setOnClickListener(v -> {
-            recyclerCardViewClickListener.onCardItemClickListener(position);
+            onRoomServiceCardClicked.roomServiceCardClicked(position);
         });
     }
 
     @Override
     public int getItemCount() {
         return roomServiceArrayList.size();
-    }
-
-    public interface RecyclerCardViewClickListener {
-        void onCardItemClickListener(int pos);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

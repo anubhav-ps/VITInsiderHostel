@@ -9,13 +9,17 @@ public enum ErrorCode {
     RA005("RA005","Tenant details couldn't be updated!"),
     RA006("RA006","Verification link couldn't not be sent!"),
 
+    LA001("LA001","User not a hosteler anymore"),
+
     EPF001("EPF001","Updating user section failed!"),
     EPF002("EPF002","Updating tenant section failed!"),
 
 
     DF001("DF001","User Details couldn't be erased!"),
     DF002("DF002","User Account ID couldn't be deleted!"),
-    DF003("DF003","Tenant Details couldn't be deleted!"),
+
+    ORF001("ORF001","Outing Status Link Couldn't Be Created"),
+    ORF002("ORF002","Outing Form Couldn't Be Raised"),
 
     RF001("",""),
     RF002("",""),

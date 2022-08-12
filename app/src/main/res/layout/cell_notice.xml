@@ -6,10 +6,10 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    app:cardElevation="2dp"
     android:longClickable="true"
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="6dp"
+    app:cardElevation="2dp"
     app:cardUseCompatPadding="true"
     app:rippleColor="#1B303030">
 
@@ -18,8 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingTop="16dp"
         android:paddingStart="16dp"
+        android:paddingTop="16dp"
         android:paddingEnd="16dp"
         android:paddingBottom="4dp">
 
@@ -30,8 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:fontFamily="sans-serif-medium"
-            android:text="Hostel Fees"
             android:maxLines="2"
+            android:text="@string/cell_notice_title_txt"
             android:textColor="@color/medium_theme_green"
             android:textSize="24sp" />
 
@@ -39,9 +39,9 @@
             android:id="@+id/cellNoticePostedOn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
             android:layout_gravity="start"
-            android:text="Posted On : 12th May 2022"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/cell_notice_posted_on_txt"
             android:textColor="#7F7F7F"
             android:textSize="10sp" />
 
@@ -53,7 +53,7 @@
             android:layout_marginTop="12dp"
             android:fontFamily="sans-serif-light"
             android:maxLength="300"
-            android:text="Lorem ipsum dolor sit amet, consect? Aborum mollitia omnis quae quia ullam unde. Adipisci animi asperiores corporis dignissimos ducimus eius eligendi enim ipsum, iste magnam minus neque nisi possimus provident ven explica"
+            android:text="@string/cell_notice_body_txt"
             android:textColor="#7F7F7F"
             android:textSize="14sp" />
 
@@ -63,12 +63,12 @@
             android:layout_height="4dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="14dp"
+            android:visibility="visible"
             app:dotsColor="@color/light_theme_green"
+            app:dotsCornerRadius="8dp"
             app:dotsSize="12dp"
             app:dotsSpacing="5dp"
             app:progressMode="true"
-            app:dotsCornerRadius="8dp"
-            android:visibility="visible"
             app:selectedDotColor="@color/dark_theme_green" />
 
     </LinearLayout>

@@ -16,8 +16,9 @@
         android:paddingTop="6dp"
         android:paddingBottom="6dp"
         android:textColor="#7F7F7F"
-        android:text="Block Tickets"
-        android:textSize="18sp" />
+        android:text="@string/block_tickets_pge_title_lbl"
+        android:textSize="18sp"
+        tools:ignore="RtlSymmetry" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ticketHistoryBlockRecyclerView"

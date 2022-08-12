@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -17,8 +18,13 @@ import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.enums.Branch;
 import com.anubhav.vitinsiderhostel.enums.ErrorCode;
 import com.anubhav.vitinsiderhostel.enums.Mod;
+import com.anubhav.vitinsiderhostel.enums.TicketStatus;
+import com.anubhav.vitinsiderhostel.interfaces.iOnAppErrorCreated;
 import com.anubhav.vitinsiderhostel.models.AlertDisplay;
+import com.anubhav.vitinsiderhostel.models.AppError;
 import com.anubhav.vitinsiderhostel.models.Scramble;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -36,7 +42,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, iOnAppErrorCreated {
 
 
     //mail domain pattern
@@ -46,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference userDetailsSection = db.collection(Mod.USD.toString());
     private final CollectionReference hostelDetailsSection = db.collection(Mod.HOD.toString());
-    private final CollectionReference reportSection = db.collection(Mod.RES.toString());
+    private final CollectionReference feedbackSection = db.collection(Mod.FBK.toString());
 
     // input field views
     private TextInputEditText nameEt, mailEt, passwordEt;
@@ -64,6 +70,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private FirebaseAuth firebaseAuth;
     private FirebaseUser currentUser;
     private FirebaseAuth.AuthStateListener authStateListener;
+
+    //listeners
+    private iOnAppErrorCreated onAppErrorCreated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +102,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         ImageButton toLogin = findViewById(R.id.registerPgeArrowBtn);
 
 
+        onAppErrorCreated = this;
+
         // name change listeners
         nameEt.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
@@ -118,10 +129,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 } else if (inputName.contains(" ")) {
                     nameEt.setError("Username cannot have blank space");
                     validName = false;
-                }else if (inputName.contains("/") || inputName.contains("\\\\")) {
+                } else if (inputName.contains("/") || inputName.contains("\\\\")) {
                     nameEt.setError("Username cannot have slashes");
                     validName = false;
-                }else if (Character.isDigit(inputName.toCharArray()[0])) {
+                } else if (Character.isDigit(inputName.toCharArray()[0])) {
                     nameEt.setError("Username cannot start with digit");
                     validName = false;
                 } else if (inputName.contains("&")) {
@@ -233,7 +244,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         if (!validName && !validMail && !validPassword) {
             final String message = "Fill all the fields to proceed !";
-            callSnackBar();
+            callSnackBar(message);
             return;
         }
 
@@ -343,54 +354,62 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                                             .addOnCompleteListener(task2 -> {
                                                                                 if (!task2.isSuccessful()) {
                                                                                     progressBar.setVisibility(View.INVISIBLE);
-                                                                                    AlertDisplay alertDisplay = new AlertDisplay(ErrorCode.RA005.getErrorCode(), ErrorCode.RA005.getErrorMessage(), RegisterActivity.this);
+                                                                                    AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE "+ErrorCode.RA005.getErrorCode(), ErrorCode.RA005.getErrorMessage(), RegisterActivity.this);
                                                                                     alertDisplay.displayAlert();
-                                                                                    // TODO: 02-07-2022
+                                                                                    AppError appError = new AppError(ErrorCode.RA005.getErrorCode(), inputMail);
+                                                                                    onAppErrorCreated.checkIfAlreadyReported(appError,"Issue Has Been Reported");
                                                                                 }
                                                                             });
+
+                                                                    //second onComplete listener ( to send verification link)
+                                                                    Objects.requireNonNull(firebaseAuth.getCurrentUser())
+                                                                            .sendEmailVerification().addOnCompleteListener(task112 -> {
+                                                                        if (task112.isSuccessful()) {
+                                                                            progressBar.setVisibility(View.INVISIBLE);
+                                                                            //create intent for going to login activity
+                                                                            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(RegisterActivity.this);
+                                                                            builder.setTitle("Registered Successfully");
+                                                                            builder.setMessage("Verify the link that is sent to your VIT mail and then login");
+                                                                            builder.setPositiveButton("Ok", (dialogInterface, i) -> {
+                                                                                // Intent to login page
+                                                                                toLoginPage();
+                                                                            });
+                                                                            builder.show();
+                                                                        } else {
+                                                                            progressBar.setVisibility(View.INVISIBLE);
+                                                                            AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE "+ErrorCode.RA006.getErrorCode(), ErrorCode.RA006.getErrorMessage(), RegisterActivity.this);
+                                                                            alertDisplay.displayAlert();
+                                                                            AppError appError = new AppError(ErrorCode.RA006.getErrorCode(), inputMail);
+                                                                            onAppErrorCreated.checkIfAlreadyReported(appError,"Issue has been reported,You will be contacted soon");
+                                                                        }
+                                                                    });
 
                                                                 } else {
 
                                                                     progressBar.setVisibility(View.INVISIBLE);
-                                                                    AlertDisplay alertDisplay = new AlertDisplay(ErrorCode.RA004.getErrorCode(), ErrorCode.RA004.getErrorMessage(), RegisterActivity.this);
+                                                                    AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE "+ErrorCode.RA004.getErrorCode(), ErrorCode.RA004.getErrorMessage(), RegisterActivity.this);
                                                                     alertDisplay.displayAlert();
-                                                                    // TODO: 02-07-2022
+                                                                    AppError appError = new AppError(ErrorCode.RA004.getErrorCode(), inputMail);
+                                                                    onAppErrorCreated.checkIfAlreadyReported(appError,"Issue has been reported,You will be contacted soon");
                                                                 }
                                                             });
+
                                                 } else {
                                                     progressBar.setVisibility(View.INVISIBLE);
-                                                    AlertDisplay alertDisplay = new AlertDisplay(ErrorCode.RA003.getErrorCode(), ErrorCode.RA003.getErrorMessage(), RegisterActivity.this);
+                                                    AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE "+ErrorCode.RA003.getErrorCode(), ErrorCode.RA003.getErrorMessage(), RegisterActivity.this);
                                                     alertDisplay.displayAlert();
-                                                    // TODO: 02-07-2022
+                                                    AppError appError = new AppError(ErrorCode.RA003.getErrorCode(), inputMail);
+                                                    onAppErrorCreated.checkIfAlreadyReported(appError,"Issue has been reported,You will be contacted soon");
                                                 }
                                             });
-                                    //second onComplete listener ( to send verification link)
-                                    Objects.requireNonNull(firebaseAuth.getCurrentUser())
-                                            .sendEmailVerification().addOnCompleteListener(task112 -> {
-                                        if (task112.isSuccessful()) {
-                                            progressBar.setVisibility(View.INVISIBLE);
-                                            //create intent for going to login activity
-                                            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(RegisterActivity.this);
-                                            builder.setTitle("Registered Successfully");
-                                            builder.setMessage("Verify the link that is sent to your VIT mail and then login");
-                                            builder.setPositiveButton("Ok", (dialogInterface, i) -> {
-                                                // Intent to login page
-                                                RegisterActivity.this.toLoginPage();
-                                            });
-                                            builder.show();
-                                        } else {
-                                            progressBar.setVisibility(View.INVISIBLE);
-                                            AlertDisplay alertDisplay = new AlertDisplay(ErrorCode.RA006.getErrorCode(), ErrorCode.RA006.getErrorMessage(), RegisterActivity.this);
-                                            alertDisplay.displayAlert();
-                                            // TODO: 02-07-2022
-                                        }
-                                    });
+
 
                                 } else {
                                     progressBar.setVisibility(View.INVISIBLE);
-                                    AlertDisplay alertDisplay = new AlertDisplay(ErrorCode.RA002.getErrorCode(), Objects.requireNonNull(task1.getException()).getMessage(), RegisterActivity.this);
+                                    AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE "+ErrorCode.RA002.getErrorCode(), Objects.requireNonNull(task1.getException()).getMessage(), RegisterActivity.this);
                                     alertDisplay.displayAlert();
-                                    // TODO: 02-07-2022
+                                    AppError appError = new AppError(ErrorCode.RA002.getErrorCode(), inputMail);
+                                    onAppErrorCreated.checkIfAlreadyReported(appError,"Issue has been reported,You will be contacted soon");
                                 }
                             });
 
@@ -398,16 +417,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     // in case user  record doesn't match with the hostlers section
                     progressBar.setVisibility(View.INVISIBLE);
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(RegisterActivity.this);
-                    builder.setTitle(ErrorCode.RA001.getErrorCode());
+                    builder.setTitle("ERROR CODE "+ErrorCode.RA001.getErrorCode());
                     builder.setMessage(ErrorCode.RA001.getErrorMessage());
                     builder.setPositiveButton("But I'm Hosteler", (dialogInterface, i) -> {
-                        // TODO: 02-07-2022
+                        AppError appError = new AppError(ErrorCode.RA001.getErrorCode(), inputMail);
+                        onAppErrorCreated.checkIfAlreadyReported(appError,"Issue has been reported,You will be contacted soon");
                     });
                     builder.setNegativeButton("Back", (dialogInterface, i) -> {
-
                     });
                     builder.show();
-
                 }
 
             }
@@ -426,9 +444,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     // snack bar method
-    private void callSnackBar() {
+    private void callSnackBar(String message) {
         Snackbar snackbar = Snackbar
-                .make(RegisterActivity.this, findViewById(R.id.registerPge), "Fill all the fields to proceed !", Snackbar.LENGTH_LONG);
+                .make(RegisterActivity.this, findViewById(R.id.registerPge), message, Snackbar.LENGTH_LONG);
         snackbar.setTextColor(Color.WHITE);
         View snackBarView = snackbar.getView();
         snackBarView.setBackgroundColor(ContextCompat.getColor(RegisterActivity.this, R.color.navy_blue));
@@ -458,6 +476,48 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if (firebaseAuth != null) {
             firebaseAuth.removeAuthStateListener(authStateListener);
         }
+    }
+
+
+    @Override
+    public void checkIfAlreadyReported(AppError appError,String message) {
+        feedbackSection
+                .document(Mod.REPISSU.toString())
+                .collection(Mod.USSTU.toString()).whereEqualTo("errorCode", appError.getErrorCode()).whereEqualTo("reporter", appError.getReporter()).whereEqualTo("status", TicketStatus.BOOKED.toString())
+                .get().addOnCompleteListener(task -> {
+            boolean flag = false;
+            if (task.isSuccessful()) {
+                flag = task.getResult().size() > 0;
+            }
+            onAppErrorCreated.getQueryResult(appError,message,flag);
+        });
+    }
+
+    @Override
+    public void getQueryResult(AppError appError,String message,boolean flag) {
+        if (flag) {
+            callSnackBar("Issue has already been reported");
+        } else {
+            reportIssue(appError,message);
+        }
+    }
+
+
+    private void reportIssue(AppError appError,String message){
+        feedbackSection
+                .document(Mod.REPISSU.toString())
+                .collection(Mod.USSTU.toString())
+                .document()
+                .set(appError).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        onAppErrorCreated.IssueReported(message);
+                    }
+                });
+    }
+
+    @Override
+    public void IssueReported(String message) {
+        callSnackBar(message);
     }
 
 

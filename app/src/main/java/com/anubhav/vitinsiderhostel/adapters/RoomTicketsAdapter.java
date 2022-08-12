@@ -10,8 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anubhav.vitinsiderhostel.R;
-import com.anubhav.vitinsiderhostel.models.Ticket;
 import com.anubhav.vitinsiderhostel.enums.TicketStatus;
+import com.anubhav.vitinsiderhostel.interfaces.iOnRoomTicketCardClicked;
+import com.anubhav.vitinsiderhostel.models.Ticket;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textview.MaterialTextView;
@@ -24,12 +25,12 @@ public class RoomTicketsAdapter extends RecyclerView.Adapter<RoomTicketsAdapter.
 
 
     private ArrayList<Ticket> ticketArrayList;
-    private iOnRoomTicketLongPressed ticketLongPressed;
+    private final iOnRoomTicketCardClicked onRoomTicketClicked;
 
 
-    public RoomTicketsAdapter(ArrayList<Ticket> ticketArrayList,iOnRoomTicketLongPressed ticketLongPressed) {
+    public RoomTicketsAdapter(ArrayList<Ticket> ticketArrayList, iOnRoomTicketCardClicked listener) {
         this.ticketArrayList = ticketArrayList;
-        this.ticketLongPressed = ticketLongPressed;
+        this.onRoomTicketClicked = listener;
     }
 
     @NonNull
@@ -50,9 +51,9 @@ public class RoomTicketsAdapter extends RecyclerView.Adapter<RoomTicketsAdapter.
         String dateString = formatToString.format(model.getItemTimeStamp().toDate());
         final String raisedOn = "Raised on : " + dateString;
         String raisedBy = "Raised by : ";
-        if (model.getUploaderMailId().equalsIgnoreCase(User.getInstance().getUserMailID())){
-            raisedBy = raisedBy+"You";
-        }else{
+        if (model.getUploaderMailId().equalsIgnoreCase(User.getInstance().getUserMailID())) {
+            raisedBy = raisedBy + "You";
+        } else {
             raisedBy = raisedBy + model.getUploaderMailId();
         }
 
@@ -73,7 +74,7 @@ public class RoomTicketsAdapter extends RecyclerView.Adapter<RoomTicketsAdapter.
         holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                ticketLongPressed.onRoomTicketClicked(position,status,model.getDocId());
+                onRoomTicketClicked.onRoomTicketCardLongPressed(position, status, model.getDocId());
                 return true;
             }
         });
@@ -104,9 +105,5 @@ public class RoomTicketsAdapter extends RecyclerView.Adapter<RoomTicketsAdapter.
         }
     }
 
-
-    public interface iOnRoomTicketLongPressed{
-           void onRoomTicketClicked(int pos,String ticketStatus,String docID);
-    }
 
 }

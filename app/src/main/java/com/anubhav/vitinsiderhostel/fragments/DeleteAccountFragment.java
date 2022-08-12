@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -20,37 +21,41 @@ import androidx.fragment.app.FragmentTransaction;
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.enums.ErrorCode;
 import com.anubhav.vitinsiderhostel.enums.Mod;
+import com.anubhav.vitinsiderhostel.enums.TicketStatus;
+import com.anubhav.vitinsiderhostel.interfaces.iOnAppErrorCreated;
 import com.anubhav.vitinsiderhostel.interfaces.iOnUserAccountDeleted;
 import com.anubhav.vitinsiderhostel.models.AlertDisplay;
-import com.anubhav.vitinsiderhostel.models.Scramble;
+import com.anubhav.vitinsiderhostel.models.AppError;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.Locale;
 
 
-public class DeleteAccountFragment extends Fragment implements View.OnClickListener {
-
-    private final String deleteKey = "DeLEtE";
+public class DeleteAccountFragment extends Fragment implements View.OnClickListener, iOnAppErrorCreated {
 
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference userDetailsSection = db.collection(Mod.USD.toString());
-    private final CollectionReference hostelDetailsSection = db.collection(Mod.HOD.toString());
-    private final CollectionReference reportSection = db.collection(Mod.RES.toString());
-
-    MaterialButton abort, delete;
-    EditText inputEt;
-    ProgressBar progressBar;
-    // firebase declaration
+    private final CollectionReference feedbackSection = db.collection(Mod.FBK.toString());
+    //string objects
+    private final String deleteKey = "DeLEtE";
+    // firebase auth declaration
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser user;
+    //views
+    private View rootView;
+    private MaterialButton abort, delete;
+    private EditText inputEt;
+    private ProgressBar progressBar;
+    //listeners
+    private iOnAppErrorCreated onAppErrorCreated;
     private iOnUserAccountDeleted callBackToAccountDeletion;
 
     public DeleteAccountFragment() {
@@ -66,7 +71,7 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_delete_account, container, false);
+        rootView = inflater.inflate(R.layout.fragment_delete_account, container, false);
 
         //firebase instantiation
         firebaseAuth = FirebaseAuth.getInstance();
@@ -74,13 +79,15 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
         //firebase authState listener definition
         authStateListener = firebaseAuth -> user = firebaseAuth.getCurrentUser();
 
-        inputEt = view.findViewById(R.id.deleteAccountET);
-        progressBar = view.findViewById(R.id.deleteAccountProgressBar);
-        abort = view.findViewById(R.id.deleteAccountAbortBtn);
-        delete = view.findViewById(R.id.deleteAccountDeleteBtn);
+        inputEt = rootView.findViewById(R.id.deleteAccountET);
+        progressBar = rootView.findViewById(R.id.deleteAccountProgressBar);
+        abort = rootView.findViewById(R.id.deleteAccountAbortBtn);
+        delete = rootView.findViewById(R.id.deleteAccountDeleteBtn);
 
         inputEt.setTextColor(Color.parseColor("#E6626161"));
         delete.setEnabled(false);
+
+        onAppErrorCreated = this;
 
         inputEt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -109,7 +116,7 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
         abort.setOnClickListener(this);
         delete.setOnClickListener(this);
 
-        return view;
+        return rootView;
     }
 
     @Override
@@ -137,36 +144,74 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
 
     private void deleteAccount() throws NoSuchAlgorithmException {
 
-        final String mailId = User.getInstance().getUserMailID().toLowerCase(Locale.ROOT);
-        final String scrambleValue = Scramble.getScramble(mailId.toLowerCase(Locale.ROOT));
-
         userDetailsSection.document(Mod.USSTU.toString())
                 .collection(Mod.DET.toString())
                 .document(User.getInstance().getUser_Id())
                 .delete()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-
-                        hostelDetailsSection
-                                .document(Mod.TED.toString())
-                                .collection(Mod.DET.toString())
-                                .document(scrambleValue)
-                                .delete()
-                                .addOnCompleteListener(task1 -> {
-                                    if (!task1.isSuccessful()) {
-                                        // TODO: 02-07-2022 report error DF003
-                                        deleteAccountID();
-                                    }
-                                });
-
                         deleteAccountID();
                     } else {
                         progressBar.setVisibility(View.INVISIBLE);
                         AlertDisplay alertDisplay = new AlertDisplay(ErrorCode.DF001.getErrorCode(), ErrorCode.DF001.getErrorMessage(), getContext());
                         alertDisplay.displayAlert();
-                        // TODO: 02-07-2022  report error
+                        AppError appError = new AppError(ErrorCode.DF001.getErrorCode(), User.getInstance().getUserMailID());
+                        onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported,You Will Be Contacted Soon");
                     }
                 });
+
+    }
+
+
+    @Override
+    public void checkIfAlreadyReported(AppError appError, String message) {
+        feedbackSection
+                .document(Mod.REPISSU.toString())
+                .collection(Mod.USSTU.toString()).whereEqualTo("errorCode", appError.getErrorCode()).whereEqualTo("reporter", appError.getReporter()).whereEqualTo("status", TicketStatus.BOOKED.toString())
+                .get().addOnCompleteListener(task -> {
+            boolean flag = false;
+            if (task.isSuccessful()) {
+                flag = task.getResult().size() > 0;
+            }
+            onAppErrorCreated.getQueryResult(appError, message, flag);
+        });
+    }
+
+    @Override
+    public void getQueryResult(AppError appError, String message, boolean flag) {
+        if (flag) {
+            callSnackBar("Issue has already been reported");
+        } else {
+            reportIssue(appError, message);
+        }
+    }
+
+
+    private void reportIssue(AppError appError, String message) {
+        feedbackSection
+                .document(Mod.REPISSU.toString())
+                .collection(Mod.USSTU.toString())
+                .document()
+                .set(appError).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                onAppErrorCreated.IssueReported(message);
+            }
+        });
+    }
+
+    @Override
+    public void IssueReported(String message) {
+        callSnackBar(message);
+    }
+
+    // snack bar method
+    private void callSnackBar(String message) {
+        Snackbar snackbar = Snackbar
+                .make(requireContext(), rootView.findViewById(R.id.deleteAccountFragment), message, Snackbar.LENGTH_SHORT);
+        snackbar.setTextColor(Color.WHITE);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.navy_blue));
+        snackbar.show();
     }
 
     //process 0 and process 1 functions
@@ -209,9 +254,17 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
                 if (task.isSuccessful()) {
                     Toast.makeText(getContext(), "Account deleted successfully", Toast.LENGTH_LONG).show();
                 } else {
-                    // TODO: 02-07-2022 report error  DF002
                     FirebaseAuth.getInstance().signOut();
+                    AppError appError = new AppError(ErrorCode.DF002.getErrorCode(), User.getInstance().getUserMailID());
+                    onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported,You Will Be Contacted Soon");
                 }
+                progressBar.setVisibility(View.INVISIBLE);
+                callBackToAccountDeletion.userAccountDeleted();
+            }).addOnFailureListener(e -> {
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                AppError appError = new AppError(ErrorCode.DF002.getErrorCode(), User.getInstance().getUserMailID());
+                onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported,You Will Be Contacted Soon");
+                FirebaseAuth.getInstance().signOut();
                 progressBar.setVisibility(View.INVISIBLE);
                 callBackToAccountDeletion.userAccountDeleted();
             });

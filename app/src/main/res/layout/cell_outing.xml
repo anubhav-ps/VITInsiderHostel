@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:fontFamily="@font/open_sans_semibold"
-                android:text="Mon"
+                android:text="@string/cell_outing_day_txt"
                 android:textColor="@color/medium_theme_green"
                 android:textSize="16sp" />
 
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:fontFamily="@font/open_sans_semibold"
-                android:text="24"
+                android:text="@string/cell_outing_date_txt"
                 android:textColor="@color/medium_theme_green"
                 android:textSize="20sp" />
 

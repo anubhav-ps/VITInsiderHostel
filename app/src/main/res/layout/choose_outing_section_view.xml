@@ -23,7 +23,7 @@
             android:layout_marginTop="6dp"
             android:layout_marginBottom="10dp"
             android:gravity="center"
-            android:text="Select Section"
+            android:text="@string/dialog_choose_orek_lbl"
             android:textColor="@color/medium_theme_green"
             android:textSize="20sp" />
 
@@ -36,7 +36,7 @@
             android:background="?attr/selectableItemBackground"
             android:gravity="center"
             android:padding="6dp"
-            android:text="Apply OREK"
+            android:text="@string/dialog_choose_apply_orek_lbl"
             android:textColor="#E6626161"
             android:textSize="18sp" />
 
@@ -49,7 +49,7 @@
             android:background="?attr/selectableItemBackground"
             android:gravity="center"
             android:padding="6dp"
-            android:text="OREK History"
+            android:text="@string/dialog_choose_orek_history_lbl"
             android:textColor="#E6626161"
             android:textSize="18sp" />
 

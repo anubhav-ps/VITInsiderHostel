@@ -5,14 +5,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anubhav.vitinsiderhostel.R;
-import com.anubhav.vitinsiderhostel.enums.OutingStatus;
+import com.anubhav.vitinsiderhostel.interfaces.iOnOutingCardClicked;
 import com.anubhav.vitinsiderhostel.models.Outing;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textview.MaterialTextView;
@@ -21,14 +19,14 @@ import java.util.List;
 
 public class OutingAdapter extends RecyclerView.Adapter<OutingAdapter.OutingViewHolder> {
 
-    private List<Outing> outingList;
-    private Context context;
-    private RecyclerOutingCardViewClickListener recyclerOutingCardViewClickListener;
+    private final iOnOutingCardClicked onOutingCardClicked;
+    private final List<Outing> outingList;
+    private final Context context;
 
-    public OutingAdapter(List<Outing> outingList, Context context, RecyclerOutingCardViewClickListener recyclerOutingCardViewClickListener) {
+    public OutingAdapter(List<Outing> outingList, Context context, iOnOutingCardClicked listener) {
         this.outingList = outingList;
         this.context = context;
-        this.recyclerOutingCardViewClickListener = recyclerOutingCardViewClickListener;
+        this.onOutingCardClicked = listener;
     }
 
 
@@ -51,7 +49,7 @@ public class OutingAdapter extends RecyclerView.Adapter<OutingAdapter.OutingView
         holder.dateTxt.setText(date);
         holder.dayTxt.setText(dayTxt);
 
-        holder.cardView.setOnClickListener(v -> recyclerOutingCardViewClickListener.onOutingCardItemClickListener(position));
+        holder.cardView.setOnClickListener(v -> onOutingCardClicked.outingCardClicked(position));
 
 
     }
@@ -61,9 +59,6 @@ public class OutingAdapter extends RecyclerView.Adapter<OutingAdapter.OutingView
         return outingList.size();
     }
 
-    public interface RecyclerOutingCardViewClickListener {
-        void onOutingCardItemClickListener(int pos);
-    }
 
     static class OutingViewHolder extends RecyclerView.ViewHolder {
 

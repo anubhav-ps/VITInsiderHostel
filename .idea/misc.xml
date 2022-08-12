@@ -24,13 +24,15 @@
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/cell_notice.xml" value="0.33" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/cell_outing.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/cell_outing_application.xml" value="0.33" />
+        <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/cell_room_mates.xml" value="0.33" />
+        <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/cell_room_service.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/cell_room_ticket.xml" value="0.5" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/choose_outing_section_view.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/choose_ticket_section_view.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/close_account_dialog.xml" value="0.33" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/dialog_outing_status.xml" value="0.33" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/dialog_tenant_view.xml" value="0.33" />
-        <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/dialog_view_orek.xml" value="0.1" />
+        <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/dialog_view_orek.xml" value="0.25" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/drop_down_option.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/edit_branch_view.xml" value="0.31666666666666665" />
         <entry key="..\:/ProgrammingFiles/Android/VITInsiderHostel/app/src/main/res/layout/edit_contact_number_view.xml" value="0.25" />

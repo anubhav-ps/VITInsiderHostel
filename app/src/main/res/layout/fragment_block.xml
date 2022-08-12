@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="4dp"
+    android:id="@+id/blockFragment"
     tools:context=".fragments.BlockFragment">
 
     <LinearLayout
@@ -19,7 +20,7 @@
             android:layout_marginTop="12dp"
             android:layout_marginBottom="2dp"
             android:fontFamily="@font/asap_medium"
-            android:text="Outing Status"
+            android:text="@string/block_pge_outing_status_lbl"
             android:textColor="@color/text_03"
             android:textSize="14sp" />
 
@@ -47,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="14dp"
                 android:fontFamily="@font/asap_medium"
-                android:text="Block Notice"
+                android:text="@string/block_pge_notice_lbl"
                 android:gravity="center_vertical"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/text_03"
@@ -79,7 +80,7 @@
             android:layout_marginTop="6dp"
             android:layout_marginBottom="2dp"
             android:fontFamily="@font/asap_medium"
-            android:text="Featured"
+            android:text="@string/block_pge_featured_lbl"
             android:textColor="@color/text_03"
             android:textSize="14sp" />
 
@@ -99,7 +100,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginBottom="2dp"
             android:fontFamily="@font/asap_medium"
-            android:text="Block Service"
+            android:text="@string/block_pge_service_lbl"
             android:textColor="@color/text_03"
             android:textSize="14sp" />
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="340dp"
     android:layout_height="700dp"
     android:clipToPadding="true"
@@ -20,9 +21,10 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="18dp"
             android:paddingStart="16dp"
-            android:text="Terms &amp; Condition"
+            android:text="@string/dialog_terms_cond_title_lbl"
             android:textColor="@color/medium_theme_green"
-            android:textSize="28sp" />
+            android:textSize="28sp"
+            tools:ignore="RtlSymmetry" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -32,15 +34,16 @@
             android:fadeScrollbars="false"
             android:paddingEnd="10dp"
             android:paddingBottom="6dp"
-            android:scrollbarSize="4dp"
             android:scrollIndicators="right"
             android:scrollbarAlwaysDrawVerticalTrack="true"
-            android:scrollbars="vertical">
+            android:scrollbarSize="4dp"
+            android:scrollbars="vertical"
+            tools:ignore="RtlSymmetry">
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingStart="14dp"
                 android:paddingEnd="14dp">
@@ -54,7 +57,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
-                    android:text="1. Once DOP (Digital Outing Passport)  is generated,Student will be able to view the validity status of the DOP in it ."
+                    android:text="@string/dialog_terms_cond_rule_1_lbl"
                     android:textColor="@color/text_01"
                     android:textSize="16sp" />
 
@@ -66,7 +69,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
-                    android:text="2. DOP Validity Status"
+                    android:text="@string/dialog_terms_cond_rule_2_lbl"
                     android:textColor="@color/text_01"
                     android:textSize="16sp" />
 
@@ -79,7 +82,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingStart="16dp"
                     android:paddingEnd="4dp"
-                    android:text="Inactive"
+                    android:text="@string/dialog_terms_cond_inactive_title_lbl"
                     android:textColor="@color/text_01"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -91,7 +94,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingStart="16dp"
                     android:paddingEnd="4dp"
-                    android:text="DOP will be inactive till the student check out from campus"
+                    android:text="@string/dialog_terms_cond_inactive_lbl"
                     android:textColor="@color/text_01"
                     android:textSize="16sp" />
 
@@ -103,7 +106,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingStart="16dp"
                     android:paddingEnd="4dp"
-                    android:text="Active"
+                    android:text="@string/dialog_terms_cond_active_title_lbl"
                     android:textColor="@color/text_01"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -116,7 +119,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingStart="16dp"
                     android:paddingEnd="4dp"
-                    android:text="DOP will be active from time of check out till the check in time specified."
+                    android:text="@string/dialog_terms_cond_active_lbl"
                     android:textColor="@color/text_01"
                     android:textSize="16sp" />
 
@@ -128,7 +131,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingStart="16dp"
                     android:paddingEnd="4dp"
-                    android:text="Expired"
+                    android:text="@string/dialog_terms_cond_expired_title_lbl"
                     android:textColor="@color/text_01"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -140,8 +143,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingStart="16dp"
                     android:paddingEnd="4dp"
-                    android:text="DOP will expire after the check in time,
-    irrespective of student has checked in or not at the specified check in time."
+                    android:text="@string/dialog_terms_cond_expired_lbl"
                     android:textColor="@color/text_01"
                     android:textSize="16sp" />
 
@@ -153,7 +155,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingStart="16dp"
                     android:paddingEnd="4dp"
-                    android:text="Cancelled"
+                    android:text="@string/dialog_terms_cond_cancel_title_lbl"
                     android:textColor="@color/text_01"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -165,9 +167,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingStart="16dp"
                     android:paddingEnd="4dp"
-                    android:text="If the Name and Register Number in DOP does not match the details in Student Id Card (or)
- Student has failed to check out even 1 hr past the check out time specified.
-"
+                    android:text="@string/dialog_terms_cond_cancel_lbl"
                     android:textColor="@color/text_01"
                     android:textSize="16sp" />
 
@@ -179,8 +179,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
-                    android:text="3. Even after outing is approved it can be rejected by managment citing student misconduct or other reasons.
-"
+                    android:text="@string/dialog_terms_cond_rule_3_lbl"
                     android:textColor="@color/text_01"
                     android:textSize="16sp" />
 
@@ -193,7 +192,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
-                    android:text="4. Misuse of outing request feature for play or fun will lead to suspension of outing for 2 month for student who applied."
+                    android:text="@string/dialog_terms_cond_rule_4_lbl"
                     android:textColor="@color/text_01"
                     android:textSize="16sp" />
 
@@ -209,7 +208,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="20dp"
-                        android:text="@string/ticket_dialog_captcha_txt"
+                        android:text="@string/dialog_terms_cond_captcha_lbl"
                         android:textColor="#E6626161" />
 
 
@@ -261,12 +260,12 @@
                     android:layout_marginTop="12dp"
                     android:fontFamily="sans-serif-light"
                     android:paddingStart="4dp"
-                    android:textStyle="bold"
                     android:paddingEnd="4dp"
-                    android:visibility="gone"
-                    android:text="By entering the captcha I declare, I have read and I accept the terms &amp; condition mentioned above."
+                    android:text="@string/dialog_terms_cond_confirm_lbl"
                     android:textColor="#EC4747"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
 
                 <com.google.android.material.button.MaterialButton
@@ -275,7 +274,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
                     android:layout_marginBottom="18dp"
-                    android:text="Proceed"
+                    android:text="@string/dialog_terms_cond_proceed_btn_txt"
                     android:textColor="@color/white"
                     app:backgroundTint="@color/medium_theme_green" />
 

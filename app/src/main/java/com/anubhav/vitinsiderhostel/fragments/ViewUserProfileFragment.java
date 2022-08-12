@@ -20,7 +20,7 @@ import com.google.android.material.textview.MaterialTextView;
 public class ViewUserProfileFragment extends Fragment implements View.OnClickListener {
 
 
-    MaterialTextView userTypeTxt, userNameTxt, userMailIdTxt, userContactNumTxt, userNativeLanguageTxt, userBranchTxt ,userRegisterNumTxt;
+    private MaterialTextView userTypeTxt, userNameTxt, userMailIdTxt, userContactNumTxt, userNativeLanguageTxt, userBranchTxt ,userRegisterNumTxt;
 
     private String userType;
     private String username;

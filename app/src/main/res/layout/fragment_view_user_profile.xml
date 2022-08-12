@@ -25,7 +25,7 @@
             android:layout_marginTop="6dp"
             android:elevation="2dp"
             android:padding="2dp"
-            android:src="@drawable/avataar_1m"
+            android:src="@drawable/av_100"
             app:elevation="2dp">
 
         </ImageView>
@@ -132,7 +132,7 @@
             android:layout_marginTop="18dp"
             android:fontFamily="@font/duru_sans"
             android:padding="2dp"
-            android:text="Register Number"
+            android:text="@string/user_profile_pge_register_number_lbl"
             android:textColor="#E6626161" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -141,7 +141,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:padding="2dp"
-            android:text="00ABC1234"
+            android:text="@string/user_profile_pge_register_number_txt"
             android:textColor="#E6626161"
             android:textSize="14sp">
 

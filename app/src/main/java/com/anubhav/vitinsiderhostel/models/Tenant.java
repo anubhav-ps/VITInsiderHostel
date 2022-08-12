@@ -21,6 +21,7 @@ public class Tenant {
     public Tenant() {
     }
 
+
     public Tenant(String tenantMailID) {
         this.tenantMailID = tenantMailID;
     }

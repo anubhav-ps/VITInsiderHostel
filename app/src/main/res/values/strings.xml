@@ -4,7 +4,7 @@
 
     /* register page */
     <string name="register_pge_sign_up">Sign Up</string>
-    <string name="register_pge_name_hint">Enter your Name</string>
+    <string name="register_pge_name_hint">Create a username</string>
     <string name="register_pge_mail_hint">Enter your V.I.T Mail ID</string>
     <string name="register_pge_user_type_hint">User Type</string>
     <string name="register_pge_gender_hint">Block</string>
@@ -17,7 +17,7 @@
     <string name="login_pge_mail_hint">Enter your V.I.T Mail ID</string>
     <string name="login_pge_password_hint">Enter your password</string>
     <string name="login_pge_login_btn_txt">Login</string>
-    <string name="login_pge_register_lbl">Dont have an account ?</string>
+    <string name="login_pge_register_lbl">Don\'t have an account ?</string>
     <string name="login_pge_resend_link_lbl">Verification link Expired ?</string>
     <string name="login_pge_forgot_password_lbl">Forgot Password ?</string>
     <string name="login_pge_2nd_txt">Login in to continue.</string>
@@ -36,15 +36,17 @@
     <string name="account_frag_account_settings_lbl">Account Settings</string>
     <string name="account_frag_user_profile_txt">User Profile</string>
     <string name="account_frag_ticket_history_txt">Ticket History</string>
-    <string name="account_frag_help_amp_support_lbl"><![CDATA[Help & Support]]></string>
     <string name="account_frag_about_vit_insider_hostel_txt">About VIT Insider Hostel</string>
-    <string name="account_frag_share_the_app_txt">Share the App</string>
+    <string name="account_frag_share_the_app_txt">Share The App</string>
     <string name="account_frag_report_issue_txt">Report Issue</string>
     <string name="account_frag_sign_out_txt">Sign Out</string>
     <string name="account_frag_version_code_txt">v1.01.0</string>
+    <string name="account_pge_suggestion_lbl">I Have a Suggestion</string>
+    <string name="account_pge_bug_lbl">I Spotted a Bug</string>
+    <string name="account_pge_report_lbl">Report Issue</string>
+    <string name="account_pge_feedback_lbl">Feedback</string>
+    <string name="account_pge_share_lbl"><![CDATA[Share & About]]></string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
     /* user profile page */
@@ -54,7 +56,7 @@
     <string name="user_profile_pge_username_lbl">Username</string>
     <string name="user_profile_pge_username_txt">Anubhav_P_S</string>
     <string name="user_profile_pge_user_mail_id_lbl">User mail ID</string>
-    <string name="user_profile_pge_user_mail_id_txt">anubhav.purusottam2019</string>
+    <string name="user_profile_pge_user_mail_id_txt">abc.student2019</string>
     <string name="user_profile_pge_contact_number_lbl">Contact Number</string>
     <string name="user_profile_pge_contact_num_txt">+919150472796</string>
     <string name="user_profile_pge_native_language_lbl">Native Language</string>
@@ -75,19 +77,8 @@
     <string name="delete_pge_sec_lbl">Once your account is deleted,all the personal data associated with your account will be deleted from database\n</string>
     <string name="delete_pge_note_lbl">Note : Account deletion will not delete the tickets that has been raised by the user and still not yet cleared.</string>
 
-    /* room page */
 
-    <string name="room_pge_room_no">Room 000–0</string>
-    <string name="room_pge_beds">0 Bed</string>
-    <string name="room_pge_type">Non Ac</string>
-    <string name="room_pge_p1_name">Roommate</string>
-    <string name="room_pge_p2_name">Roommate</string>
-    <string name="room_pge_p3_name">Roommate</string>
-    <string name="room_pge_p4_name">Roommate</string>
-
-
-    <string name="room_service_name_txt">Furnitures</string>
-    <string name="room_pge_room_service_txt">Room Services</string>
+    /* raise room ticket dialog*/
     <string name="ticket_dialog_book_service_txt">Book Service</string>
     <string name="ticket_dialog_service_name_txt">Service</string>
     <string name="ticket_dialog_description_hint_txt">Describe your issue in few lines</string>
@@ -97,12 +88,17 @@
     <string name="ticket_dialog_raise_ticket_btn_txt">Raise Ticket</string>
 
 
+    /* invite dialog */
     <string name="invite_dialog_invite_txt">Invite User</string>
     <string name="invite_dialog_content_txt">Your roommate from Electrical &amp; Electronics branch has not installed the app. Invite your roommate via mail to get their details</string>
     <string name="invite_dialog_mail_txt">.vitstudent.ac.in</string>
     <string name="invite_dialog_btn_txt">Invite User</string>
+
+    /* view tenant dialog */
     <string name="tenant_dialog_detail_txt">Detail</string>
     <string name="tenant_dialog_back_btn_txt">Back</string>
+
+    /* outing dialog */
     <string name="dialog_outing_date_txt">23</string>
     <string name="dialog_outing_month_txt">MAY</string>
     <string name="dialog_outing_status_lbl">Status :</string>
@@ -113,6 +109,162 @@
     <string name="dialog_outing_from_txt">10:00</string>
     <string name="dialog_outing_till_txt">14:00</string>
     <string name="dialog_outing_duration_txt">4 hrs</string>
+
+
+    /*room fragment*/
+    <string name="room_pge_room_mates_txt">Room Mates</string>
+    <string name="room_pge_room_type_txt">NON-A/C</string>
+    <string name="room_pge_beds_txt">3-BED</string>
+    <string name="room_pge_room_no_txt">701-B</string>
+    <string name="room_pge_user_reg_num_txt">19BEE1144</string>
+    <string name="room_pge_user_name_txt">anubhav_p_s</string>
+    <string name="room_pge_room_service_txt">Room Services</string>
+
+
+    /* digital outing passport */
+    <string name="dop_toolbar_title_txt">Digital Outing Passport</string>
+    <string name="dop_loading_txt">Loading..</string>
+    <string name="dop_digital_outing_txt">Digital Outing</string>
+    <string name="dop_passport_txt">Passport</string>
+    <string name="dop_issued_on_txt">Issued On : 5 JUN 2022, 12:35</string>
+    <string name="dop_status_txt">EXPIRED</string>
+    <string name="dop_register_number_txt">Register Number</string>
+    <string name="dop_register_number">19BEE1144</string>
+    <string name="dop_student_name_txt">Student Name</string>
+    <string name="dop_student_name">Anubhav.P.S</string>
+    <string name="dop_visit_date_txt">Visit Date</string>
+    <string name="dop_visit_date">06–06–2022</string>
+    <string name="dop_check_out_txt">Check Out</string>
+    <string name="dop_campus_check_out_txt">Campus Check Out</string>
+    <string name="dop_campus_check_out">10:00</string>
+    <string name="dop_checked_out_at_txt">Checked out at</string>
+    <string name="dop_checked_out_at">10:20:39</string>
+    <string name="dop_campus_check_in_txt">Campus Check In</string>
+    <string name="dop_check_in_txt">Check In</string>
+    <string name="dop_check_in">18:00</string>
+    <string name="dop_checked_in_at_txt">Checked in at</string>
+    <string name="dop_checked_in_at">18:00</string>
+    <string name="dop_bottom_app_title_txt">Insider Hostel</string>
+    <string name="user_profile_pge_register_number_txt">00ABC1234</string>
+    <string name="user_profile_pge_register_number_lbl">Register Number</string>
+
+
+    /*cell items values*/
+    <string name="cell_menu_title_lbl">Mess Food</string>
+    <string name="cell_room_service_title_lbl">Furniture</string>
+    <string name="cell_block_service_title_lbl">Furniture</string>
+    <string name="cell_notice_title_txt">Hostel Fees</string>
+    <string name="cell_notice_posted_on_txt">Posted On : 12th May 2022</string>
+    <string name="cell_notice_body_txt">ssimus provident ven explica</string>
+    <string name="cell_outing_day_txt">Mon</string>
+    <string name="cell_outing_date_txt">24</string>
+    <string name="cell_room_mate_user_name_txt">anubhav_p_s</string>
+    <string name="cell_room_ticket_title_txt">Service - Fan</string>
+    <string name="cell_room_ticket_body_txt">Capacitor has been damaged</string>
+    <string name="cell_room_ticket_status_lbl">Status</string>
+    <string name="cell_room_ticket_raised_lbl">Raised</string>
+    <string name="cell_room_ticket_in_review_lbl">In Review</string>
+    <string name="cell_room_ticket_solved_lbl">Solved</string>
+    <string name="cell_room_ticket_raised_on_txt">Raised on : 19th Jan 2022</string>
+    <string name="cell_room_ticket_raised_by_txt">Raised by : anubhav.pursottam2019@vitstudent.ac.in</string>
+
+    /* dialog terms and condition */
+    <string name="dialog_terms_cond_rule_1_lbl">1. Once DOP (Digital Outing Passport) is generated,Student will be able to view the validity status of the DOP in it .</string>
+    <string name="dialog_terms_cond_title_lbl"><![CDATA[Terms & Condition]]></string>
+    <string name="dialog_terms_cond_rule_2_lbl">2. DOP Validity Status</string>
+    <string name="dialog_terms_cond_inactive_title_lbl">Inactive</string>
+    <string name="dialog_terms_cond_inactive_lbl">DOP will be inactive till the student check out from campus</string>
+    <string name="dialog_terms_cond_active_title_lbl">Active</string>
+    <string name="dialog_terms_cond_active_lbl">DOP will be active from time of check out till the check in time specified.</string>
+    <string name="dialog_terms_cond_expired_title_lbl">Expired</string>
+    <string name="dialog_terms_cond_expired_lbl">DOP will expire after the check in time, irrespective of student has checked in or not at the specified check in time.</string>
+    <string name="dialog_terms_cond_cancel_title_lbl">Cancelled</string>
+    <string name="dialog_terms_cond_cancel_lbl">If the Name and Register Number in DOP does not match the details in Student Id Card (or) Student has failed to check out even 1 hr past the check out time specified.</string>
+    <string name="dialog_terms_cond_rule_3_lbl">3. Even after outing is approved it can be rejected by management citing student misconduct or other reasons.</string>
+    <string name="dialog_terms_cond_rule_4_lbl">4. Misuse of outing request feature for play or fun will lead to suspension of outing for 2 month for student who applied.</string>
+    <string name="dialog_terms_cond_captcha_lbl">captcha</string>
+    <string name="dialog_terms_cond_confirm_lbl"><![CDATA[By entering the captcha I declare, I have read and I accept the terms & condition mentioned above.]]></string>
+    <string name="dialog_terms_cond_proceed_btn_txt">Proceed</string>
+
+    /* splash screen activity*/
+    <string name="splash_screen_pge_tag_line_lbl">Don\'t Move, Just Tap</string>
+
+    /* ticket history activity*/
+    <string name="ticket_history_pge_toolbar_lbl">Ticket History</string>
+
+    /*edit profile fragment*/
+    <string name="edit_profile_pge_save_btn_txt">Save</string>
+    <string name="edit_profile_pge_change_avatar_lbl">Change Avatar</string>
+
+
+    /*outing history fragment*/
+    <string name="outing_history_pge_no_tickets_lbl">No Outing Request Applications \nfrom your side</string>
+    <string name="outing_history_pge_loading_lbl">Loading..</string>
+    <string name="outing_history_pge_toolbar_title_lbl">Outing Request Applications</string>
+
+    /*block ticket fragment*/
+    <string name="block_tickets_pge_title_lbl">Block Tickets</string>
+
+    /*block fragment*/
+    <string name="block_pge_outing_status_lbl">Outing Status</string>
+    <string name="block_pge_notice_lbl">Block Notice</string>
+    <string name="block_pge_featured_lbl">Featured</string>
+    <string name="block_pge_service_lbl">Block Service</string>
+
+
+    /*choose ticket dialog*/
+    <string name="dialog_choose_room_tickets_lbl">Room Tickets</string>
+    <string name="dialog_choose_block_tickets_lbl">Block Tickets</string>
+    <string name="dialog_choose_tickets_lbl">Select ticket section</string>
+
+    /*choose orek dialog*/
+    <string name="dialog_choose_orek_lbl">Select Section</string>
+    <string name="dialog_choose_apply_orek_lbl">Apply OREK</string>
+    <string name="dialog_choose_orek_history_lbl">OREK History</string>
+
+    /*edit dialogs*/
+    <string name="dialog_edit_branch_lbl">Branch</string>
+    <string name="dialog_edit_branch_pick_lbl">Pick your Branch</string>
+    <string name="dialog_edit_contact_lbl">Contact Number</string>
+    <string name="dialog_edit_contact_info_lbl">Prefix country code (Ex : +91 )</string>
+    <string name="dialog_edit_contact_enter_lbl">Enter new contact number</string>
+    <string name="dialog_edit_username_lbl">Username</string>
+    <string name="dialog_edit_enter_username_lbl">Enter new username</string>
+    <string name="dialog_edit_native_language_lbl">Native Language</string>
+    <string name="dialog_edit_enter_native_language_lbl">Enter Native Language</string>
+
+    /*room tickets*/
+    <string name="room_ticket_pge_title_lbl">Room Tickets</string>
+
+
+    /*outing request fragment*/
+    <string name="ora_pge_hi_there_bl">Hi there</string>
+    <string name="ora_pge_student_name_txt">anubhav</string>
+    <string name="ora_pge_travel_out_txt">Plans to travel Out?</string>
+    <string name="ora_pge_travel_out_lbl">Fill in the required details below to get your DOP</string>
+    <string name="ora_pge_student_detail_lbl">Student Details</string>
+    <string name="ora_pge_student_name_lbl">Name</string>
+    <string name="ora_pge_enter_name_hint">Enter Name</string>
+    <string name="ora_pge_enter_name_info_lbl">Enter correct name as in your ID Card</string>
+    <string name="ora_pge_register_number_lbl">Register Number</string>
+    <string name="ora_pge_mail_id_lbl">Mail ID</string>
+    <string name="ora_pge_contact_number_lbl">Contact Number</string>
+    <string name="ora_pge_room_detail_lbl">Room Detail</string>
+    <string name="ora_pge_parent_contact_number_lbl">Parent Contact Number</string>
+    <string name="ora_pge_parent_contact_number_hint">Prefix Country Code (Ex: +91)</string>
+    <string name="ora_pge_visit_details_lbl">Visit Details</string>
+    <string name="ora_pge_visit_location_lbl">Visit Location</string>
+    <string name="ora_pge_visit_purpose_lbl">Purpose of Visit</string>
+    <string name="ora_pge_visit_purpose_hint">State Purpose Of Visit</string>
+    <string name="ora_pge_apply_btn_txt">Apply</string>
+    <string name="ora_pge_check_in_limit_lbl">*Limit for Check In is 18:00</string>
+    <string name="ora_pge_check_out_limit_lbl">*Possible Check Out Time is from 05:00 to 20:59</string>
+    <string name="ora_pge_check_out_hint">24 Hr Format</string>
+    <string name="ora_pge_check_out_lbl">Check Out</string>
+    <string name="ora_pge_visit_date_hint">DD/MM/YYYY</string>
+    <string name="ora_pge_visit_date_lbl">Date of Visit</string>
+    <string name="ora_pge_visit_location_hint">Enter Address</string>
+    <string name="account_pge_notification_lbl">Notifications</string>
 
 
 </resources>

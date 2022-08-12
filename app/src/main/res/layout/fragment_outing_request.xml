@@ -2,12 +2,17 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/outingRequestFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:scrollIndicators="right"
+    android:scrollbarSize="4dp"
+    android:scrollbarFadeDuration="0"
     android:fadeScrollbars="false"
-    android:scrollbarSize="5dp"
+    android:scrollbarThumbVertical="@android:color/darker_gray"
     android:scrollbars="vertical"
+    android:verticalScrollbarPosition="right"
     tools:context=".fragments.OutingRequestFragment">
 
 
@@ -23,13 +28,14 @@
             android:layout_marginTop="8dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingStart="28dp">
+            android:paddingStart="28dp"
+            tools:ignore="RtlSymmetry">
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/average_sans"
-                android:text="Hie there "
+                android:text="@string/ora_pge_hi_there_bl"
                 android:textColor="#424242"
                 android:textSize="20sp" />
 
@@ -39,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:fontFamily="@font/average_sans"
-                android:text="anubhav"
+                android:text="@string/ora_pge_student_name_txt"
                 android:textColor="@color/light_theme_green"
                 android:textSize="20sp" />
 
@@ -52,9 +58,10 @@
             android:layout_marginTop="6dp"
             android:fontFamily="sans-serif"
             android:paddingStart="28dp"
-            android:text="Plans to travel Out?"
+            android:text="@string/ora_pge_travel_out_txt"
             android:textColor="#424242"
-            android:textSize="26sp" />
+            android:textSize="26sp"
+            tools:ignore="RtlSymmetry" />
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
@@ -63,9 +70,10 @@
             android:layout_marginBottom="26dp"
             android:fontFamily="sans-serif-light"
             android:paddingStart="28dp"
-            android:text="Fill in the required details below to get your DOP"
+            android:text="@string/ora_pge_travel_out_lbl"
             android:textColor="#424242"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            tools:ignore="RtlSymmetry" />
 
 
         <LinearLayout
@@ -83,7 +91,7 @@
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/average_sans"
                 android:padding="2dp"
-                android:text="Student Details"
+                android:text="@string/ora_pge_student_detail_lbl"
                 android:textColor="@color/light_theme_green"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -93,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
                 android:padding="2dp"
-                android:text="Name"
+                android:text="@string/ora_pge_student_name_lbl"
                 android:textColor="@color/text_04"
                 android:textSize="16sp" />
 
@@ -101,7 +109,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter Name"
+                android:hint="@string/ora_pge_enter_name_hint"
                 android:textColorHint="#878787"
                 app:boxStrokeColor="@color/light_theme_green"
                 app:endIconMode="clear_text"
@@ -126,7 +134,7 @@
                 android:layout_marginTop="2dp"
                 android:fontFamily="@font/duru_sans"
                 android:padding="2dp"
-                android:text="Enter correct name as in your ID Card"
+                android:text="@string/ora_pge_enter_name_info_lbl"
                 android:textColor="#E6626161"
                 android:textSize="12sp" />
 
@@ -137,7 +145,7 @@
                 android:layout_marginTop="18dp"
                 android:fontFamily="sans-serif"
                 android:padding="2dp"
-                android:text="Register Number"
+                android:text="@string/ora_pge_register_number_lbl"
                 android:textColor="@color/text_04"
                 android:textSize="16sp" />
 
@@ -172,7 +180,7 @@
                 android:layout_marginTop="18dp"
                 android:fontFamily="sans-serif"
                 android:padding="2dp"
-                android:text="Mail ID"
+                android:text="@string/ora_pge_mail_id_lbl"
                 android:textColor="@color/text_04"
                 android:textSize="16sp" />
 
@@ -205,7 +213,7 @@
                 android:layout_marginTop="18dp"
                 android:fontFamily="sans-serif"
                 android:padding="2dp"
-                android:text="Contact Number"
+                android:text="@string/ora_pge_contact_number_lbl"
                 android:textColor="@color/text_04"
                 android:textSize="16sp" />
 
@@ -242,7 +250,7 @@
                 android:layout_marginTop="18dp"
                 android:fontFamily="sans-serif"
                 android:padding="2dp"
-                android:text="Room Detail"
+                android:text="@string/ora_pge_room_detail_lbl"
                 android:textColor="@color/text_04"
                 android:textSize="16sp" />
 
@@ -280,7 +288,7 @@
                 android:layout_marginTop="18dp"
                 android:fontFamily="sans-serif"
                 android:padding="2dp"
-                android:text="Parent Contact Number"
+                android:text="@string/ora_pge_parent_contact_number_lbl"
                 android:textColor="@color/text_04"
                 android:textSize="16sp" />
 
@@ -288,7 +296,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Prefix Country Code (Ex: +91)"
+                android:hint="@string/ora_pge_parent_contact_number_hint"
                 android:maxLength="14"
                 android:textColorHint="#878787"
                 app:boxStrokeColor="@color/light_theme_green"
@@ -316,7 +324,7 @@
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/average_sans"
                 android:padding="2dp"
-                android:text="Visit Details"
+                android:text="@string/ora_pge_visit_details_lbl"
                 android:textColor="@color/light_theme_green"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -327,7 +335,7 @@
                 android:layout_marginTop="18dp"
                 android:fontFamily="sans-serif"
                 android:padding="2dp"
-                android:text="Visit Location"
+                android:text="@string/ora_pge_visit_location_lbl"
                 android:textColor="@color/text_04"
                 android:textSize="16sp" />
 
@@ -344,7 +352,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="80"
                     android:focusable="false"
-                    android:hint="Enter Address"
+                    android:hint="@string/ora_pge_visit_location_hint"
                     android:textColorHint="#878787"
                     app:boxStrokeColor="@color/light_theme_green"
                     app:counterEnabled="true"
@@ -386,7 +394,7 @@
                 android:layout_marginTop="18dp"
                 android:fontFamily="sans-serif"
                 android:padding="2dp"
-                android:text="Purpose of Visit"
+                android:text="@string/ora_pge_visit_purpose_lbl"
                 android:textColor="@color/text_04"
                 android:textSize="16sp" />
 
@@ -395,7 +403,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:focusable="false"
-                android:hint="State Purpose Of Visit"
+                android:hint="@string/ora_pge_visit_purpose_hint"
                 android:inputType="text|textMultiLine|textCapSentences"
                 android:scrollbars="vertical"
                 android:textColorHint="#878787"
@@ -426,6 +434,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:weightSum="100">
 
@@ -441,16 +450,17 @@
                         android:fontFamily="sans-serif"
                         android:padding="2dp"
                         android:paddingStart="5dp"
-                        android:text="Date of Visit"
+                        android:text="@string/ora_pge_visit_date_lbl"
                         android:textColor="@color/text_04"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        tools:ignore="RtlSymmetry" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="140dp"
                         android:layout_height="wrap_content"
                         android:focusable="false"
-                        android:hint="DD/MM/YYYY"
+                        android:hint="@string/ora_pge_visit_date_hint"
                         android:longClickable="false"
                         android:textColorHint="#878787"
                         app:boxStrokeColor="@color/light_theme_green"
@@ -487,7 +497,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif"
                         android:padding="2dp"
-                        android:text="Check Out"
+                        android:text="@string/ora_pge_check_out_lbl"
                         android:textColor="@color/text_04"
                         android:textSize="16sp" />
 
@@ -497,7 +507,7 @@
                         android:layout_height="wrap_content"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
-                        android:hint="24 Hr Format"
+                        android:hint="@string/ora_pge_check_out_hint"
                         android:longClickable="false"
                         android:textColorHint="#878787"
                         app:boxStrokeColor="@color/light_theme_green"
@@ -532,9 +542,10 @@
                 android:layout_marginTop="14dp"
                 android:fontFamily="sans-serif-light"
                 android:paddingEnd="4dp"
-                android:text="*Possible Check Out Time is from 05:00 to 20:59"
+                android:text="@string/ora_pge_check_out_limit_lbl"
                 android:textColor="@color/text_01"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="RtlSymmetry" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
@@ -542,9 +553,10 @@
                 android:layout_marginTop="1dp"
                 android:fontFamily="sans-serif-light"
                 android:paddingEnd="4dp"
-                android:text="*Limit for Check In is 18:00"
+                android:text="@string/ora_pge_check_in_limit_lbl"
                 android:textColor="@color/text_01"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="RtlSymmetry" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -568,7 +580,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/light_theme_green"
-                    android:text="Apply"
+                    android:text="@string/ora_pge_apply_btn_txt"
                     android:textAllCaps="false"
                     android:textColor="@color/white" />
 

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anubhav.vitinsiderhostel.R;
+import com.anubhav.vitinsiderhostel.interfaces.iOnBlockServiceCardClicked;
 import com.anubhav.vitinsiderhostel.models.BlockService;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textview.MaterialTextView;
@@ -16,15 +17,15 @@ import com.google.android.material.textview.MaterialTextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockServiceRecyclerAdapter extends RecyclerView.Adapter<BlockServiceRecyclerAdapter.ViewHolder> {
+public class BlockServiceRecyclerAdapter extends RecyclerView.Adapter<BlockServiceRecyclerAdapter.ViewHolder>{
 
 
     private final List<BlockService> blockServiceArrayList;
-    private RecyclerBlockServiceCardClickListener recyclerCardViewClickListener;
+    private final iOnBlockServiceCardClicked onBlockServiceCardClicked;
 
-    public BlockServiceRecyclerAdapter(List<BlockService> blockServiceArrayList, RecyclerBlockServiceCardClickListener listener) {
+    public BlockServiceRecyclerAdapter(List<BlockService> blockServiceArrayList,iOnBlockServiceCardClicked listener) {
         this.blockServiceArrayList = blockServiceArrayList;
-        this.recyclerCardViewClickListener = listener;
+        this.onBlockServiceCardClicked = listener;
     }
 
     @NonNull
@@ -40,7 +41,7 @@ public class BlockServiceRecyclerAdapter extends RecyclerView.Adapter<BlockServi
         holder.icon.setImageResource(blockServiceArrayList.get(position).getImageUrl());
         holder.serviceName.setText(blockServiceArrayList.get(position).getServiceName());
         holder.cardView.setOnClickListener(v -> {
-            recyclerCardViewClickListener.onBlockServiceCardClickListener(position);
+            onBlockServiceCardClicked.blockServiceCardClickListener(position);
         });
     }
 
@@ -49,9 +50,7 @@ public class BlockServiceRecyclerAdapter extends RecyclerView.Adapter<BlockServi
         return blockServiceArrayList.size();
     }
 
-    public interface RecyclerBlockServiceCardClickListener {
-        void onBlockServiceCardClickListener(int pos);
-    }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 

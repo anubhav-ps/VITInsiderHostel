@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="6dp"
-            android:text="Branch"
+            android:text="@string/dialog_edit_branch_lbl"
             android:textColor="@color/medium_theme_green"
             android:textSize="18sp" />
 
@@ -33,7 +33,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="16dp"
-            android:hint="Pick your Branch"
+            android:hint="@string/dialog_edit_branch_pick_lbl"
             android:textColorHint="#878787"
             android:visibility="visible"
             app:boxBackgroundColor="#EEEEEE"

@@ -22,8 +22,7 @@ import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.adapters.OutingHistoryRecyclerAdapter;
 import com.anubhav.vitinsiderhostel.interfaces.iOnDopClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnOutingHistoryCardClicked;
-import com.anubhav.vitinsiderhostel.interfaces.iOnOutingHistoryFetched;
-import com.anubhav.vitinsiderhostel.interfaces.iOnOutingSectionChosen;
+import com.anubhav.vitinsiderhostel.interfaces.iOnOutingHistoryDownloaded;
 import com.anubhav.vitinsiderhostel.models.LinkEnds;
 import com.anubhav.vitinsiderhostel.models.ORApp;
 import com.anubhav.vitinsiderhostel.models.User;
@@ -41,10 +40,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryFetched, iOnOutingHistoryCardClicked {
+public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryDownloaded, iOnOutingHistoryCardClicked {
 
 
-    iOnOutingHistoryFetched onOutingHistoryFetched;
+    private iOnOutingHistoryDownloaded onOutingHistoryDownloaded;
     private LinkEnds linkEnds = new LinkEnds();
     private List<String> links;
     private List<ORApp> orApps;
@@ -75,7 +74,7 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryF
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_outing_history, container, false);
 
-        onOutingHistoryFetched = this;
+        onOutingHistoryDownloaded = this;
         orApps = new ArrayList<>();
         dialog = new Dialog(getContext());
 
@@ -101,36 +100,32 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryF
     private void retrieveAllStudentLink() {
         links = new ArrayList<>();
         linkEnds.readStudentLinkId(studentMailId)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                boolean isPresent = false;
-                if (task.isSuccessful()) {
-                    final int size = task.getResult().size();
-                    if (size == 0) {
-                        //todo show no history
-                        loading.setVisibility(View.GONE);
-                        loadingLinearLayout.setVisibility(View.GONE);
-                        emptyHistory.setVisibility(View.VISIBLE);
-                    } else {
-                        isPresent = true;
-                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                            links.add(documentSnapshot.getId());
-                        }
-                    }
-                } else {
-                    //todo report couldn't read
+                .get().addOnCompleteListener(task -> {
+            boolean isPresent = false;
+            if (task.isSuccessful()) {
+                final int size = task.getResult().size();
+                if (size == 0) {
                     loading.setVisibility(View.GONE);
                     loadingLinearLayout.setVisibility(View.GONE);
                     emptyHistory.setVisibility(View.VISIBLE);
+                } else {
+                    isPresent = true;
+                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                        links.add(documentSnapshot.getId());
+                    }
                 }
-                onOutingHistoryFetched.onStudentLinksFetched(isPresent);
+            } else {
+                //todo report couldn't read
+                loading.setVisibility(View.GONE);
+                loadingLinearLayout.setVisibility(View.GONE);
+                emptyHistory.setVisibility(View.VISIBLE);
             }
+            onOutingHistoryDownloaded.studentLinksFetched(isPresent);
         });
     }
 
     @Override
-    public void onStudentLinksFetched(boolean flag) {
+    public void studentLinksFetched(boolean flag) {
         if (flag == true) {
             for (String id : links) {
                 String[] splitValues = id.split("\\|");
@@ -157,7 +152,7 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryF
                             loading.setVisibility(View.GONE);
                             loadingLinearLayout.setVisibility(View.GONE);
                         }
-                        onOutingHistoryFetched.onOrAppsFetched();
+                        onOutingHistoryDownloaded.orAppsFetched();
                     }
                 });
             }
@@ -167,7 +162,7 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryF
     }
 
     @Override
-    public void onOrAppsFetched() {
+    public void orAppsFetched() {
         orApps.sort((o1, o2) -> Long.compare(o2.getUploadTimestamp().getSeconds(), o1.getUploadTimestamp().getSeconds()));
         loading.setVisibility(View.GONE);
         loadingLinearLayout.setVisibility(View.GONE);
@@ -175,7 +170,7 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryF
     }
 
     @Override
-    public void onORekFetchedForDeletion(int pos) {
+    public void oRekFetchedForDeletion(int pos) {
         final String[] splitValue = onSearchDocId.split("\\|");
         DocumentReference orekDocRef = linkEnds.readOREKDocs(splitValue);
         orekDocRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -200,7 +195,7 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryF
     }
 
     @Override
-    public void onOutingHistoryCardClicked(int pos) {
+    public void outingHistoryCardClicked(int pos) {
         dialog.setContentView(R.layout.dialog_view_orek);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -225,7 +220,7 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryF
     }
 
     @Override
-    public void onOutingHistoryCardLongPressed(int pos) {
+    public void outingHistoryCardLongPressed(int pos) {
 
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
         builder.setTitle("Delete OREK");
@@ -253,16 +248,16 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryF
                 } else {
                     //todo error getting documents
                 }
-                onOutingHistoryFetched.onORekFetchedForDeletion(pos);
+                onOutingHistoryDownloaded.oRekFetchedForDeletion(pos);
             }
         });
     }
 
     @Override
-    public void onOutingHistoryViewDopClicked(String docId, int pos) {
-            final String date = orApps.get(pos).getVisitDate();
-            final String[] splitValue = date.split("-");
-            onDopClicked.onViewDopClicked(studentBlock,splitValue[2],splitValue[1],splitValue[0],docId);
+    public void outingHistoryViewDopClicked(String docId, int pos) {
+        final String date = orApps.get(pos).getVisitDate();
+        final String[] splitValue = date.split("-");
+        onDopClicked.viewDopClicked(studentBlock, splitValue[2], splitValue[1], splitValue[0], docId);
     }
 
     @Override

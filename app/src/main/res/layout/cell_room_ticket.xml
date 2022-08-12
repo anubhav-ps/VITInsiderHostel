@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cellRoomTicketHistoryCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:longClickable="true"
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="10dp"
-    android:longClickable="true"
-    android:clickable="true"
-    app:rippleColor="#9CB888"
-    android:id="@+id/cellRoomTicketHistoryCard"
     app:cardUseCompatPadding="true"
-    android:focusable="true">
+    app:rippleColor="#9CB888">
 
 
     <LinearLayout
@@ -27,7 +28,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="6dp"
             android:fontFamily="sans-serif-medium"
-            android:text="Service - Fan"
+            android:text="@string/cell_room_ticket_title_txt"
             android:textColor="@color/medium_theme_green"
             android:textSize="22sp" />
 
@@ -39,7 +40,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="12dp"
             android:fontFamily="sans-serif-light"
-            android:text="Capacitor has been damaged"
+            android:text="@string/cell_room_ticket_body_txt"
             android:textColor="#7F7F7F"
             android:textSize="14sp" />
 
@@ -50,9 +51,10 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
             android:paddingEnd="10dp"
-            android:text="Status"
+            android:text="@string/cell_room_ticket_status_lbl"
             android:textColor="@color/medium_theme_green"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            tools:ignore="RtlSymmetry" />
 
         <ImageView
             android:id="@+id/cellRoomTicketStatus"
@@ -67,14 +69,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:orientation="horizontal"
-            android:paddingStart="10dp">
+            android:paddingStart="10dp"
+            tools:ignore="RtlSymmetry">
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="90dp"
                 android:fontFamily="@font/harmattan"
-                android:text="Raised"
+                android:text="@string/cell_room_ticket_raised_lbl"
                 android:textColor="#7F7F7F"
                 android:textSize="12sp" />
 
@@ -83,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="100dp"
                 android:fontFamily="@font/harmattan"
-                android:text="In Review"
+                android:text="@string/cell_room_ticket_in_review_lbl"
                 android:textColor="#7F7F7F"
                 android:textSize="12sp" />
 
@@ -91,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/harmattan"
-                android:text="Solved"
+                android:text="@string/cell_room_ticket_solved_lbl"
                 android:textColor="#7F7F7F"
                 android:textSize="12sp" />
 
@@ -106,7 +109,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:fontFamily="sans-serif-light"
-            android:text="Raised on : 19th Jan 2022"
+            android:text="@string/cell_room_ticket_raised_on_txt"
             android:textColor="#7F7F7F"
             android:textSize="10sp" />
 
@@ -117,7 +120,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="2dp"
             android:fontFamily="sans-serif-light"
-            android:text="Raised by : anubhav.pursottam2019@vitstudent.ac.in"
+            android:text="@string/cell_room_ticket_raised_by_txt"
             android:textColor="#7F7F7F"
             android:textSize="10sp" />
 

@@ -25,8 +25,8 @@ import java.util.Locale;
 public class OutingHistoryRecyclerAdapter extends RecyclerView.Adapter<OutingHistoryRecyclerAdapter.ViewHolder> {
 
 
-    private List<ORApp> list;
-    private iOnOutingHistoryCardClicked cardClicked;
+    private final List<ORApp> list;
+    private final iOnOutingHistoryCardClicked cardClicked;
 
     public OutingHistoryRecyclerAdapter(List<ORApp> list, iOnOutingHistoryCardClicked cardClicked) {
         this.list = list;
@@ -91,7 +91,7 @@ public class OutingHistoryRecyclerAdapter extends RecyclerView.Adapter<OutingHis
             @Override
             public void onClick(View v) {
                 if (list.get(position).getOraStatus().equalsIgnoreCase(ORAStatus.APPROVED.toString())) {
-                    cardClicked.onOutingHistoryViewDopClicked(list.get(position).getOraDocId(), position);
+                    cardClicked.outingHistoryViewDopClicked(list.get(position).getOraDocId(), position);
                 }
             }
         });
@@ -100,7 +100,7 @@ public class OutingHistoryRecyclerAdapter extends RecyclerView.Adapter<OutingHis
             @Override
             public boolean onLongClick(View v) {
                 if (!list.get(position).getOraStatus().equalsIgnoreCase(ORAStatus.APPROVED.toString())) {
-                    cardClicked.onOutingHistoryCardLongPressed(position);
+                    cardClicked.outingHistoryCardLongPressed(position);
                 }
                 return true;
             }
@@ -109,7 +109,7 @@ public class OutingHistoryRecyclerAdapter extends RecyclerView.Adapter<OutingHis
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cardClicked.onOutingHistoryCardClicked(position);
+                cardClicked.outingHistoryCardClicked(position);
             }
         });
 
