@@ -19,16 +19,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anubhav.vitinsiderhostel.R;
+import com.anubhav.vitinsiderhostel.activities.RegisterActivity;
 import com.anubhav.vitinsiderhostel.adapters.OutingHistoryRecyclerAdapter;
 import com.anubhav.vitinsiderhostel.interfaces.iOnDopClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnOutingHistoryCardClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnOutingHistoryDownloaded;
+import com.anubhav.vitinsiderhostel.models.AlertDisplay;
 import com.anubhav.vitinsiderhostel.models.LinkEnds;
 import com.anubhav.vitinsiderhostel.models.ORApp;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -222,15 +223,10 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryD
     @Override
     public void outingHistoryCardLongPressed(int pos) {
 
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
-        builder.setTitle("Delete OREK");
-        builder.setMessage("Are you sure you want to delete this OREK ?");
-        builder.setPositiveButton("Cancel", (dialogInterface, i) -> {
-        });
-        builder.setNegativeButton("Delete", (dialogInterface, i) -> {
-            deleteOREK(pos);
-        });
-        builder.show();
+        AlertDisplay alertDisplay = new AlertDisplay("Delete OREK", "Are you sure you want to delete this OREK ?", getContext());
+        alertDisplay.getBuilder().setPositiveButton("Cancel",null);
+        alertDisplay.getBuilder().setNegativeButton("Delete",(dialogInterface, i) -> deleteOREK(pos));
+        alertDisplay.display();
 
     }
 

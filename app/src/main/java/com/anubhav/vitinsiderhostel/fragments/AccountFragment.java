@@ -20,9 +20,10 @@ import com.anubhav.vitinsiderhostel.BuildConfig;
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.activities.LoginActivity;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
+import com.anubhav.vitinsiderhostel.interfaces.iOnAccountMenuClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnTicketSectionClicked;
-import com.anubhav.vitinsiderhostel.interfaces.iOnUserProfileClicked;
 import com.anubhav.vitinsiderhostel.models.User;
+import com.anubhav.vitinsiderhostel.notifications.AppNotification;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,7 +49,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
 
     //listeners
-    private iOnUserProfileClicked callbackToFragmentContainer;
+    private iOnAccountMenuClicked onAccountMenuClicked;
 
     //local database
     private LocalSqlDatabase localSqlDatabase;
@@ -86,9 +87,14 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
         MaterialTextView userProfileTxt = rootView.findViewById(R.id.accountPgeViewUserProfile);
         MaterialTextView ticketHistoryTxt = rootView.findViewById(R.id.accountPgeViewTicketHistory);
+        MaterialTextView notificationTxt = rootView.findViewById(R.id.accountPgeNotificationSetting);
+
         MaterialTextView aboutAppTxt = rootView.findViewById(R.id.accountPgeViewAbout);
         MaterialTextView shareAppTxt = rootView.findViewById(R.id.accountPgeViewShareApp);
+
         MaterialTextView reportIssueTxt = rootView.findViewById(R.id.accountPgeViewReportIssue);
+        MaterialTextView bugTxt = rootView.findViewById(R.id.accountPgeViewSpottedBug);
+        MaterialTextView suggestionTxt = rootView.findViewById(R.id.accountPgeViewSuggestion);
 
         MaterialTextView signOutTxt = rootView.findViewById(R.id.accountPgeSignOut);
         MaterialTextView versionCodeTxt = rootView.findViewById(R.id.accountPgeAppVersion);
@@ -103,12 +109,23 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
         setUserDetails();
 
-        signOutTxt.setOnClickListener(this);
+
         userProfileTxt.setOnClickListener(this);
         ticketHistoryTxt.setOnClickListener(this);
+        notificationTxt.setOnClickListener(this);
+
+        shareAppTxt.setOnClickListener(this);
+        aboutAppTxt.setOnClickListener(this);
+
+        reportIssueTxt.setOnClickListener(this);
+        bugTxt.setOnClickListener(this);
+        suggestionTxt.setOnClickListener(this);
+
+        signOutTxt.setOnClickListener(this);
 
         return rootView;
     }
+
 
     private void setUserDetails() {
         if (User.getInstance() != null) {
@@ -130,7 +147,57 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             openUserProfile();
         } else if (id == R.id.accountPgeViewTicketHistory) {
             promptTicketSection();
+        } else if (id == R.id.accountPgeViewShareApp) {
+            openShareAppDialog();
+        } else if (id == R.id.accountPgeViewSuggestion) {
+            openSuggestionFragment();
+        } else if (id == R.id.accountPgeViewReportIssue) {
+            openReportFragment();
+        } else if (id == R.id.accountPgeViewSpottedBug) {
+            openBugFragment();
+        } else if (id == R.id.accountPgeViewAbout) {
+            openAboutFragment();
+        } else if (id == R.id.accountPgeNotificationSetting) {
+            openNotificationFragment();
         }
+    }
+
+    private void openUserProfile() {
+        this.onAccountMenuClicked.userProfileClicked();
+    }
+
+    private void openNotificationFragment() {
+        this.onAccountMenuClicked.notificationsClicked();
+    }
+
+    private void openAboutFragment() {
+        this.onAccountMenuClicked.aboutAppClicked();
+    }
+
+    private void openReportFragment() {
+        callSnackBar("In Beta , Use The Google Form Provided To Report The Issues You Faced");
+        //this.onAccountMenuClicked.reportIssueClicked();
+    }
+
+    private void openBugFragment() {
+        callSnackBar("In Beta , Use The Google Form Provided To Share The Bugs You Found");
+        //this.onAccountMenuClicked.spottedBugClicked();
+    }
+
+    private void openSuggestionFragment() {
+        callSnackBar("Currently not taking any suggestion");
+        //this.onAccountMenuClicked.haveSuggestionsClicked();
+    }
+
+    private void openShareAppDialog() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Insider Hostel");
+        String shareMessage = "\nHey dude, check out this app for VIT Chennai Hostel\n\n";
+        shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID + "\n";
+        intent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+        startActivity(Intent.createChooser(intent, "Select One"));
     }
 
     private void promptTicketSection() {
@@ -164,13 +231,10 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         onTicketSectionChosen.blockTicketClicked();
     }
 
-    // callback to
-    private void openUserProfile() {
-        this.callbackToFragmentContainer.userProfileCalled();
-    }
 
     // method to handle the sign out process
     private void processSignOut() {
+        AppNotification.getInstance().unSubscribeAllTopics();
         FirebaseAuth.getInstance().signOut();
         LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getActivity());
         localSqlDatabase.deleteCurrentUser();
@@ -220,18 +284,23 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         super.onAttach(context);
         Activity activity = (Activity) context;
         try {
-            this.callbackToFragmentContainer = (iOnUserProfileClicked) activity;
+            this.onAccountMenuClicked = (iOnAccountMenuClicked) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + "is not implementing iOnAccountClicked");
+        }
+        try {
             this.onTicketSectionChosen = (iOnTicketSectionClicked) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + "is not implementing onUserProfileCalledListener");
+            throw new ClassCastException(activity.toString() + "is not implementing iOnTicketSectionClicked");
         }
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        if (this.callbackToFragmentContainer != null) {
-            this.callbackToFragmentContainer = null;
+        if (this.onAccountMenuClicked != null) {
+            this.onAccountMenuClicked = null;
         }
         if (this.onTicketSectionChosen != null) {
             this.onTicketSectionChosen = null;

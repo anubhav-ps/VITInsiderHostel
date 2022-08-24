@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -23,10 +22,7 @@ import com.anubhav.vitinsiderhostel.interfaces.iOnAppErrorCreated;
 import com.anubhav.vitinsiderhostel.models.AlertDisplay;
 import com.anubhav.vitinsiderhostel.models.AppError;
 import com.anubhav.vitinsiderhostel.models.Scramble;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,6 +37,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, iOnAppErrorCreated {
 
@@ -113,6 +111,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
+        final String username_pattern = "^(?=.{8,20}$)(?!.*[_]{2})[a-zA-Z0-9_]+";
+
         nameEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -123,22 +123,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 nameEt.setError(null);
                 inputName = Objects.requireNonNull(nameEt.getText()).toString().trim();
-                if (inputName.isEmpty()) {
-                    nameEt.setError("Username cannot be Empty");
+
+                Pattern p = Pattern.compile(username_pattern);
+                Matcher m = p.matcher(inputName);
+
+                if (!m.matches()) {
+                    nameEt.setError("Username must be 8 to 20 characters wide.No special characters allowed except '-'");
                     validName = false;
-                } else if (inputName.contains(" ")) {
-                    nameEt.setError("Username cannot have blank space");
-                    validName = false;
-                } else if (inputName.contains("/") || inputName.contains("\\\\")) {
-                    nameEt.setError("Username cannot have slashes");
-                    validName = false;
-                } else if (Character.isDigit(inputName.toCharArray()[0])) {
-                    nameEt.setError("Username cannot start with digit");
-                    validName = false;
-                } else if (inputName.contains("&")) {
-                    nameEt.setError("Username cannot have ampersand");
-                    validName = false;
-                } else {
+                }else {
                     validName = true;
                 }
             }
@@ -171,11 +163,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if (TextUtils.isEmpty(inputMail)) {
                     mailEt.setError("Mail ID is required !");
                     validMail = false;
-                } else if (!inputMail.endsWith(studentMailPattern)) {
-                    validMail = false;
-                } else {
-                    validMail = true;
-                }
+                } else validMail = inputMail.endsWith(studentMailPattern);
             }
 
             @Override
@@ -354,10 +342,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                                             .addOnCompleteListener(task2 -> {
                                                                                 if (!task2.isSuccessful()) {
                                                                                     progressBar.setVisibility(View.INVISIBLE);
-                                                                                    AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE "+ErrorCode.RA005.getErrorCode(), ErrorCode.RA005.getErrorMessage(), RegisterActivity.this);
+                                                                                    AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE " + ErrorCode.RA005.getErrorCode(), ErrorCode.RA005.getErrorMessage(), RegisterActivity.this);
                                                                                     alertDisplay.displayAlert();
                                                                                     AppError appError = new AppError(ErrorCode.RA005.getErrorCode(), inputMail);
-                                                                                    onAppErrorCreated.checkIfAlreadyReported(appError,"Issue Has Been Reported");
+                                                                                    onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported");
                                                                                 }
                                                                             });
 
@@ -367,65 +355,60 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                                         if (task112.isSuccessful()) {
                                                                             progressBar.setVisibility(View.INVISIBLE);
                                                                             //create intent for going to login activity
-                                                                            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(RegisterActivity.this);
-                                                                            builder.setTitle("Registered Successfully");
-                                                                            builder.setMessage("Verify the link that is sent to your VIT mail and then login");
-                                                                            builder.setPositiveButton("Ok", (dialogInterface, i) -> {
-                                                                                // Intent to login page
-                                                                                toLoginPage();
-                                                                            });
-                                                                            builder.show();
+                                                                            AlertDisplay alertDisplay = new AlertDisplay("Registered Successfully", "Verify the link that is sent to your VIT mail and then login", RegisterActivity.this);
+                                                                            alertDisplay.getBuilder().setPositiveButton("Ok", (dialogInterface, i) -> toLoginPage());
+                                                                            alertDisplay.display();
+
                                                                         } else {
                                                                             progressBar.setVisibility(View.INVISIBLE);
-                                                                            AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE "+ErrorCode.RA006.getErrorCode(), ErrorCode.RA006.getErrorMessage(), RegisterActivity.this);
+                                                                            AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE " + ErrorCode.RA006.getErrorCode(), ErrorCode.RA006.getErrorMessage(), RegisterActivity.this);
                                                                             alertDisplay.displayAlert();
                                                                             AppError appError = new AppError(ErrorCode.RA006.getErrorCode(), inputMail);
-                                                                            onAppErrorCreated.checkIfAlreadyReported(appError,"Issue has been reported,You will be contacted soon");
+                                                                            onAppErrorCreated.checkIfAlreadyReported(appError, "Issue has been reported,You will be contacted soon");
                                                                         }
                                                                     });
 
                                                                 } else {
 
                                                                     progressBar.setVisibility(View.INVISIBLE);
-                                                                    AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE "+ErrorCode.RA004.getErrorCode(), ErrorCode.RA004.getErrorMessage(), RegisterActivity.this);
+                                                                    AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE " + ErrorCode.RA004.getErrorCode(), ErrorCode.RA004.getErrorMessage(), RegisterActivity.this);
                                                                     alertDisplay.displayAlert();
                                                                     AppError appError = new AppError(ErrorCode.RA004.getErrorCode(), inputMail);
-                                                                    onAppErrorCreated.checkIfAlreadyReported(appError,"Issue has been reported,You will be contacted soon");
+                                                                    onAppErrorCreated.checkIfAlreadyReported(appError, "Issue has been reported,You will be contacted soon");
                                                                 }
                                                             });
 
                                                 } else {
                                                     progressBar.setVisibility(View.INVISIBLE);
-                                                    AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE "+ErrorCode.RA003.getErrorCode(), ErrorCode.RA003.getErrorMessage(), RegisterActivity.this);
+                                                    AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE " + ErrorCode.RA003.getErrorCode(), ErrorCode.RA003.getErrorMessage(), RegisterActivity.this);
                                                     alertDisplay.displayAlert();
                                                     AppError appError = new AppError(ErrorCode.RA003.getErrorCode(), inputMail);
-                                                    onAppErrorCreated.checkIfAlreadyReported(appError,"Issue has been reported,You will be contacted soon");
+                                                    onAppErrorCreated.checkIfAlreadyReported(appError, "Issue has been reported,You will be contacted soon");
                                                 }
                                             });
 
 
                                 } else {
                                     progressBar.setVisibility(View.INVISIBLE);
-                                    AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE "+ErrorCode.RA002.getErrorCode(), Objects.requireNonNull(task1.getException()).getMessage(), RegisterActivity.this);
+                                    AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE " + ErrorCode.RA002.getErrorCode(), Objects.requireNonNull(task1.getException()).getMessage(), RegisterActivity.this);
                                     alertDisplay.displayAlert();
                                     AppError appError = new AppError(ErrorCode.RA002.getErrorCode(), inputMail);
-                                    onAppErrorCreated.checkIfAlreadyReported(appError,"Issue has been reported,You will be contacted soon");
+                                    onAppErrorCreated.checkIfAlreadyReported(appError, "Issue has been reported,You will be contacted soon");
                                 }
                             });
 
                 } else {
                     // in case user  record doesn't match with the hostlers section
                     progressBar.setVisibility(View.INVISIBLE);
-                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(RegisterActivity.this);
-                    builder.setTitle("ERROR CODE "+ErrorCode.RA001.getErrorCode());
-                    builder.setMessage(ErrorCode.RA001.getErrorMessage());
-                    builder.setPositiveButton("But I'm Hosteler", (dialogInterface, i) -> {
+
+                    AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE " + ErrorCode.RA001.getErrorCode(), ErrorCode.RA001.getErrorMessage(), RegisterActivity.this);
+                    alertDisplay.getBuilder().setPositiveButton("But I'm Hosteler", (dialogInterface, i) -> {
                         AppError appError = new AppError(ErrorCode.RA001.getErrorCode(), inputMail);
-                        onAppErrorCreated.checkIfAlreadyReported(appError,"Issue has been reported,You will be contacted soon");
+                        onAppErrorCreated.checkIfAlreadyReported(appError, "Issue has been reported,You will be contacted soon");
                     });
-                    builder.setNegativeButton("Back", (dialogInterface, i) -> {
-                    });
-                    builder.show();
+                    alertDisplay.getBuilder().setNegativeButton("Back", null);
+                    alertDisplay.display();
+
                 }
 
             }
@@ -480,7 +463,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
     @Override
-    public void checkIfAlreadyReported(AppError appError,String message) {
+    public void checkIfAlreadyReported(AppError appError, String message) {
         feedbackSection
                 .document(Mod.REPISSU.toString())
                 .collection(Mod.USSTU.toString()).whereEqualTo("errorCode", appError.getErrorCode()).whereEqualTo("reporter", appError.getReporter()).whereEqualTo("status", TicketStatus.BOOKED.toString())
@@ -489,30 +472,30 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             if (task.isSuccessful()) {
                 flag = task.getResult().size() > 0;
             }
-            onAppErrorCreated.getQueryResult(appError,message,flag);
+            onAppErrorCreated.getQueryResult(appError, message, flag);
         });
     }
 
     @Override
-    public void getQueryResult(AppError appError,String message,boolean flag) {
+    public void getQueryResult(AppError appError, String message, boolean flag) {
         if (flag) {
             callSnackBar("Issue has already been reported");
         } else {
-            reportIssue(appError,message);
+            reportIssue(appError, message);
         }
     }
 
 
-    private void reportIssue(AppError appError,String message){
+    private void reportIssue(AppError appError, String message) {
         feedbackSection
                 .document(Mod.REPISSU.toString())
                 .collection(Mod.USSTU.toString())
                 .document()
                 .set(appError).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
-                        onAppErrorCreated.IssueReported(message);
-                    }
-                });
+            if (task.isSuccessful()) {
+                onAppErrorCreated.IssueReported(message);
+            }
+        });
     }
 
     @Override

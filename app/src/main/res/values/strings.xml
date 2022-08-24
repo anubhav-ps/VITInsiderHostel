@@ -48,7 +48,6 @@
     <string name="account_pge_share_lbl"><![CDATA[Share & About]]></string>
 
 
-
     /* user profile page */
     <string name="user_profile_pge_toolbar_lbl">User Profile</string>
     <string name="user_profile_pge_user_type_lbl">User Type</string>
@@ -155,7 +154,7 @@
     <string name="cell_block_service_title_lbl">Furniture</string>
     <string name="cell_notice_title_txt">Hostel Fees</string>
     <string name="cell_notice_posted_on_txt">Posted On : 12th May 2022</string>
-    <string name="cell_notice_body_txt">ssimus provident ven explica</string>
+    <string name="cell_notice_body_txt">Hi ,We at VIT Insider Team are very excited to have you as our beta tester. We wanted you to be the first to know that In few short weeks we will be launching Insider Hostel App for VIT Chennai Campus.With this speci Hi ,We at VIT Insider Team are very excited to have you as our beta tester. We wanted you to be the first to know that In few short weeks we will be launching Insider Hostel App for VIT Chennai Campus.With this speci</string>
     <string name="cell_outing_day_txt">Mon</string>
     <string name="cell_outing_date_txt">24</string>
     <string name="cell_room_mate_user_name_txt">anubhav_p_s</string>
@@ -264,7 +263,26 @@
     <string name="ora_pge_visit_date_hint">DD/MM/YYYY</string>
     <string name="ora_pge_visit_date_lbl">Date of Visit</string>
     <string name="ora_pge_visit_location_hint">Enter Address</string>
+
+    /*account page*/
     <string name="account_pge_notification_lbl">Notifications</string>
 
+
+    /*notice page*/
+    <string name="notice_pge_body_txt">Hi ,We at VIT Insider Team are very excited to have you as our beta tester. We wanted you to be the first to know that In few short weeks we will be launching Insider Hostel App for VIT Chennai Campus.With this special early access, you are going to be one among the 88 beta testers to get the experience of Insider Hostel App. \n\nIn this beta stage ,we\'re working at full speed to roll out app improvements and new features. \n\nSince this is a beta,not everything will be perfect yet. Let us know if you hit any road bumps along the way. \n\nWith your valuable feedback,We can make Insider Hostel App as beautiful and user friendly as possible.We want to make Insider Hostel App the best platform for university hostel. \n\nLet\'s start testing \n\nThankyou \nAnubhav.P.S</string>
+    <string name="notice_pge_title_txt">Beta Testing Is Live</string>
+    <string name="notice_pge_uploader_txt">Anubhav P.S</string>
+    <string name="notice_pge_posted_on_txt">Aug 12, 2022</string>
+    <string name="notice_pge_link_txt">www.wikipedia.com</string>
+    <string name="notice_pge_app_name_lbl">VIT Insider Hostel</string>
+    <string name="notice_pge_urgency_txt">No action required</string>
+    <string name="notice_pge_urgency_lbl">Urgency</string>
+    <string name="notice_pge_link_lbl">Link</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="about_frag_quote_lbl">\"Great Ideas Are Not Born In Silicon Valley,They Are Born In The Minds Of Visionary People\"</string>
+    <string name="about_pge_about_app_lbl"><![CDATA[\t\t\t\t\tDevelopment of Insider Hostel App started in 2022 year beginning, 6 months after the launch of Insider App for 2021 B.tech & M.tech batch Orientation.Seeing the success of the previous app, Insider Hostel App was started with the goal of making a platform that can digitalize the traditional way of registering complaints about room appliances or hostel facilities on paper while making sure the new app eliminated all the bugs and faulty designs from previous app to make it more efficient and better.Gradually over the next 9 months of development the mission of Insider Hostel included other important features that helps in connecting hostel students and making most of the hostel document procedures a few screen taps away. \n\n The Insider Hostel App also focuses on ways to connect as many hostel students as possible even before they arrive at campus via the feature like the roommate and travel-companion.Insider Hostel will continue to identify other hostel problems that can be solved via mobile application to make student\'s hostel life hassle free while ensuring them great UI Experience and data security]]></string>
 
 </resources>

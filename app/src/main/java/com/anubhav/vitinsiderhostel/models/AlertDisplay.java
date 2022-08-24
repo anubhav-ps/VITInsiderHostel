@@ -30,6 +30,12 @@ public class AlertDisplay {
         builder.show();
     }
 
+    public void display() {
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.show();
+    }
+
     public void displayAlert(String positiveBtn) {
         builder.setTitle(title);
         builder.setMessage(message);

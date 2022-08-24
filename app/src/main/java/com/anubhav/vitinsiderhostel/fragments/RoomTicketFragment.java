@@ -19,12 +19,12 @@ import com.anubhav.vitinsiderhostel.adapters.RoomTicketsAdapter;
 import com.anubhav.vitinsiderhostel.enums.TicketStatus;
 import com.anubhav.vitinsiderhostel.interfaces.iOnRoomTicketCardClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnTicketListDownloaded;
+import com.anubhav.vitinsiderhostel.models.AlertDisplay;
 import com.anubhav.vitinsiderhostel.models.Ticket;
 import com.anubhav.vitinsiderhostel.models.TicketIDs;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -105,12 +105,10 @@ public class RoomTicketFragment extends Fragment implements iOnTicketListDownloa
                     //todo display no tickets
                     progressBar.setVisibility(View.GONE);
                     linearLayout.setVisibility(View.GONE);
-                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
-                    builder.setTitle("Tickets Raised");
-                    builder.setMessage("There are no tickets raised for your room");
-                    builder.setPositiveButton("Ok", (dialogInterface, i) -> {
-                    });
-                    builder.show();
+
+                    AlertDisplay alertDisplay = new AlertDisplay("No Tickets Raised", "There are no tickets raised for your room", getContext());
+                    alertDisplay.getBuilder().setPositiveButton("Ok", null);
+                    alertDisplay.display();
                 } else {
                     processGetTickets(task);
                 }
@@ -175,22 +173,20 @@ public class RoomTicketFragment extends Fragment implements iOnTicketListDownloa
     @Override
     public void onRoomTicketCardLongPressed(int pos, String ticketStatus, String docID) {
         if (ticketStatus.equalsIgnoreCase(TicketStatus.BOOKED.toString()) || ticketStatus.equalsIgnoreCase(TicketStatus.IN_REVIEW.toString())) {
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
-            builder.setTitle("Ticket not closed yet");
-            builder.setMessage("This Ticket cannot be deleted until its solved");
-            builder.setPositiveButton("Ok", (dialogInterface, i) -> {
-            });
-            builder.show();
+
+            AlertDisplay alertDisplay = new AlertDisplay("Ticket not closed yet", "This Ticket cannot be deleted until its solved", getContext());
+            alertDisplay.getBuilder().setPositiveButton("Ok", null);
+            alertDisplay.display();
+
         } else if (ticketStatus.equalsIgnoreCase(TicketStatus.SOLVED.toString())) {
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
-            builder.setTitle("Delete Ticket");
-            builder.setMessage("Are you sure you want to delete the ticket ?");
-            builder.setPositiveButton("Cancel", (dialogInterface, i) -> {
-            });
-            builder.setNegativeButton("Delete", (dialogInterface, i) -> {
+
+            AlertDisplay alertDisplay = new AlertDisplay("Delete Ticket", "Are you sure you want to delete the ticket ?", getContext());
+            alertDisplay.getBuilder().setPositiveButton("Cancel", null);
+            alertDisplay.getBuilder().setNegativeButton("Delete", (dialogInterface, i) -> {
                 deleteTicket(pos, docID);
             });
-            builder.show();
+            alertDisplay.display();
+
         }
     }
 

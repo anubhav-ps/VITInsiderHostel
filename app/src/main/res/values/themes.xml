@@ -43,13 +43,23 @@
         <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 
-   <style name="cancelBtn">
-       <item name="colorControlHighlight">#E6FF7C7C</item>
-   </style>
+    <style name="cancelBtn">
+        <item name="colorControlHighlight">#E6FF7C7C</item>
+    </style>
 
     <style name="cancelTheme">
         <item name="android:theme">@style/cancelBtn</item>
         <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="SwitchCompatTheme">
+        <item name="colorControlActivated">@color/medium_theme_green</item>
+        <item name="colorControlHighlight">@color/quantum_grey</item>
+    </style>
+
+    <style name="SwitchCompatStyle">
+        <item name="thumbTint">@color/switch_color</item>
+        <item name="trackTint">@color/switch_color</item>
     </style>
 
 </resources>

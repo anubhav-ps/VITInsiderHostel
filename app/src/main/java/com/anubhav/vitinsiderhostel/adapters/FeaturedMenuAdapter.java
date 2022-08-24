@@ -45,8 +45,18 @@ public class FeaturedMenuAdapter extends RecyclerView.Adapter<FeaturedMenuAdapte
         holder.icon.setImageResource(list.get(position).getIconId());
         holder.title.setText(list.get(position).getTitle());
         holder.cardView.setOnClickListener(v -> {
-            if (list.get(position).getTitle().equalsIgnoreCase("Outing Request")){
+            if (list.get(position).getTitle().equalsIgnoreCase("Outing Request")) {
                 onFeaturedMenuClicked.outingRequestClicked();
+            } else if (list.get(position).getTitle().equalsIgnoreCase("Mess Food")) {
+                onFeaturedMenuClicked.messFoodClicked();
+            } else if (list.get(position).getTitle().equalsIgnoreCase("Lost & Found")) {
+                onFeaturedMenuClicked.lostNFoundClicked();
+            } else if (list.get(position).getTitle().equalsIgnoreCase("Ride Share")) {
+                onFeaturedMenuClicked.rideShareClicked();
+            } else if (list.get(position).getTitle().equalsIgnoreCase("Hostel Rules")) {
+                onFeaturedMenuClicked.hostelRulesClicked();
+            } else if (list.get(position).getTitle().equalsIgnoreCase("Travel Companion")) {
+                onFeaturedMenuClicked.travelCompanionClicked();
             }
         });
 

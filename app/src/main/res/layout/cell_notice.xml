@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cellNoticeCard"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="200dp"
     android:clickable="true"
     android:focusable="true"
     android:longClickable="true"
@@ -47,12 +47,14 @@
 
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/cellNoticeShortDescription"
+            android:id="@+id/cellNoticeBodyTxt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_marginTop="12dp"
+            android:ellipsize="marquee"
             android:fontFamily="sans-serif-light"
-            android:maxLength="300"
+            android:justificationMode="inter_word"
+            android:lineSpacingExtra="4sp"
             android:text="@string/cell_notice_body_txt"
             android:textColor="#7F7F7F"
             android:textSize="14sp" />
@@ -64,6 +66,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="14dp"
             android:visibility="visible"
+            android:layout_marginBottom="4dp"
             app:dotsColor="@color/light_theme_green"
             app:dotsCornerRadius="8dp"
             app:dotsSize="12dp"

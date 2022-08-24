@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="18dp"
+    android:layout_marginEnd="18dp"
+    android:orientation="vertical"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="50dp"
+    app:cardElevation="6dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:text="Connect Using"
+            android:textColor="@color/medium_theme_green"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/dialogConnectLinkedinImgBtn"
+                style="@style/SelectableItemBackground"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:scaleType="centerCrop"
+                android:src="@drawable/linkedin_logo" />
+
+            <ImageButton
+                android:id="@+id/dialogConnectInstagramImgBtn"
+                style="@style/SelectableItemBackground"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:scaleType="centerCrop"
+                android:src="@drawable/instagram_logo" />
+
+            <ImageButton
+                android:id="@+id/dialogConnectYoutubeImgBtn"
+                style="@style/SelectableItemBackground"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:scaleType="centerCrop"
+                android:src="@drawable/youtube_logo" />
+
+            <ImageButton
+                android:id="@+id/dialogConnectSnapchatImgBtn"
+                style="@style/SelectableItemBackground"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/snapchat_logo" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

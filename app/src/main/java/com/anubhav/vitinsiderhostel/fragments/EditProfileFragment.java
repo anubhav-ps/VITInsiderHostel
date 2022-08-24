@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -43,34 +42,27 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class EditProfileFragment extends Fragment implements View.OnClickListener, iOnNotifyDbProcess , iOnAppErrorCreated {
+public class EditProfileFragment extends Fragment implements View.OnClickListener, iOnNotifyDbProcess, iOnAppErrorCreated {
 
-
-
-    // firebase declaration
-    private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener authStateListener;
-    private FirebaseUser user;
 
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference userDetailsSection = db.collection(Mod.USD.toString());
     private final CollectionReference hostelDetailsSection = db.collection(Mod.HOD.toString());
     private final CollectionReference feedbackSection = db.collection(Mod.FBK.toString());
-
-
+    //listeners
+    iOnAppErrorCreated onAppErrorCreated;
+    // firebase declaration
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener authStateListener;
+    private FirebaseUser user;
     //views
     private View rootView;
     private MaterialTextView userNameTxt, userMailIdTxt, contactNumberTxt, nativeLanguageTxt, branchTxt, registerNumberTxt;
     private ProgressBar progressBar;
     private Dialog dialog;
-
-
     //flags
     private boolean hasChanged = false;
-
-    //listeners
-    iOnAppErrorCreated onAppErrorCreated;
 
 
     public EditProfileFragment() {
@@ -163,12 +155,10 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             openEditRegisterNumberView();
         } else if (id == R.id.editPgeCancelBtn) {
             if (hasChanged) {
-                new AlertDialog.Builder(requireContext())
-                        .setTitle("Unsaved changes")
-                        .setMessage("You have unsaved changes. Are you sure you want to cancel?")
-                        .setPositiveButton("Yes", (dialog, which) -> editCancelBtn())
-                        .setNegativeButton("No", null)
-                        .show();
+                AlertDisplay alertDisplay = new AlertDisplay("Unsaved changes", "You have unsaved changes. Are you sure you want to cancel?", getContext());
+                alertDisplay.getBuilder().setPositiveButton("Yes", (dialogInterface, i) -> editCancelBtn());
+                alertDisplay.getBuilder().setNegativeButton("No", null);
+                alertDisplay.display();
             } else {
                 editCancelBtn();
             }
@@ -244,8 +234,8 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                                     progressBar.setVisibility(View.GONE);
                                     AlertDisplay alertDisplay = new AlertDisplay(ErrorCode.EPF002.getErrorCode(), ErrorCode.EPF002.getErrorMessage(), getContext());
                                     alertDisplay.displayAlert();
-                                    AppError appError = new AppError(ErrorCode.EPF002.getErrorCode(),User.getInstance().getUserMailID());
-                                    onAppErrorCreated.checkIfAlreadyReported(appError,"Issue Has Been Reported");
+                                    AppError appError = new AppError(ErrorCode.EPF002.getErrorCode(), User.getInstance().getUserMailID());
+                                    onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported");
                                 }
                             });
                         } else {
@@ -253,7 +243,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                             AlertDisplay alertDisplay = new AlertDisplay(ErrorCode.EPF001.getErrorCode(), ErrorCode.EPF001.getErrorMessage(), getContext());
                             alertDisplay.displayAlert();
                             AppError appError = new AppError(ErrorCode.EPF001.getErrorCode(), User.getInstance().getUserMailID());
-                            onAppErrorCreated.checkIfAlreadyReported(appError,"Issue Has Been Reported,Will Be Looked Upon");
+                            onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported,Will Be Looked Upon");
                         }
                     });
 
@@ -267,7 +257,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         ViewUserProfileFragment viewUserProfileFragment = new ViewUserProfileFragment();
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.userProfilePageContainer, viewUserProfileFragment);
+        fragmentTransaction.replace(R.id.accountMenuPgeFragmentContainer, viewUserProfileFragment);
         fragmentTransaction.commit();
     }
 
@@ -338,17 +328,16 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         EditText usernameEt = dialog.findViewById(R.id.editNameViewNameEt);
         ImageButton cancelBtn = dialog.findViewById(R.id.editNameViewCancelBtn);
         ImageButton saveBtn = dialog.findViewById(R.id.editNameViewSaveBtn);
+
+        final String pattern = "^(?=.{8,20}$)(?!.*[_]{2})[a-zA-Z0-9_]+";
+
         saveBtn.setOnClickListener(v -> {
             final String username = usernameEt.getText().toString().trim();
-            if (username.length() < 10 || username.length() > 20) {
-                usernameEt.setError("Username should be minimum 10 characters wide and   20 characters maximum");
+            Pattern p = Pattern.compile(pattern);
+            Matcher m = p.matcher(username);
+            if (!m.matches()) {
+                usernameEt.setError("Username must be 8 to 20 characters wide.No special characters allowed except '-'");
                 return;
-            }
-            if (!TextUtils.isEmpty(username)) {
-                if (Character.isDigit(username.toCharArray()[0])) {
-                    usernameEt.setError("Username cannot begin with digits");
-                    return;
-                }
             }
             setTextFieldValue(userNameTxt, username.trim());
             closeEditView();

@@ -27,6 +27,7 @@ import com.anubhav.vitinsiderhostel.interfaces.iOnUserAccountDeleted;
 import com.anubhav.vitinsiderhostel.models.AlertDisplay;
 import com.anubhav.vitinsiderhostel.models.AppError;
 import com.anubhav.vitinsiderhostel.models.User;
+import com.anubhav.vitinsiderhostel.notifications.AppNotification;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -138,7 +139,7 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
         ViewUserProfileFragment viewUserProfileFragment = new ViewUserProfileFragment();
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.userProfilePageContainer, viewUserProfileFragment);
+        fragmentTransaction.replace(R.id.accountMenuPgeFragmentContainer, viewUserProfileFragment);
         fragmentTransaction.commit();
     }
 
@@ -254,6 +255,7 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
                 if (task.isSuccessful()) {
                     Toast.makeText(getContext(), "Account deleted successfully", Toast.LENGTH_LONG).show();
                 } else {
+                    AppNotification.getInstance().unSubscribeAllTopics();
                     FirebaseAuth.getInstance().signOut();
                     AppError appError = new AppError(ErrorCode.DF002.getErrorCode(), User.getInstance().getUserMailID());
                     onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported,You Will Be Contacted Soon");
@@ -264,6 +266,7 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 AppError appError = new AppError(ErrorCode.DF002.getErrorCode(), User.getInstance().getUserMailID());
                 onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported,You Will Be Contacted Soon");
+                AppNotification.getInstance().unSubscribeAllTopics();
                 FirebaseAuth.getInstance().signOut();
                 progressBar.setVisibility(View.INVISIBLE);
                 callBackToAccountDeletion.userAccountDeleted();

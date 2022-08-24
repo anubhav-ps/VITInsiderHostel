@@ -31,10 +31,12 @@ import com.anubhav.vitinsiderhostel.enums.Mod;
 import com.anubhav.vitinsiderhostel.enums.OutingStatus;
 import com.anubhav.vitinsiderhostel.enums.ServiceType;
 import com.anubhav.vitinsiderhostel.interfaces.iOnBlockServiceCardClicked;
+import com.anubhav.vitinsiderhostel.interfaces.iOnFeaturedActivityCalled;
 import com.anubhav.vitinsiderhostel.interfaces.iOnFeaturedMenuClicked;
+import com.anubhav.vitinsiderhostel.interfaces.iOnNoticeActivityCalled;
+import com.anubhav.vitinsiderhostel.interfaces.iOnNoticeCardClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnNoticeDownloaded;
 import com.anubhav.vitinsiderhostel.interfaces.iOnOutingCardClicked;
-import com.anubhav.vitinsiderhostel.interfaces.iOnOutingSectionClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnOutingStatusDownloaded;
 import com.anubhav.vitinsiderhostel.models.BlockService;
 import com.anubhav.vitinsiderhostel.models.Featured;
@@ -42,12 +44,14 @@ import com.anubhav.vitinsiderhostel.models.Notice;
 import com.anubhav.vitinsiderhostel.models.Outing;
 import com.anubhav.vitinsiderhostel.models.Scramble;
 import com.anubhav.vitinsiderhostel.models.User;
+import com.anubhav.vitinsiderhostel.notifications.AppNotification;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -59,7 +63,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 
-public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOnBlockServiceCardClicked, iOnOutingStatusDownloaded, iOnNoticeDownloaded, iOnFeaturedMenuClicked {
+public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOnBlockServiceCardClicked, iOnOutingStatusDownloaded, iOnNoticeDownloaded, iOnFeaturedMenuClicked, iOnNoticeCardClicked {
 
 
     //firebase fireStore
@@ -74,6 +78,7 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
         {
             add(new Featured(R.drawable.mess_icon, "Mess Food"));
             add(new Featured(R.drawable.lost_found_icon, "Lost & Found"));
+            add(new Featured(R.drawable.travel_companion_icon, "Travel Companion"));
             add(new Featured(R.drawable.ride_share_icon, "Ride Share"));
             add(new Featured(R.drawable.outing_request_icon, "Outing Request"));
             add(new Featured(R.drawable.hostel_rules_icon, "Hostel Rules"));
@@ -93,9 +98,11 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
         }
     };
     //listeners
-    iOnOutingStatusDownloaded onOutingStatusDownloaded;
-    iOnNoticeDownloaded onNoticeDownloaded;
-    iOnOutingSectionClicked onOutingSectionClicked;
+    private iOnOutingStatusDownloaded onOutingStatusDownloaded;
+    private iOnNoticeDownloaded onNoticeDownloaded;
+    private iOnNoticeActivityCalled onNoticeActivityCalled;
+    private iOnFeaturedActivityCalled onFeaturedActivityCalled;
+
     // firebase declaration
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
@@ -159,27 +166,26 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
 
 
     private void fetchNoticeData() {
-
-       /* noticeSection
+        noticeList.clear();
+        noticeSection
                 .document(Mod.getBlock(User.getInstance().getStudentBlock()))
                 .collection(Mod.DET.toString())
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    if (task.getResult().size() == 0) {
-                        //todo display No notice
-                        noticeProgress.setVisibility(View.GONE);
-                    } else {
-                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                            noticeList.add(documentSnapshot.toObject(Notice.class));
-                        }
-                        onNoticeReceived.onNoticeReceived();
-                    }
+                .get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                    noticeList.add(documentSnapshot.toObject(Notice.class));
                 }
+                onNoticeDownloaded.noticeDownloaded();
+            } else {
+                //todo display No notice
+                callSnackBar("No Notice Has Been Posted");
+                noticeProgress.setVisibility(View.GONE);
             }
+        }).addOnFailureListener(e -> {
+            noticeProgress.setVisibility(View.GONE);
+            callSnackBar("Failed To Fetch Notice Data - " + e.getMessage());
         });
-*/
+
 
     }
 
@@ -208,7 +214,7 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
     }
 
     private void processNoticeViewPager() {
-        NoticeAdapter noticeAdapter = new NoticeAdapter(getContext(), noticeViewPager, noticeList);
+        NoticeAdapter noticeAdapter = new NoticeAdapter(getContext(), noticeViewPager, noticeList, this);
         noticeViewPager.setAdapter(noticeAdapter);
     }
 
@@ -336,43 +342,52 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
 
     @Override
     public void outingRequestClicked() {
-        dialog.setContentView(R.layout.choose_outing_section_view);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-
-        MaterialTextView applyORA = dialog.findViewById(R.id.chooseApplyORASection);
-        MaterialTextView oraHistory = dialog.findViewById(R.id.chooseORAHistorySection);
-
-        applyORA.setOnClickListener(v -> {
-            dialog.dismiss();
-            openApplyOraFragments();
-        });
-
-        oraHistory.setOnClickListener(v -> {
-            dialog.dismiss();
-            openOraHistoryFragment();
-        });
-
-        dialog.show();
-
+        if (User.getInstance().getUserContactNumber() == null || User.getInstance().getUserContactNumber().isEmpty() || User.getInstance().getUserContactNumber().equalsIgnoreCase("N/A")) {
+            callSnackBar("Update contact number to apply for outing");
+            return;
+        }
+        onFeaturedActivityCalled.requestOutingSectionFragment();
     }
 
-    private void openOraHistoryFragment() {
-        onOutingSectionClicked.oraHistorySectionClicked();
+    @Override
+    public void travelCompanionClicked() {
+        String message = "Feature will be available in upcoming app updates";
+        callSnackBar(message);
+        // onFeaturedActivityCalled.requestTravelCompanion();
     }
 
-    private void openApplyOraFragments() {
-        onOutingSectionClicked.applyOraSectionClicked();
+    @Override
+    public void rideShareClicked() {
+        String message = "Feature will be available in upcoming app updates";
+        callSnackBar(message);
     }
+
+    @Override
+    public void hostelRulesClicked() {
+        String message = "Feature will be available in upcoming app updates";
+        callSnackBar(message);
+    }
+
+    @Override
+    public void lostNFoundClicked() {
+        String message = "Feature will be available in upcoming app updates";
+        callSnackBar(message);
+    }
+
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         Activity activity = (Activity) context;
         try {
-            this.onOutingSectionClicked = (iOnOutingSectionClicked) activity;
+            this.onFeaturedActivityCalled = (iOnFeaturedActivityCalled) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + "is not implementing on iOnOutingSectionChosen");
+            throw new ClassCastException(activity.toString() + "is not implementing on iOnFeaturedActivityCalled");
+        }
+        try {
+            this.onNoticeActivityCalled = (iOnNoticeActivityCalled) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + "is not implementing iOnNoticeActivityCalled");
         }
 
     }
@@ -380,23 +395,19 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
     @Override
     public void onDetach() {
         super.onDetach();
-        if (this.onOutingSectionClicked != null) {
-            this.onOutingSectionClicked = null;
+
+        if (this.onFeaturedActivityCalled != null) {
+            this.onFeaturedActivityCalled = null;
+        }
+        if (this.onNoticeActivityCalled != null) {
+            this.onNoticeActivityCalled = null;
         }
 
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
-        noticeList.clear();
-        fetchNoticeData();
-
         if (User.getInstance() == null) {
             User user = null;
             user = localSqlDatabase.getCurrentUser();
@@ -428,6 +439,7 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
                     String registerNum = Objects.requireNonNull(documentSnapshot.get("studentRegisterNumber")).toString();
 
                     if (!roomNo.equals(User.getInstance().getRoomNo()) || !studentBlock.equals(User.getInstance().getStudentBlock()) || !registerNum.equals(User.getInstance().getStudentRegisterNumber())) {
+                        AppNotification.getInstance().unSubscribeAllTopics();
                         FirebaseAuth.getInstance().signOut();
                         logOutUser("Updates in room details, Login again!");
                         localSqlDatabase.deleteCurrentUser();
@@ -435,6 +447,7 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
                     }
 
                 } else {
+                    AppNotification.getInstance().unSubscribeAllTopics();
                     FirebaseAuth.getInstance().signOut();
                     logOutUser("Logging Out Abruptly :(");
                     localSqlDatabase.deleteCurrentUser();
@@ -465,6 +478,12 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
         View snackBarView = snackbar.getView();
         snackBarView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.navy_blue));
         snackbar.show();
+    }
+
+    @Override
+    public void noticeCardClicked(int pos) {
+        onNoticeActivityCalled.noticeActivityCalled(noticeList.get(pos).getNoticeDocID());
+
     }
 
 }

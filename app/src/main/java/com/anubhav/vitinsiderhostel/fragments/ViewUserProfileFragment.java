@@ -104,7 +104,7 @@ public class ViewUserProfileFragment extends Fragment implements View.OnClickLis
     private void changeFragment(Fragment fragment){
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.userProfilePageContainer,fragment);
+        fragmentTransaction.replace(R.id.accountMenuPgeFragmentContainer,fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

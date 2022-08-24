@@ -36,16 +36,16 @@ import com.anubhav.vitinsiderhostel.interfaces.iOnNotifyDbProcess;
 import com.anubhav.vitinsiderhostel.interfaces.iOnRoomMateCardClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnRoomServiceCardClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnRoomTenantListDownloaded;
+import com.anubhav.vitinsiderhostel.models.AlertDisplay;
 import com.anubhav.vitinsiderhostel.models.RoomService;
 import com.anubhav.vitinsiderhostel.models.RoomTenants;
 import com.anubhav.vitinsiderhostel.models.Scramble;
 import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.User;
+import com.anubhav.vitinsiderhostel.notifications.AppNotification;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -56,7 +56,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -131,7 +130,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
     private boolean ac = false;
 
     //
-    private long setTime=0;
+    private long setTime = 0;
 
 
     // firebase auth  declaration
@@ -182,8 +181,9 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
         roomMateProgressBar.setVisibility(View.INVISIBLE);
 
 
-        //
         localSqlDatabase = new LocalSqlDatabase(getContext(), this);
+
+        //
         onRoomTenantListDownloaded = this;
         dialog = new Dialog(getContext());
 
@@ -364,14 +364,11 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
                         .get()
                         .addOnSuccessListener(documentSnapshot1 -> {
                             if (documentSnapshot1.exists()) {
-                                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
-                                builder.setTitle("Ticket Already Raised !");
-                                builder.setMessage("Ticket has been raised for this service already by you or your roommate.\n" +
+                                AlertDisplay alertDisplay = new AlertDisplay("Ticket Already Raised !", "Ticket has been raised for this service already by you or your roommate.\n" +
                                         "New Tickets under the same category cannot be raised until the existing ticket is closed.\n\n" +
-                                        "You can check the status and details of the existing ticket in ticket history.\n");
-                                builder.setPositiveButton("Ok", (dialogInterface, i) -> {
-                                });
-                                builder.show();
+                                        "You can check the status and details of the existing ticket in ticket history.\n", getContext());
+                                alertDisplay.getBuilder().setPositiveButton("Ok", null);
+                                alertDisplay.display();
                             } else {
                                 collectUploadTicket(documentReferenceToRoomTicket, serviceName);
                             }
@@ -518,8 +515,6 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
     }
 
 
-
-
     private void logOutUser(String message) {
         if (message != null) {
             Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
@@ -534,7 +529,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
 
 
     private void refreshRoomMates() {
-        if (System.currentTimeMillis()>setTime){
+        if (System.currentTimeMillis() > setTime) {
             setTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(2);
             roomMateProgressBar.setVisibility(View.VISIBLE);
             downloadRoomMates();
@@ -638,6 +633,9 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
     @Override
     public void onStart() {
         super.onStart();
+        if (localSqlDatabase==null){
+            localSqlDatabase = new LocalSqlDatabase(getContext(), this);
+        }
         user = firebaseAuth.getCurrentUser();
         firebaseAuth.addAuthStateListener(authStateListener);
     }
@@ -656,7 +654,6 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
     @Override
     public void onResume() {
         super.onResume();
-
         if (User.getInstance() == null) {
             User user = null;
             user = localSqlDatabase.getCurrentUser();
@@ -687,12 +684,14 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
                     String registerNum = Objects.requireNonNull(documentSnapshot.get("studentRegisterNumber")).toString();
 
                     if (!roomNo.equals(User.getInstance().getRoomNo()) || !studentBlock.equals(User.getInstance().getStudentBlock()) || !registerNum.equals(User.getInstance().getStudentRegisterNumber())) {
+                        AppNotification.getInstance().unSubscribeAllTopics();
                         FirebaseAuth.getInstance().signOut();
                         localSqlDatabase.deleteCurrentUser();
                         localSqlDatabase.deleteAllTenants();
-                        logOutUser("User details updated,Login again!");
+                        logOutUser("Updates in room details, Login again!");
                     }
                 } else {
+                    AppNotification.getInstance().unSubscribeAllTopics();
                     FirebaseAuth.getInstance().signOut();
                     localSqlDatabase.deleteCurrentUser();
                     localSqlDatabase.deleteAllTenants();

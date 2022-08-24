@@ -36,8 +36,11 @@
             android:paddingBottom="6dp"
             android:scrollIndicators="right"
             android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbarFadeDuration="0"
             android:scrollbarSize="4dp"
+            android:scrollbarThumbVertical="@android:color/darker_gray"
             android:scrollbars="vertical"
+            android:verticalScrollbarPosition="right"
             tools:ignore="RtlSymmetry">
 
 

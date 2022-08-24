@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     android:background="@color/background_fill_colour"
     android:id="@+id/userProfileActivity"
-    tools:context=".activities.UserProfileActivity">
+    tools:context=".activities.AccountMenuActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbarUserProfile"
+        android:id="@+id/accountMenuPgeToolBar"
         android:layout_width="match_parent"
         android:layout_height="62dp"
         android:layout_alignParentTop="true"
@@ -18,7 +18,7 @@
         app:elevation="6dp">
 
         <ImageButton
-            android:id="@+id/userProfileBackArrow"
+            android:id="@+id/accountMenuPgeBackArrow"
             style="@style/ForArrowTheme"
             android:layout_width="38dp"
             android:layout_height="38dp"
@@ -30,7 +30,7 @@
             android:src="@drawable/back_arrow_icon" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tool_bar_account_txt"
+            android:id="@+id/accountMenuPgeToolBarTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -47,10 +47,10 @@
 
 
     <FrameLayout
-        android:id="@+id/userProfilePageContainer"
+        android:id="@+id/accountMenuPgeFragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbarUserProfile">
+        android:layout_below="@+id/accountMenuPgeToolBar">
 
     </FrameLayout>
 

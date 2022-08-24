@@ -15,18 +15,26 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
+import com.anubhav.vitinsiderhostel.enums.FeaturedMenu;
+import com.anubhav.vitinsiderhostel.enums.SettingsMenu;
 import com.anubhav.vitinsiderhostel.fragments.AccountFragment;
 import com.anubhav.vitinsiderhostel.fragments.BlockFragment;
 import com.anubhav.vitinsiderhostel.fragments.RoomFragment;
+import com.anubhav.vitinsiderhostel.interfaces.iOnAccountMenuClicked;
+import com.anubhav.vitinsiderhostel.interfaces.iOnFeaturedActivityCalled;
+import com.anubhav.vitinsiderhostel.interfaces.iOnNoticeActivityCalled;
 import com.anubhav.vitinsiderhostel.interfaces.iOnOutingSectionClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnTicketSectionClicked;
-import com.anubhav.vitinsiderhostel.interfaces.iOnUserProfileClicked;
+import com.anubhav.vitinsiderhostel.models.User;
+import com.anubhav.vitinsiderhostel.notifications.AppNotification;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
-public class HomePageActivity extends AppCompatActivity implements iOnUserProfileClicked, iOnTicketSectionClicked, iOnOutingSectionClicked {
+public class HomePageActivity extends AppCompatActivity implements iOnAccountMenuClicked, iOnTicketSectionClicked, iOnOutingSectionClicked, iOnNoticeActivityCalled, iOnFeaturedActivityCalled {
 
 
     // firebase declaration
@@ -54,6 +62,8 @@ public class HomePageActivity extends AppCompatActivity implements iOnUserProfil
                 chipNavigationBar.setItemSelected(R.id.menu_account, true);
             } else if (result.getResultCode() == 88) {   // to come back to Home Page Activity and place the block fragment , if the back arrow or back pressed is called in outing activity
                 chipNavigationBar.setItemSelected(R.id.menu_block, true);
+            } else if (result.getResultCode() == 90) {
+                chipNavigationBar.setItemSelected(R.id.menu_block, true);
             }
         }
     });
@@ -74,6 +84,10 @@ public class HomePageActivity extends AppCompatActivity implements iOnUserProfil
 
         //firebase authState listener definition
         authStateListener = firebaseAuth -> user = firebaseAuth.getCurrentUser();
+
+        FirebaseMessaging firebaseMessaging = FirebaseMessaging.getInstance();
+        firebaseMessaging.subscribeToTopic(User.getInstance().getRoomNo());
+
 
         // view
         chipNavigationBar = findViewById(R.id.bottom_navigation_view);
@@ -131,14 +145,6 @@ public class HomePageActivity extends AppCompatActivity implements iOnUserProfil
         fragmentTransaction.commit();
     }
 
-    // callback to show the user profile activity when user clicks on the user profile text view in the account fragment
-    @Override
-    public void userProfileCalled() {
-        Intent intent = new Intent(HomePageActivity.this, UserProfileActivity.class);
-        activityResultLauncher.launch(intent);
-    }
-
-
     @Override
     public void roomTicketClicked() {
         Intent intent = new Intent(HomePageActivity.this, TicketHistoryActivity.class);
@@ -168,6 +174,14 @@ public class HomePageActivity extends AppCompatActivity implements iOnUserProfil
     }
 
     @Override
+    public void noticeActivityCalled(String docId) {
+        Intent intent = new Intent(HomePageActivity.this, NoticeActivity.class);
+        System.out.println("In Home Page ID =  " + docId);
+        intent.putExtra("DOC_ID", docId);
+        activityResultLauncher.launch(intent);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
     }
@@ -181,12 +195,71 @@ public class HomePageActivity extends AppCompatActivity implements iOnUserProfil
     }
 
     private void logOutUser() {
+        AppNotification.getInstance().unSubscribeAllTopics();
         Intent intent = new Intent(HomePageActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
         finish();
+    }
+
+
+    @Override
+    public void userProfileClicked() {
+        intentTo(SettingsMenu.PROFILE);
+    }
+
+    @Override
+    public void ticketHistoryClicked() {
+
+    }
+
+    @Override
+    public void notificationsClicked() {
+        intentTo(SettingsMenu.NOTIFICATIONS);
+    }
+
+    @Override
+    public void aboutAppClicked() {
+        intentTo(SettingsMenu.ABOUT);
+    }
+
+    @Override
+    public void reportIssueClicked() {
+
+    }
+
+    @Override
+    public void spottedBugClicked() {
+
+    }
+
+    @Override
+    public void haveSuggestionsClicked() {
+
+    }
+
+    private void intentTo(SettingsMenu settingsMenu) {
+        Intent intent = new Intent(HomePageActivity.this, AccountMenuActivity.class);
+        intent.putExtra("SECTION", settingsMenu.getValue());
+        activityResultLauncher.launch(intent);
+    }
+
+    private void intentToFeaturedActivity(FeaturedMenu featuredMenu) {
+        Intent intent = new Intent(HomePageActivity.this, FeaturedActivity.class);
+        intent.putExtra("SECTION", featuredMenu.toString());
+        activityResultLauncher.launch(intent);
+    }
+
+    @Override
+    public void requestOutingSectionFragment() {
+        intentToFeaturedActivity(FeaturedMenu.OUTING_REQUEST);
+    }
+
+    @Override
+    public void requestTravelCompanion() {
+        intentToFeaturedActivity(FeaturedMenu.TRAVEL_COMPANION);
     }
 
 }

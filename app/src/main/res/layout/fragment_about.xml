@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#181717"
+    android:fadeScrollbars="false"
+    android:orientation="vertical"
+    android:paddingBottom="20dp"
+    android:scrollIndicators="right"
+    android:scrollbarFadeDuration="0"
+    android:scrollbarSize="4dp"
+    android:scrollbarThumbVertical="@android:color/darker_gray"
+    android:scrollbars="vertical"
+    android:verticalScrollbarPosition="right"
+    tools:context=".fragments.AboutFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="22dp"
+            android:text="Developer"
+            android:textColor="@color/background_fill_colour"
+            android:textSize="18sp"
+            app:fontFamily="sans-serif-medium" />
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="6dp"
+            app:cardBackgroundColor="#262626"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:elevation="3dp"
+                        android:src="@drawable/devloper_profile" />
+
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/aboutFragmentConnectBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="120dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="6dp"
+                        app:rippleColor="#655F5F">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="8dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center_vertical"
+                                android:text="Connect"
+                                android:textColor="@color/black">
+
+                            </com.google.android.material.textview.MaterialTextView>
+
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginStart="10dp"
+                                android:src="@drawable/ic_baseline_connect_without_contact_24"
+                                app:tint="@color/black">
+
+                            </ImageView>
+
+                        </LinearLayout>
+
+
+                    </com.google.android.material.card.MaterialCardView>
+
+
+                </LinearLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Anubhav.P.Sahoo"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:fontFamily="sans-serif-medium" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="VIT'23 B.tech EEE"
+                    android:textColor="@color/quantum_grey"
+                    android:textSize="14sp"
+                    app:fontFamily="sans-serif-medium" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="Founder &amp; Developer of VIT Insider"
+                    android:textColor="@color/quantum_grey"
+                    android:textSize="14sp"
+                    app:fontFamily="sans-serif-medium" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="Founder of RUD Bootcamp"
+                    android:textColor="@color/quantum_grey"
+                    android:textSize="14sp"
+                    app:fontFamily="sans-serif-medium" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="16dp"
+                    android:fontFamily="@font/timmana"
+                    android:gravity="center_horizontal"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="4dp"
+                    android:text="@string/about_frag_quote_lbl"
+                    android:textAlignment="center"
+                    android:textColor="@color/quantum_grey"
+                    android:textSize="16sp" />
+
+                <!--  <com.google.android.material.textview.MaterialTextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="end"
+                      android:layout_marginTop="6dp"
+                      android:layout_marginEnd="8dp"
+                      android:clickable="true"
+                      android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_down_24"
+                      android:focusable="true"
+                      android:visibility="gone"
+                      android:gravity="center_vertical"
+                      android:text="Read More"
+                      style="@style/SelectableItemBackground"
+                      android:background="?attr/selectableItemBackground"
+                      android:textColor="@color/white"
+                      android:textSize="13sp">
+
+                  </com.google.android.material.textview.MaterialTextView>-->
+
+
+            </LinearLayout>
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="22dp"
+            android:text="Insider Hostel"
+            android:textColor="@color/background_fill_colour"
+            android:textSize="18sp"
+            app:fontFamily="sans-serif-medium" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="6dp"
+            android:focusable="false"
+            android:justificationMode="inter_word"
+            android:lineSpacingExtra="4sp"
+            android:paddingStart="24dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="24dp"
+            android:text="@string/about_pge_about_app_lbl"
+            android:textColor="@color/quantum_grey500"
+            android:textIsSelectable="false">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="4dp"
+            android:text="@string/notice_pge_app_name_lbl"
+            android:textColor="@color/background_fill_colour"
+            android:textSize="12sp"
+            app:fontFamily="sans-serif-medium" />
+    </LinearLayout>
+
+
+</ScrollView>

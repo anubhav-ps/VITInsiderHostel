@@ -12,8 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.anubhav.vitinsiderhostel.R;
+import com.anubhav.vitinsiderhostel.enums.FeaturedMenu;
 import com.anubhav.vitinsiderhostel.fragments.OutingHistoryFragment;
 import com.anubhav.vitinsiderhostel.fragments.OutingRequestFragment;
+import com.anubhav.vitinsiderhostel.fragments.TravelCompanionHomeFragment;
 import com.anubhav.vitinsiderhostel.interfaces.iOnDopClicked;
 
 public class FeaturedActivity extends AppCompatActivity implements View.OnClickListener, iOnDopClicked {
@@ -26,22 +28,22 @@ public class FeaturedActivity extends AppCompatActivity implements View.OnClickL
             OutingHistoryFragment outingHistoryFragment = new OutingHistoryFragment();
             makeTransaction(outingHistoryFragment);
         }
+
     });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_featured);
-
-        final String section = getIntent().getStringExtra("Section");
         if (savedInstanceState == null) {
-            if (section.equalsIgnoreCase("ApplyOuting")) {
-                OutingRequestFragment outingRequestFragment = new OutingRequestFragment();
-                makeTransaction(outingRequestFragment);
-            } else if (section.equalsIgnoreCase("OutingHistory")) {
-                OutingHistoryFragment outingHistoryFragment = new OutingHistoryFragment();
-                makeTransaction(outingHistoryFragment);
+            final String section = getIntent().getStringExtra("SECTION");
+            Fragment fragment = null;
+            if (section.equalsIgnoreCase(FeaturedMenu.OUTING_REQUEST.toString())) {
+                fragment = new OutingRequestFragment();
+            }else if (section.equalsIgnoreCase(FeaturedMenu.TRAVEL_COMPANION.toString())){
+                fragment = new TravelCompanionHomeFragment();
             }
+            makeTransaction(fragment);
         }
 
         ImageButton backArrowToBlockFragment = findViewById(R.id.featuredActivityBackArrow);
