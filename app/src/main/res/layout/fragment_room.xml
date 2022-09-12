@@ -2,11 +2,11 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/roomFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_fill_colour"
     android:orientation="vertical"
-    android:id="@+id/roomFragment"
     tools:context=".fragments.RoomFragment">
 
     <LinearLayout
@@ -184,42 +184,43 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="2dp"
             android:gravity="center_vertical"
-            android:layout_gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingEnd="12dp"
+            tools:ignore="RtlSymmetry">
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_marginStart="10dp"
                 android:fontFamily="@font/asap_medium"
+                android:gravity="center_vertical"
                 android:text="@string/room_pge_room_mates_txt"
                 android:textColor="#7F7F7F"
-                android:gravity="center_vertical"
-                android:layout_gravity="center_vertical"
                 android:textSize="17sp" />
-
-            <ProgressBar
-                android:id="@+id/roomPgeRoomMateProgressBar"
-                android:layout_marginStart="14dp"
-                android:visibility="invisible"
-                android:layout_gravity="center_vertical"
-                android:layout_width="18dp"
-                android:layout_height="18dp"/>
 
             <ImageButton
                 android:id="@+id/roomPgeRoomMateRefreshBtn"
+                style="@style/ForArrowTheme"
                 android:layout_width="23dp"
                 android:layout_height="23dp"
-                style="@style/ForArrowTheme"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="192dp"
+                android:layout_marginStart="14dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_baseline_refresh_24">
+                android:src="@drawable/ic_baseline_refresh_24" />
 
-            </ImageButton>
+            <ProgressBar
+                android:id="@+id/roomPgeRoomMateProgressBar"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:visibility="invisible" />
+
 
         </LinearLayout>
 
@@ -227,6 +228,7 @@
             android:id="@+id/roomPgeRoomMateRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="185dp"
+            android:layout_gravity="center_horizontal"
             android:orientation="horizontal"
             android:visibility="visible">
 

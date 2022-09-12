@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.fragments.BlockTicketFragment;
+import com.anubhav.vitinsiderhostel.fragments.OutingHistoryFragment;
 import com.anubhav.vitinsiderhostel.fragments.RoomTicketFragment;
 
 public class TicketHistoryActivity extends AppCompatActivity implements View.OnClickListener {
@@ -22,13 +23,15 @@ public class TicketHistoryActivity extends AppCompatActivity implements View.OnC
 
         final String section = getIntent().getStringExtra("Section");
         if (savedInstanceState == null) {
+            Fragment fragment = null;
             if (section.equalsIgnoreCase("ROOM")) {
-                RoomTicketFragment roomTicketFragment = new RoomTicketFragment();
-                makeTransaction(roomTicketFragment);
+                fragment = new RoomTicketFragment();
             } else if (section.equalsIgnoreCase("BLOCK")) {
-                BlockTicketFragment blockTicketFragment = new BlockTicketFragment();
-                makeTransaction(blockTicketFragment);
+                fragment = new BlockTicketFragment();
+            } else if (section.equalsIgnoreCase("OUTING")) {
+                fragment = new OutingHistoryFragment();
             }
+            makeTransaction(fragment);
         }
 
         ImageButton backArrowToAccount = findViewById(R.id.ticketHistoryBackArrow);

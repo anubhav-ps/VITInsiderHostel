@@ -284,5 +284,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="about_frag_quote_lbl">\"Great Ideas Are Not Born In Silicon Valley,They Are Born In The Minds Of Visionary People\"</string>
     <string name="about_pge_about_app_lbl"><![CDATA[\t\t\t\t\tDevelopment of Insider Hostel App started in 2022 year beginning, 6 months after the launch of Insider App for 2021 B.tech & M.tech batch Orientation.Seeing the success of the previous app, Insider Hostel App was started with the goal of making a platform that can digitalize the traditional way of registering complaints about room appliances or hostel facilities on paper while making sure the new app eliminated all the bugs and faulty designs from previous app to make it more efficient and better.Gradually over the next 9 months of development the mission of Insider Hostel included other important features that helps in connecting hostel students and making most of the hostel document procedures a few screen taps away. \n\n The Insider Hostel App also focuses on ways to connect as many hostel students as possible even before they arrive at campus via the feature like the roommate and travel-companion.Insider Hostel will continue to identify other hostel problems that can be solved via mobile application to make student\'s hostel life hassle free while ensuring them great UI Experience and data security]]></string>
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_notice_page">NoticePageActivity</string>
 
 </resources>

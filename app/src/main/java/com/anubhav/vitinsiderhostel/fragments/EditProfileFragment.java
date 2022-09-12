@@ -26,7 +26,6 @@ import com.anubhav.vitinsiderhostel.interfaces.iOnAppErrorCreated;
 import com.anubhav.vitinsiderhostel.interfaces.iOnNotifyDbProcess;
 import com.anubhav.vitinsiderhostel.models.AlertDisplay;
 import com.anubhav.vitinsiderhostel.models.AppError;
-import com.anubhav.vitinsiderhostel.models.Scramble;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -192,17 +191,10 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             final String userNativeLanguage = nativeLanguageTxt.getText().toString().trim();
             final int avatar = 100;
 
-            final String scrambleValue = Scramble.getScramble(User.getInstance().getUserMailID());
-
             DocumentReference docUserRef = userDetailsSection
                     .document(Mod.USSTU.toString())
                     .collection(Mod.DET.toString())
                     .document(User.getInstance().getUser_Id());
-
-            DocumentReference docTenantRef = hostelDetailsSection
-                    .document(Mod.TED.toString())
-                    .collection(Mod.DET.toString())
-                    .document(scrambleValue);
 
             docUserRef.update(
                     "userName", userName,
@@ -211,33 +203,18 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                     "avatar", avatar)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            docTenantRef.update(
-                                    "tenantUserName", userName,
-                                    "tenantContactNumber", userContactNumber,
-                                    "tenantNativeLanguage", userNativeLanguage,
-                                    "tenantAvatar", avatar
-                            ).addOnCompleteListener(task1 -> {
-                                if (task1.isSuccessful()) {
-                                    callSnackBar("Successfully Updated");
-                                    progressBar.setVisibility(View.GONE);
-                                    hasChanged = false;
 
-                                    User.getInstance().setUserName(userName);
-                                    User.getInstance().setUserContactNumber(userContactNumber);
-                                    User.getInstance().setStudentNativeLanguage(userNativeLanguage);
-                                    User.getInstance().setAvatar(avatar);
+                            callSnackBar("Successfully Updated");
+                            progressBar.setVisibility(View.GONE);
+                            hasChanged = false;
 
-                                    LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getContext(), EditProfileFragment.this);
-                                    localSqlDatabase.updateUserInBackground(User.getInstance());
+                            User.getInstance().setUserName(userName);
+                            User.getInstance().setUserContactNumber(userContactNumber);
+                            User.getInstance().setStudentNativeLanguage(userNativeLanguage);
+                            User.getInstance().setAvatar(avatar);
 
-                                } else {
-                                    progressBar.setVisibility(View.GONE);
-                                    AlertDisplay alertDisplay = new AlertDisplay(ErrorCode.EPF002.getErrorCode(), ErrorCode.EPF002.getErrorMessage(), getContext());
-                                    alertDisplay.displayAlert();
-                                    AppError appError = new AppError(ErrorCode.EPF002.getErrorCode(), User.getInstance().getUserMailID());
-                                    onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported");
-                                }
-                            });
+                            LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getContext(), EditProfileFragment.this);
+                            localSqlDatabase.updateUserInBackground(User.getInstance());
                         } else {
                             progressBar.setVisibility(View.GONE);
                             AlertDisplay alertDisplay = new AlertDisplay(ErrorCode.EPF001.getErrorCode(), ErrorCode.EPF001.getErrorMessage(), getContext());
@@ -245,7 +222,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                             AppError appError = new AppError(ErrorCode.EPF001.getErrorCode(), User.getInstance().getUserMailID());
                             onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported,Will Be Looked Upon");
                         }
-                    });
+                    }).addOnFailureListener(e -> callSnackBar("Couldn't perform the update,Please try again after sometime"));
 
         } else {
             callSnackBar("No Changes were made");

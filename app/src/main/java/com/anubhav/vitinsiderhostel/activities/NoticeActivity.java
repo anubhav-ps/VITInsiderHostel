@@ -1,8 +1,10 @@
 package com.anubhav.vitinsiderhostel.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowInsets;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -13,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.enums.Mod;
-import com.anubhav.vitinsiderhostel.enums.SettingsMenu;
 import com.anubhav.vitinsiderhostel.enums.Urgency;
 import com.anubhav.vitinsiderhostel.interfaces.iOnNoticeDownloaded;
 import com.anubhav.vitinsiderhostel.models.Notice;
@@ -24,7 +25,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
-import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -51,6 +51,26 @@ public class NoticeActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notice);
+
+        /*WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+        layoutParams.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+        getWindow().setAttributes(layoutParams);
+*/
+        if (Build.VERSION.SDK_INT >= 30) {
+            this.getWindow().getDecorView().findViewById(android.R.id.content).getWindowInsetsController().hide(
+                    WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+        } else {
+            // Note that some of these constants are new as of API 16 (Jelly Bean)
+            // and API 19 (KitKat). It is safe to use them, as they are inlined
+            // at compile-time and do nothing on earlier devices.
+            this.getWindow().getDecorView().findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        }
+
 
         //get intent value
         final String docId = getIntent().getStringExtra("DOC_ID");

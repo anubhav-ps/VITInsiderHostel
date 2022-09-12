@@ -2,6 +2,7 @@ package com.anubhav.vitinsiderhostel.enums;
 
 public enum SettingsMenu {
     PROFILE("User Profile"),
+    PUBLIC_PROFILE("Public Profile"),
     NOTIFICATIONS("Notification"),
     ABOUT("About"),
     REPORT("Report"),

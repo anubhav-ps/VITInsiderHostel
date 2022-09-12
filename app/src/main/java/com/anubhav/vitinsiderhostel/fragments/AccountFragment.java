@@ -20,6 +20,7 @@ import com.anubhav.vitinsiderhostel.BuildConfig;
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.activities.LoginActivity;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
+import com.anubhav.vitinsiderhostel.enums.Mod;
 import com.anubhav.vitinsiderhostel.interfaces.iOnAccountMenuClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnTicketSectionClicked;
 import com.anubhav.vitinsiderhostel.models.User;
@@ -28,8 +29,15 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AccountFragment extends Fragment implements View.OnClickListener {
+
+
+    //firebase fire store declaration
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final CollectionReference tokenSection = db.collection(Mod.FCM.toString());
 
     // firebase declaration
     private FirebaseAuth firebaseAuth;
@@ -86,6 +94,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         userMailIdTxt = rootView.findViewById(R.id.accountPgeUserMail);
 
         MaterialTextView userProfileTxt = rootView.findViewById(R.id.accountPgeViewUserProfile);
+        MaterialTextView publicProfileTxt = rootView.findViewById(R.id.accountPgeViewPublicProfile);
         MaterialTextView ticketHistoryTxt = rootView.findViewById(R.id.accountPgeViewTicketHistory);
         MaterialTextView notificationTxt = rootView.findViewById(R.id.accountPgeNotificationSetting);
 
@@ -111,6 +120,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
 
         userProfileTxt.setOnClickListener(this);
+        publicProfileTxt.setOnClickListener(this);
         ticketHistoryTxt.setOnClickListener(this);
         notificationTxt.setOnClickListener(this);
 
@@ -145,6 +155,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             processSignOut();
         } else if (id == R.id.accountPgeViewUserProfile) {
             openUserProfile();
+        } else if (id == R.id.accountPgeViewPublicProfile) {
+            openPublicProfile();
         } else if (id == R.id.accountPgeViewTicketHistory) {
             promptTicketSection();
         } else if (id == R.id.accountPgeViewShareApp) {
@@ -164,6 +176,14 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
     private void openUserProfile() {
         this.onAccountMenuClicked.userProfileClicked();
+    }
+
+    private void openPublicProfile() {
+        if (User.getInstance().getUserContactNumber() == null || User.getInstance().getUserContactNumber().isEmpty() || User.getInstance().getUserContactNumber().equalsIgnoreCase("N/A")) {
+            callSnackBar("Update contact number for public profile feature");
+            return;
+        }
+        this.onAccountMenuClicked.publicProfileClicked();
     }
 
     private void openNotificationFragment() {
@@ -207,6 +227,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
         MaterialTextView roomTicket = dialog.findViewById(R.id.chooseTicketRoomTxt);
         MaterialTextView blockTicket = dialog.findViewById(R.id.chooseTicketBlockTxt);
+        MaterialTextView outingTicket = dialog.findViewById(R.id.chooseTicketOutingTxt);
 
         roomTicket.setOnClickListener(v -> {
             dialog.dismiss();
@@ -217,6 +238,12 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             dialog.dismiss();
             openBlockTickets();
         });
+
+        outingTicket.setOnClickListener(v -> {
+            dialog.dismiss();
+            openOutingTickets();
+        });
+
 
         dialog.show();
 
@@ -231,10 +258,19 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         onTicketSectionChosen.blockTicketClicked();
     }
 
+    private void openOutingTickets() {
+        onTicketSectionChosen.outingTicketClicked();
+    }
+
 
     // method to handle the sign out process
     private void processSignOut() {
         AppNotification.getInstance().unSubscribeAllTopics();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            tokenSection.document(User.getInstance().getUser_Id()).delete();
+        }
+
         FirebaseAuth.getInstance().signOut();
         LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getActivity());
         localSqlDatabase.deleteCurrentUser();

@@ -1,6 +1,5 @@
 package com.anubhav.vitinsiderhostel.models;
 
-import com.anubhav.vitinsiderhostel.enums.OutingStatus;
 
 public class Outing {
 
@@ -14,7 +13,7 @@ public class Outing {
     private String duration;
 
     public Outing() {
-        status = OutingStatus.NOT_ALLOWED.toString();
+      //  status = OutingStatus.NOT_ALLOWED.toString();
         openTime = "00:00";
         closeTime = "00:00";
         duration = "0";

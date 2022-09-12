@@ -28,7 +28,7 @@ import com.anubhav.vitinsiderhostel.adapters.NoticeAdapter;
 import com.anubhav.vitinsiderhostel.adapters.OutingAdapter;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.anubhav.vitinsiderhostel.enums.Mod;
-import com.anubhav.vitinsiderhostel.enums.OutingStatus;
+import com.anubhav.vitinsiderhostel.enums.OutingFormStatus;
 import com.anubhav.vitinsiderhostel.enums.ServiceType;
 import com.anubhav.vitinsiderhostel.interfaces.iOnBlockServiceCardClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnFeaturedActivityCalled;
@@ -318,11 +318,13 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
         tillTxt.setText(till);
         durationTxt.setText(duration);
 
-        if (status.equalsIgnoreCase(OutingStatus.NOT_ALLOWED.toString()) || status.equalsIgnoreCase(OutingStatus.NOT_DECIDED.toString())) {
+
+        //todo outing status enum changed
+     /*   if (status.equalsIgnoreCase(OutingStatus.NOT_ALLOWED.toString()) || status.equalsIgnoreCase(OutingStatus.NOT_DECIDED.toString())) {
             image.setImageResource(R.drawable.sad);
         } else {
             image.setImageResource(R.drawable.vacation);
-        }
+        }*/
 
         dialog.show();
     }
@@ -351,9 +353,7 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
 
     @Override
     public void travelCompanionClicked() {
-        String message = "Feature will be available in upcoming app updates";
-        callSnackBar(message);
-        // onFeaturedActivityCalled.requestTravelCompanion();
+        onFeaturedActivityCalled.requestTravelCompanion();
     }
 
     @Override

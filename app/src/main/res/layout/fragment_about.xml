@@ -64,15 +64,24 @@
                         android:elevation="3dp"
                         android:src="@drawable/devloper_profile" />
 
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1">
+
+                    </View>
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/aboutFragmentConnectBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="120dp"
+                        android:layout_marginEnd="4dp"
                         android:clickable="true"
                         android:focusable="true"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
                         app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="10dp"
                         app:cardElevation="6dp"
@@ -83,6 +92,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_margin="8dp"
+                            android:layout_marginStart="2dp"
+                            android:layout_marginEnd="2dp"
                             android:gravity="center"
                             android:orientation="horizontal">
 
@@ -118,7 +129,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Anubhav.P.Sahoo"
+                    android:text="Anubhav P Sahoo"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     app:fontFamily="sans-serif-medium" />

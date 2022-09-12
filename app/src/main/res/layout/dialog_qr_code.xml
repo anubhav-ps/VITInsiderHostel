@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="2dp"
+            android:fontFamily="@font/secular_one"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="QR CODE"
+            android:textColor="@color/navy_blue"
+            android:textSize="32sp">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <ImageView
+            android:id="@+id/dialogQRCodeImg"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="6dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/dialogQRRegisterNumberTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/cabin_medium"
+            android:gravity="center_horizontal"
+            android:text="19BEE1144"
+            android:textColor="@color/navy_blue"
+            android:textSize="22sp">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/dialogQRVisitDateTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="18dp"
+            android:fontFamily="@font/open_sans_semibold"
+            android:gravity="center_horizontal"
+            android:text="12/05/2022"
+            android:textColor="@color/navy_blue"
+            android:textSize="18sp">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -1,270 +1,287 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/editProfileFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_fill_colour"
+    android:fadeScrollbars="false"
     android:orientation="vertical"
     android:paddingTop="40dp"
+    android:paddingBottom="20dp"
+    android:scrollIndicators="right"
+    android:scrollbarFadeDuration="0"
+    android:scrollbarSize="4dp"
+    android:scrollbarThumbVertical="@android:color/darker_gray"
+    android:scrollbars="vertical"
+    android:verticalScrollbarPosition="right"
     tools:context=".fragments.EditProfileFragment">
-
-
-    <ImageView
-        android:id="@+id/editPgeAvatarIcon"
-        style="@style/SelectableItemBackground"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="6dp"
-        android:background="?attr/selectableItemBackground"
-        android:elevation="4dp"
-        android:padding="2dp"
-        android:src="@drawable/av_100"
-        app:elevation="2dp">
-
-    </ImageView>
-
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/editPgeAvatar"
-        style="@style/SelectableItemBackground"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp"
-        android:background="?attr/selectableItemBackground"
-        android:text="@string/edit_profile_pge_change_avatar_lbl"
-        android:textColor="#E65A5A5A"
-        android:textSize="16sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingStart="40dp"
-        android:paddingTop="38dp"
-        android:paddingEnd="40dp"
-        android:paddingBottom="24dp">
+        android:layout_height="wrap_content"
+        android:background="@color/background_fill_colour"
+        android:orientation="vertical">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/duru_sans"
-            android:padding="2dp"
-            android:text="@string/user_profile_pge_username_lbl"
-            android:textColor="#E6626161" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/editPgeUserName"
+        <ImageView
+            android:id="@+id/editPgeAvatarIcon"
             style="@style/SelectableItemBackground"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="6dp"
             android:background="?attr/selectableItemBackground"
-            android:fontFamily="sans-serif"
+            android:elevation="4dp"
             android:padding="2dp"
-            android:text="@string/user_profile_pge_username_txt"
-            android:textColor="#E6626161"
-            android:textSize="14sp">
+            android:src="@drawable/av_100"
+            app:elevation="2dp">
 
-        </com.google.android.material.textview.MaterialTextView>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@android:color/darker_gray" />
+        </ImageView>
 
 
         <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/duru_sans"
-            android:padding="2dp"
-            android:text="@string/user_profile_pge_user_mail_id_lbl"
-            android:textColor="#E6626161" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/editPgeMailId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:padding="2dp"
-            android:text="@string/user_profile_pge_user_mail_id_txt"
-            android:textColor="#E6626161"
-            android:textSize="14sp">
-
-        </com.google.android.material.textview.MaterialTextView>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@android:color/darker_gray" />
-
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/duru_sans"
-            android:padding="2dp"
-            android:text="@string/user_profile_pge_register_number_lbl"
-            android:textColor="#E6626161" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/editPgeRegisterNumber"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:padding="2dp"
-            android:text="@string/user_profile_pge_register_number_txt"
-            android:textColor="#E6626161"
-            android:textSize="14sp">
-
-        </com.google.android.material.textview.MaterialTextView>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@android:color/darker_gray" />
-
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/duru_sans"
-            android:padding="2dp"
-            android:text="@string/user_profile_pge_contact_number_lbl"
-            android:textColor="#E6626161" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/editPgeContactNumber"
+            android:id="@+id/editPgeAvatar"
             style="@style/SelectableItemBackground"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:fontFamily="sans-serif"
-            android:padding="2dp"
-            android:text="@string/user_profile_pge_contact_num_txt"
-            android:textColor="#E6626161"
-            android:textSize="14sp">
-
-        </com.google.android.material.textview.MaterialTextView>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@android:color/darker_gray" />
-
-        <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/duru_sans"
-            android:padding="2dp"
-            android:text="@string/user_profile_pge_native_language_lbl"
-            android:textColor="#E6626161" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/editPgeNativeLanguage"
-            style="@style/SelectableItemBackground"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:fontFamily="sans-serif"
-            android:padding="2dp"
-            android:text="@string/user_profile_pge_native_language_txt"
-            android:textColor="#E6626161"
-            android:textSize="14sp">
-
-        </com.google.android.material.textview.MaterialTextView>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
             android:layout_gravity="center_horizontal"
-            android:background="@android:color/darker_gray" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/duru_sans"
-            android:padding="2dp"
-            android:text="@string/user_profile_pge_branch_lbl"
-            android:textColor="#E6626161" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/editPgeBranch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:background="?attr/selectableItemBackground"
-            android:fontFamily="sans-serif"
-            android:padding="2dp"
-            android:text="@string/user_profile_pge_branch_txt"
-            android:textColor="#E6626161"
-            android:textSize="14sp">
-
-        </com.google.android.material.textview.MaterialTextView>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@android:color/darker_gray" />
-
+            android:text="@string/edit_profile_pge_change_avatar_lbl"
+            android:textColor="#E65A5A5A"
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="52dp"
-            android:gravity="center_horizontal|center_vertical"
-            android:orientation="horizontal"
-            android:padding="10dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingStart="40dp"
+            android:paddingTop="38dp"
+            android:paddingEnd="40dp"
+            android:paddingBottom="24dp">
 
-
-            <ImageButton
-                android:id="@+id/editPgeCancelBtn"
-                style="@style/ForArrowTheme"
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="26dp"
-                android:layout_marginEnd="24dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:elevation="8dp"
+                android:fontFamily="@font/duru_sans"
                 android:padding="2dp"
-                android:src="@drawable/ic_baseline_cancel_24" />
+                android:text="@string/user_profile_pge_username_lbl"
+                android:textColor="#E6626161" />
 
-            <ProgressBar
-                android:id="@+id/editPgeProgressBar"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/editPgeUserName"
+                style="@style/SelectableItemBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:fontFamily="sans-serif"
+                android:padding="2dp"
+                android:text="@string/user_profile_pge_username_txt"
+                android:textColor="#E6626161"
+                android:textSize="14sp">
+
+            </com.google.android.material.textview.MaterialTextView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@android:color/darker_gray" />
+
+
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:visibility="gone" />
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/duru_sans"
+                android:padding="2dp"
+                android:text="@string/user_profile_pge_user_mail_id_lbl"
+                android:textColor="#E6626161" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/editPgeMailId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:padding="2dp"
+                android:text="@string/user_profile_pge_user_mail_id_txt"
+                android:textColor="#E6626161"
+                android:textSize="14sp">
+
+            </com.google.android.material.textview.MaterialTextView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@android:color/darker_gray" />
 
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/editPgeSaveBtn"
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/light_theme_green"
-                android:padding="14dp"
-                android:text="@string/edit_profile_pge_save_btn_txt"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                app:cornerRadius="50dp" />
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/duru_sans"
+                android:padding="2dp"
+                android:text="@string/user_profile_pge_register_number_lbl"
+                android:textColor="#E6626161" />
 
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/editPgeRegisterNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:padding="2dp"
+                android:text="@string/user_profile_pge_register_number_txt"
+                android:textColor="#E6626161"
+                android:textSize="14sp">
+
+            </com.google.android.material.textview.MaterialTextView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@android:color/darker_gray" />
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/duru_sans"
+                android:padding="2dp"
+                android:text="@string/user_profile_pge_contact_number_lbl"
+                android:textColor="#E6626161" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/editPgeContactNumber"
+                style="@style/SelectableItemBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:fontFamily="sans-serif"
+                android:padding="2dp"
+                android:text="@string/user_profile_pge_contact_num_txt"
+                android:textColor="#E6626161"
+                android:textSize="14sp">
+
+            </com.google.android.material.textview.MaterialTextView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@android:color/darker_gray" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/duru_sans"
+                android:padding="2dp"
+                android:text="@string/user_profile_pge_native_language_lbl"
+                android:textColor="#E6626161" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/editPgeNativeLanguage"
+                style="@style/SelectableItemBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:fontFamily="sans-serif"
+                android:padding="2dp"
+                android:text="@string/user_profile_pge_native_language_txt"
+                android:textColor="#E6626161"
+                android:textSize="14sp">
+
+            </com.google.android.material.textview.MaterialTextView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@android:color/darker_gray" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/duru_sans"
+                android:padding="2dp"
+                android:text="@string/user_profile_pge_branch_lbl"
+                android:textColor="#E6626161" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/editPgeBranch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:fontFamily="sans-serif"
+                android:padding="2dp"
+                android:text="@string/user_profile_pge_branch_txt"
+                android:textColor="#E6626161"
+                android:textSize="14sp">
+
+            </com.google.android.material.textview.MaterialTextView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@android:color/darker_gray" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="52dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+
+                <ImageButton
+                    android:id="@+id/editPgeCancelBtn"
+                    style="@style/ForArrowTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="24dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:elevation="8dp"
+                    android:padding="2dp"
+                    android:src="@drawable/ic_baseline_cancel_24" />
+
+                <ProgressBar
+                    android:id="@+id/editPgeProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:visibility="gone" />
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/editPgeSaveBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/light_theme_green"
+                    android:padding="14dp"
+                    android:text="@string/edit_profile_pge_save_btn_txt"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    app:cornerRadius="50dp" />
+
+
+            </LinearLayout>
 
         </LinearLayout>
+
 
     </LinearLayout>
 
 
-</LinearLayout>
+</ScrollView>

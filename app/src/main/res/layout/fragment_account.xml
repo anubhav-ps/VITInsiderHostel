@@ -103,6 +103,26 @@
                 tools:ignore="RtlSymmetry" />
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/accountPgeViewPublicProfile"
+                style="@style/SelectableItemBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_right_24"
+                android:focusable="true"
+                android:fontFamily="sans-serif"
+                android:gravity="center_vertical"
+                android:padding="4dp"
+                android:paddingStart="38dp"
+                android:paddingEnd="16dp"
+                android:text="Public Profile"
+                android:textColor="#E6626161"
+                android:textSize="14sp"
+                tools:ignore="RtlSymmetry" />
+
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/accountPgeViewTicketHistory"
                 style="@style/SelectableItemBackground"
                 android:layout_width="match_parent"
@@ -141,7 +161,6 @@
                 android:textColor="#E6626161"
                 android:textSize="14sp"
                 tools:ignore="RtlSymmetry" />
-
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"

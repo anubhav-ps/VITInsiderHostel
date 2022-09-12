@@ -2,32 +2,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="280dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginBottom="6dp"
     android:orientation="vertical">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cellOutingHistoryCard"
-        android:longClickable="true"
         android:layout_width="match_parent"
-        android:layout_height="240dp"
+        android:layout_height="wrap_content"
         android:layout_margin="6dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:longClickable="true"
+        android:paddingBottom="10dp"
         app:cardBackgroundColor="#DEEFF2"
         app:cardCornerRadius="4dp"
-        android:paddingBottom="10dp"
-        android:clickable="true"
-        app:cardUseCompatPadding="true"
-        android:focusable="true"
-        app:rippleColor="#93DEEFF2"
-        app:cardElevation="4dp">
+        app:cardElevation="4dp"
+        app:rippleColor="#93477373">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="14dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:weightSum="100">
@@ -41,31 +46,34 @@
                     android:paddingEnd="20dp"
                     android:text="JUN"
                     android:textColor="#6CBFC7"
-                    android:textSize="40sp">
+                    android:textSize="32sp">
 
                 </com.google.android.material.textview.MaterialTextView>
 
                 <View
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:background="#D4E3E3E3" />
+                    android:background="#D4C7C7C7" />
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
                     android:layout_weight="60"
                     android:orientation="vertical"
-                    android:paddingTop="8dp">
+                    android:paddingTop="2dp">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/cellOutingHistoryDateYearTxt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
                         android:paddingStart="8dp"
                         android:text="22 - 2022"
                         android:textColor="@color/text_04"
-                        android:textSize="18sp">
+                        android:textSize="14sp">
 
                     </com.google.android.material.textview.MaterialTextView>
 
@@ -73,11 +81,11 @@
                         android:id="@+id/cellOutingHistoryStatusTxt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
                         android:paddingStart="8dp"
-                        android:paddingTop="8dp"
                         android:text="APPROVED"
                         android:textColor="@color/text_04"
-                        android:textSize="24sp">
+                        android:textSize="20sp">
 
                     </com.google.android.material.textview.MaterialTextView>
 
@@ -86,65 +94,15 @@
 
             </LinearLayout>
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="2dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingStart="20dp">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/cellOutingHistoryRegNumTxt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="19BEE1144"
-                    android:textColor="@color/text_04"
-                    android:textSize="26sp">
-
-                </com.google.android.material.textview.MaterialTextView>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:fontFamily="sans-serif-light"
-                    android:text="REGN"
-                    android:layout_gravity="bottom"
-                    android:paddingBottom="6dp"
-                    android:textColor="@color/text_02"
-                    android:textSize="12sp">
-
-                </com.google.android.material.textview.MaterialTextView>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/cellOutingHistoryViewDopBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="View DOP"
-                    android:visibility="visible"
-                    android:textSize="12sp"
-                    app:backgroundTint="#6CBFC7"
-                    app:elevation="4dp"
-                    android:textColor="@color/white"
-                    android:textAllCaps="false"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="34dp">
-
-                </com.google.android.material.button.MaterialButton>
-
-
-            </LinearLayout>
-
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
                 android:fontFamily="sans-serif"
-                android:textColor="@color/text_04"
-                android:paddingStart="26dp"
                 android:text="Vist Location"
+                android:textColor="@color/text_04"
                 android:textSize="12sp">
 
             </com.google.android.material.textview.MaterialTextView>
@@ -154,11 +112,41 @@
                 android:id="@+id/cellOutingHistoryVisitLocationTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
                 android:layout_marginTop="2dp"
+                android:layout_marginEnd="16dp"
                 android:fontFamily="sans-serif-light"
-                android:paddingStart="26dp"
-                android:textColor="@color/text_04"
                 android:text="ITC Grand Chola Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                android:textColor="@color/text_04"
+                android:textSize="12sp">
+
+            </com.google.android.material.textview.MaterialTextView>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="sans-serif"
+                android:text="Vist Purpose"
+                android:textColor="@color/text_04"
+                android:textSize="12sp">
+
+            </com.google.android.material.textview.MaterialTextView>
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/cellOutingHistoryVisitPurposeTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="sans-serif-light"
+                android:justificationMode="inter_word"
+                android:text="ITC Grand Chola Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                android:textColor="@color/text_04"
                 android:textSize="12sp">
 
             </com.google.android.material.textview.MaterialTextView>
@@ -167,12 +155,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="6dp">
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="4dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="6dp"
                     android:orientation="vertical">
 
                     <com.google.android.material.textview.MaterialTextView
@@ -180,9 +173,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:fontFamily="sans-serif"
-                        android:paddingStart="26dp"
+                        android:text="Check Out"
                         android:textColor="@color/text_04"
-                        android:text="Campus Check Out"
                         android:textSize="12sp">
 
                     </com.google.android.material.textview.MaterialTextView>
@@ -193,14 +185,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:fontFamily="sans-serif-light"
-                        android:textColor="@color/text_04"
-                        android:paddingStart="40dp"
-                        android:text="16:00"
                         android:gravity="end"
+                        android:text="16:00"
+                        android:textColor="@color/text_04"
                         android:textSize="12sp">
 
                     </com.google.android.material.textview.MaterialTextView>
-
 
                 </LinearLayout>
 
@@ -208,29 +198,30 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginEnd="6dp"
                     android:orientation="vertical">
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:fontFamily="sans-serif"
-                        android:paddingStart="40dp"
+                        android:text="Check In"
                         android:textColor="@color/text_04"
-                        android:text="Campus Check In"
                         android:textSize="12sp">
 
                     </com.google.android.material.textview.MaterialTextView>
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/cellOutingHistoryCheckInTxt"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="end"
                         android:layout_marginTop="2dp"
                         android:fontFamily="sans-serif-light"
-                        android:paddingStart="40dp"
-                        android:text="20:00"
                         android:gravity="end"
+                        android:text="20:00"
                         android:textColor="@color/text_04"
                         android:textSize="12sp">
 
@@ -238,6 +229,22 @@
 
 
                 </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/cellOutingHistoryViewDopBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="34dp"
+                    android:text="QR CODE"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:visibility="visible"
+                    app:backgroundTint="#6CBFC7"
+                    app:elevation="4dp">
+
+                </com.google.android.material.button.MaterialButton>
 
             </LinearLayout>
 
@@ -253,10 +260,10 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
         android:gravity="end"
-        android:paddingEnd="16dp"
-        android:text="Applied on  22 May 2022"
+        android:paddingEnd="14dp"
+        android:text="Applied on 22 May 2022"
         android:textColor="@color/text_04"
-        android:textSize="14sp">
+        android:textSize="12sp">
 
     </com.google.android.material.textview.MaterialTextView>
 

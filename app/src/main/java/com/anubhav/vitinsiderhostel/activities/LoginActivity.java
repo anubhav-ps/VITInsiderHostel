@@ -12,7 +12,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -22,6 +24,7 @@ import com.anubhav.vitinsiderhostel.enums.ErrorCode;
 import com.anubhav.vitinsiderhostel.enums.Mod;
 import com.anubhav.vitinsiderhostel.enums.TicketStatus;
 import com.anubhav.vitinsiderhostel.interfaces.iOnAppErrorCreated;
+import com.anubhav.vitinsiderhostel.interfaces.iOnFCMTokenGenerated;
 import com.anubhav.vitinsiderhostel.interfaces.iOnNotifyDbProcess;
 import com.anubhav.vitinsiderhostel.interfaces.iOnRoomTenantListDownloaded;
 import com.anubhav.vitinsiderhostel.models.AlertDisplay;
@@ -31,25 +34,33 @@ import com.anubhav.vitinsiderhostel.models.Scramble;
 import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.anubhav.vitinsiderhostel.notifications.AppNotification;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, iOnNotifyDbProcess, iOnRoomTenantListDownloaded, iOnAppErrorCreated{
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, iOnNotifyDbProcess, iOnRoomTenantListDownloaded, iOnAppErrorCreated, iOnFCMTokenGenerated {
 
 
     //firebase fire store declaration
@@ -57,6 +68,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private final CollectionReference userDetailsSection = db.collection(Mod.USD.toString());
     private final CollectionReference hostelDetailsSection = db.collection(Mod.HOD.toString());
     private final CollectionReference feedbackSection = db.collection(Mod.FBK.toString());
+    private final CollectionReference tokenSection = db.collection(Mod.FCM.toString());
 
     //string objects
     private final String studentMailPattern = "@vitstudent.ac.in";
@@ -80,6 +92,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     //listeners
     private iOnRoomTenantListDownloaded onRoomTenantListDownloaded;
     private iOnAppErrorCreated onAppErrorCreated;
+    private iOnFCMTokenGenerated onFCMTokenGenerated;
 
 
     @Override
@@ -104,6 +117,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //listeners
         onRoomTenantListDownloaded = this;
         onAppErrorCreated = this;
+        onFCMTokenGenerated = this;
 
         // mail id change listeners
         mailEt.setOnFocusChangeListener((v, hasFocus) -> {
@@ -319,6 +333,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                             final String studentRoomNo = Objects.requireNonNull(documentSnapshot1.get("roomNo")).toString();
                                                             final String studentRoomType = Objects.requireNonNull(documentSnapshot1.get("roomType")).toString();
                                                             final String admin = Objects.requireNonNull(documentSnapshot1.get("isAdmin")).toString();
+                                                            final boolean hasPublicProfile = (boolean) Objects.requireNonNull(documentSnapshot1.get("hasPublicProfile"));
+                                                            final String  privateDocId = Objects.requireNonNull(documentSnapshot1.get("privateProfileID")).toString();
 
                                                             User user = User.getInstance();
                                                             user.setUser_Id(userID);
@@ -338,6 +354,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                                 adminVal = true;
                                                             }
                                                             user.setAdmin(adminVal);
+                                                            user.setHasPublicProfile(hasPublicProfile);
+                                                            user.setPrivateProfileID(privateDocId);
 
 
                                                             //Toast.makeText(LoginActivity.this,tNum , Toast.LENGTH_SHORT).show();
@@ -449,7 +467,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void notifyCompleteDataDownload() {
-        progressBar.setVisibility(View.INVISIBLE);
+        uploadToken();
+    }
+
+    @Override
+    public void onTokenGenerated(String token) {
+        //FCM_Tokens/UserId/-> token : value
+        //-> lastUpdated : timestamp
+        Map<String, Object> tokenMap = new HashMap<>();
+        tokenMap.put("token", token);
+        tokenMap.put("lastUpdated", new Timestamp(new Date()));
+        tokenSection.document(User.getInstance().getUser_Id()).set(tokenMap).addOnCompleteListener(task -> {
+
+            if(!task.isSuccessful()){
+                progressBar.setVisibility(View.INVISIBLE);
+                callSnackBar("Try logging in again after sometime");
+                logoutUser();
+            }else{
+                progressBar.setVisibility(View.INVISIBLE);
+                onFCMTokenGenerated.onTokenPushed();
+            }
+
+        }).addOnFailureListener(e -> {
+            progressBar.setVisibility(View.INVISIBLE);
+            callSnackBar("Try logging in again after sometime");
+            logoutUser();
+        });
+    }
+
+    @Override
+    public void onTokenPushed() {
         AppNotification.getInstance().subscribeAllTopics();
         Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -459,11 +506,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         finish();
     }
 
+    private void uploadToken() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+                if (!task.isSuccessful()){
+                    progressBar.setVisibility(View.INVISIBLE);
+                    callSnackBar(Objects.requireNonNull(task.getException()).getMessage());
+                    callSnackBar("Try logging in again after sometime");
+                    logoutUser();
+                }else{
+                     onFCMTokenGenerated.onTokenGenerated(task.getResult());
+                }
+        }).addOnFailureListener(e -> {
+            progressBar.setVisibility(View.INVISIBLE);
+            callSnackBar(e.getMessage());
+            callSnackBar("Try logging in again after sometime");
+            logoutUser();
+        });
+    }
     @Override
     public void notifyUserUpdated() {
 
     }
 
+    private void logoutUser(){
+        FirebaseAuth.getInstance().signOut();
+        localSqlDatabase.deleteAllTenants();
+        localSqlDatabase.deleteCurrentUser();
+    }
 
     @Override
     public void notifyCompleteListDownload() {
@@ -552,6 +621,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             firebaseAuth.removeAuthStateListener(authStateListener);
         }
     }
+
 
 
 }

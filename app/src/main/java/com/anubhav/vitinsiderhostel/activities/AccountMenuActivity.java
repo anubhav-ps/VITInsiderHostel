@@ -15,6 +15,7 @@ import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.enums.SettingsMenu;
 import com.anubhav.vitinsiderhostel.fragments.AboutFragment;
 import com.anubhav.vitinsiderhostel.fragments.NotificationFragment;
+import com.anubhav.vitinsiderhostel.fragments.PublicProfileFragment;
 import com.anubhav.vitinsiderhostel.fragments.ViewUserProfileFragment;
 import com.anubhav.vitinsiderhostel.interfaces.iOnUserAccountDeleted;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -43,6 +44,9 @@ public class AccountMenuActivity extends AppCompatActivity implements View.OnCli
             if (section.equalsIgnoreCase(SettingsMenu.PROFILE.getValue())) {
                 toolbarTitle.setText(SettingsMenu.PROFILE.getValue());
                 fragment = new ViewUserProfileFragment();
+            }else if(section.equalsIgnoreCase(SettingsMenu.PUBLIC_PROFILE.getValue())){
+                toolbarTitle.setText(SettingsMenu.PUBLIC_PROFILE.getValue());
+                fragment = new PublicProfileFragment();
             } else if (section.equalsIgnoreCase(SettingsMenu.NOTIFICATIONS.getValue())) {
                 toolbarTitle.setText(SettingsMenu.NOTIFICATIONS.getValue());
                 fragment = new NotificationFragment();

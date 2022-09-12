@@ -24,10 +24,8 @@ import com.anubhav.vitinsiderhostel.enums.Mod;
 import com.anubhav.vitinsiderhostel.enums.TicketStatus;
 import com.anubhav.vitinsiderhostel.interfaces.iOnAppErrorCreated;
 import com.anubhav.vitinsiderhostel.interfaces.iOnUserAccountDeleted;
-import com.anubhav.vitinsiderhostel.models.AlertDisplay;
 import com.anubhav.vitinsiderhostel.models.AppError;
 import com.anubhav.vitinsiderhostel.models.User;
-import com.anubhav.vitinsiderhostel.notifications.AppNotification;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,15 +33,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.security.NoSuchAlgorithmException;
-
 
 public class DeleteAccountFragment extends Fragment implements View.OnClickListener, iOnAppErrorCreated {
 
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference userDetailsSection = db.collection(Mod.USD.toString());
     private final CollectionReference feedbackSection = db.collection(Mod.FBK.toString());
+    private final CollectionReference tokenSection = db.collection(Mod.FCM.toString());
     //string objects
     private final String deleteKey = "DeLEtE";
     // firebase auth declaration
@@ -126,12 +122,7 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
         if (id == R.id.deleteAccountAbortBtn) {
             abortAction();
         } else if (id == R.id.deleteAccountDeleteBtn) {
-            progressBar.setVisibility(View.VISIBLE);
-            try {
-                deleteAccount();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
+            deleteAccount();
         }
     }
 
@@ -143,24 +134,9 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
         fragmentTransaction.commit();
     }
 
-    private void deleteAccount() throws NoSuchAlgorithmException {
-
-        userDetailsSection.document(Mod.USSTU.toString())
-                .collection(Mod.DET.toString())
-                .document(User.getInstance().getUser_Id())
-                .delete()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        deleteAccountID();
-                    } else {
-                        progressBar.setVisibility(View.INVISIBLE);
-                        AlertDisplay alertDisplay = new AlertDisplay(ErrorCode.DF001.getErrorCode(), ErrorCode.DF001.getErrorMessage(), getContext());
-                        alertDisplay.displayAlert();
-                        AppError appError = new AppError(ErrorCode.DF001.getErrorCode(), User.getInstance().getUserMailID());
-                        onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported,You Will Be Contacted Soon");
-                    }
-                });
-
+    private void deleteAccount() {
+        progressBar.setVisibility(View.VISIBLE);
+        deleteAccountID();
     }
 
 
@@ -248,28 +224,24 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
     }
 
 
-    public void deleteAccountID() {
+    private void deleteAccountID() {
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
+            if (FirebaseAuth.getInstance().getCurrentUser()!=null){
+                tokenSection.document(User.getInstance().getUser_Id()).delete();
+            }
             user.delete().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
+                    progressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(getContext(), "Account deleted successfully", Toast.LENGTH_LONG).show();
+                    callBackToAccountDeletion.userAccountDeleted();
                 } else {
-                    AppNotification.getInstance().unSubscribeAllTopics();
-                    FirebaseAuth.getInstance().signOut();
                     AppError appError = new AppError(ErrorCode.DF002.getErrorCode(), User.getInstance().getUserMailID());
                     onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported,You Will Be Contacted Soon");
                 }
-                progressBar.setVisibility(View.INVISIBLE);
-                callBackToAccountDeletion.userAccountDeleted();
             }).addOnFailureListener(e -> {
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                AppError appError = new AppError(ErrorCode.DF002.getErrorCode(), User.getInstance().getUserMailID());
-                onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported,You Will Be Contacted Soon");
-                AppNotification.getInstance().unSubscribeAllTopics();
-                FirebaseAuth.getInstance().signOut();
                 progressBar.setVisibility(View.INVISIBLE);
-                callBackToAccountDeletion.userAccountDeleted();
             });
         }
     }

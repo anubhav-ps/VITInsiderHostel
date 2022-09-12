@@ -51,6 +51,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private final CollectionReference userDetailsSection = db.collection(Mod.USD.toString());
     private final CollectionReference hostelDetailsSection = db.collection(Mod.HOD.toString());
     private final CollectionReference feedbackSection = db.collection(Mod.FBK.toString());
+    private final CollectionReference privateSection = db.collection(Mod.PRIV.toString());
 
     // input field views
     private TextInputEditText nameEt, mailEt, passwordEt;
@@ -130,7 +131,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if (!m.matches()) {
                     nameEt.setError("Username must be 8 to 20 characters wide.No special characters allowed except '-'");
                     validName = false;
-                }else {
+                } else {
                     validName = true;
                 }
             }
@@ -321,6 +322,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                     userMap.put("roomNo", roomNo);
                                                     userMap.put("roomType", type);
                                                     userMap.put("isAdmin", "0");
+                                                    userMap.put("hasPublicProfile", false);
+                                                    userMap.put("privateProfileID", "");
 
                                                     // uploading user details
                                                     userDetailsSection
@@ -330,25 +333,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                             .set(userMap)
                                                             .addOnCompleteListener(task11 -> {
                                                                 if (task11.isSuccessful()) {
-                                                                    // update the tenant details
-                                                                    hostelDetailsSection
-                                                                            .document(Mod.TED.toString())
-                                                                            .collection(Mod.DET.toString())
-                                                                            .document(scrambleValue)
-                                                                            .update(
-                                                                                    "tenantUserName", inputName,
-                                                                                    "tenantAvatar", 100
-                                                                            )
-                                                                            .addOnCompleteListener(task2 -> {
-                                                                                if (!task2.isSuccessful()) {
-                                                                                    progressBar.setVisibility(View.INVISIBLE);
-                                                                                    AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE " + ErrorCode.RA005.getErrorCode(), ErrorCode.RA005.getErrorMessage(), RegisterActivity.this);
-                                                                                    alertDisplay.displayAlert();
-                                                                                    AppError appError = new AppError(ErrorCode.RA005.getErrorCode(), inputMail);
-                                                                                    onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported");
-                                                                                }
-                                                                            });
-
                                                                     //second onComplete listener ( to send verification link)
                                                                     Objects.requireNonNull(firebaseAuth.getCurrentUser())
                                                                             .sendEmailVerification().addOnCompleteListener(task112 -> {
@@ -369,7 +353,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                                     });
 
                                                                 } else {
-
                                                                     progressBar.setVisibility(View.INVISIBLE);
                                                                     AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE " + ErrorCode.RA004.getErrorCode(), ErrorCode.RA004.getErrorMessage(), RegisterActivity.this);
                                                                     alertDisplay.displayAlert();
@@ -377,7 +360,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                                     onAppErrorCreated.checkIfAlreadyReported(appError, "Issue has been reported,You will be contacted soon");
                                                                 }
                                                             });
-
                                                 } else {
                                                     progressBar.setVisibility(View.INVISIBLE);
                                                     AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE " + ErrorCode.RA003.getErrorCode(), ErrorCode.RA003.getErrorMessage(), RegisterActivity.this);
@@ -386,7 +368,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                     onAppErrorCreated.checkIfAlreadyReported(appError, "Issue has been reported,You will be contacted soon");
                                                 }
                                             });
-
 
                                 } else {
                                     progressBar.setVisibility(View.INVISIBLE);

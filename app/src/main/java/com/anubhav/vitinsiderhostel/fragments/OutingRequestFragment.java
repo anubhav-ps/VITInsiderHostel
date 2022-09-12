@@ -20,15 +20,11 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.anubhav.vitinsiderhostel.R;
-import com.anubhav.vitinsiderhostel.enums.ErrorCode;
 import com.anubhav.vitinsiderhostel.enums.Mod;
-import com.anubhav.vitinsiderhostel.enums.ORAStatus;
 import com.anubhav.vitinsiderhostel.enums.TicketStatus;
 import com.anubhav.vitinsiderhostel.interfaces.iOnAppErrorCreated;
+import com.anubhav.vitinsiderhostel.models.AlertDisplay;
 import com.anubhav.vitinsiderhostel.models.AppError;
-import com.anubhav.vitinsiderhostel.models.LinkEnds;
-import com.anubhav.vitinsiderhostel.models.ORAStudentLink;
-import com.anubhav.vitinsiderhostel.models.ORApp;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -42,6 +38,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -54,6 +52,7 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference feedbackSection = db.collection(Mod.FBK.toString());
+    private final CollectionReference outingFormSection = db.collection(Mod.OUSEC.toString());
 
     // firebase declaration
     private FirebaseAuth firebaseAuth;
@@ -62,7 +61,7 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
 
     //views
     private View rootView;
-    private TextInputEditText studentNameEt, studentRegisterNumberEt, studentMailIdEt, studentContactNumberEt, studentRoomDetailsEt, parentContactNumberEt, visitLocationEt, visitPurposeEt, checkOutTimeEt, visitDateEt;
+    private TextInputEditText studentRegisterNumberEt, studentMailIdEt, studentContactNumberEt, studentRoomDetailsEt, parentContactNumberEt, visitLocationEt, visitPurposeEt, checkOutTimeEt, visitDateEt;
     private MaterialTextView userNameTxt;
     private ImageView locationPickerBtn;
     private ProgressBar progressBar;
@@ -70,8 +69,7 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
     private Dialog dialog;
 
     //objects
-    private LinkEnds coupleEnds = new LinkEnds();
-    private ORApp oraUpload = new ORApp();
+    private HashMap<String, Object> outingForm = new HashMap<>();
 
     //string objects
     private String userName, studentMailId, studentRegisterNumber, studentContactNumber, studentRoomNum, studentBlock, fdate = null;
@@ -113,7 +111,6 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
 
         dialog = new Dialog(getContext());
         userNameTxt = rootView.findViewById(R.id.oraUserNameTxt);
-        studentNameEt = rootView.findViewById(R.id.oraStudentNameEt);
         studentRegisterNumberEt = rootView.findViewById(R.id.oraStudentRegisterNumberEt);
         studentMailIdEt = rootView.findViewById(R.id.oraStudentMailIdEt);
         studentRoomDetailsEt = rootView.findViewById(R.id.oraStudentRoomDetailEt);
@@ -136,18 +133,29 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
             studentBlock = User.getInstance().getStudentBlock();
         }
 
-        userNameTxt.setText(userName);
+        String name = " ";
+        String delimiter = "[^a-zA-Z]+";
+        String[] splitPhrase = studentMailId.split("@")[0].split(delimiter);
+
+        if (splitPhrase.length > 1) {
+            name = firstCaps(splitPhrase[0]) + " " + firstCaps(splitPhrase[1]);
+        } else {
+            name = firstCaps(splitPhrase[0]);
+        }
+
+        userNameTxt.setText(name);
         studentMailIdEt.setText(studentMailId);
         studentRegisterNumberEt.setText(studentRegisterNumber);
         studentContactNumberEt.setText(studentContactNumber);
         final String roomDetail = studentRoomNum + "-" + studentBlock;
         studentRoomDetailsEt.setText(roomDetail);
 
-        oraUpload.setStudentMailId(studentMailId);
-        oraUpload.setStudentRegisterNumber(studentRegisterNumber);
-        oraUpload.setStudentContactNumber(studentContactNumber);
-        oraUpload.setStudentRoomDetails(roomDetail);
-
+        outingForm.put("userId", User.getInstance().getUser_Id());
+        outingForm.put("studentMailId", studentMailId);
+        outingForm.put("studentRegisterNumber", studentRegisterNumber);
+        outingForm.put("studentContactNumber", studentContactNumber);
+        outingForm.put("studentRoomDetails", roomDetail);
+        outingForm.put("studentBlock", studentBlock);
 
         //listeners
         onAppErrorCreated = this;
@@ -174,9 +182,15 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
         }
     }
 
+    private String firstCaps(String name) {
+        char[] arr = name.toCharArray();
+        arr[0] = String.valueOf(arr[0]).toUpperCase(Locale.ROOT).charAt(0);
+        return String.valueOf(arr);
+    }
+
+
     private void validateAll() {
-        if (validateStudentName(studentNameEt)
-                && validateContactNumber(parentContactNumberEt)
+        if (validateContactNumber(parentContactNumberEt)
                 && validateVisitLocation(visitLocationEt) && validateVisitPurpose(visitPurposeEt)
                 && validateDate(visitDateEt)
                 && validateTime(checkOutTimeEt) && flagOutTime) {
@@ -308,66 +322,48 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
 
             }
         });
-        proceedBtn.setOnClickListener(v -> initiateUploadingToAllBucket());
+        proceedBtn.setOnClickListener(v -> {
+            progressBar.setVisibility(View.GONE);
+            initiateUploadingToAllBucket();
+        });
         dialog.show();
     }
 
     private void initiateUploadingToAllBucket() {
         dialog.dismiss();
-        final String[] splitDate = fdate.split("-");
-        DocumentReference oraDocRef = coupleEnds.insertOREK(studentBlock, splitDate[2], splitDate[1], splitDate[0]).document();
-        final String docId = oraDocRef.getId();
-        final Timestamp uploadTime = new Timestamp(new Date());
-        final String checkIn = "18:00";
-
-        oraUpload.setCheckIn(checkIn);
-        oraUpload.setOraDocId(docId);
-        oraUpload.setOraStatus(ORAStatus.APPLIED.toString());
-        oraUpload.setUploadTimestamp(uploadTime);
-
-        oraDocRef.set(oraUpload)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        ORAStudentLink oraStudentLink = coupleEnds.getStudentLinkId(docId, uploadTime);
-                        DocumentReference studentLinkDocRef = coupleEnds.insertLinkStudentOREK(studentMailId, studentBlock, splitDate[2], splitDate[1], splitDate[0], docId);
-                        studentLinkDocRef.set(oraStudentLink).addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()) {
-                                callSnackBar("Successfully Submitted Your Application.Check OREK History For Application Status.");
-                            } else {
-                                callSnackBar("Couldn't Submit Your Application For Outing! :(");
-                                oraDocRef.delete();
-                                AppError appError = new AppError(ErrorCode.ORF001.getErrorCode(), studentMailId);
-                                onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported");
-
-                            }
-                        });
-                    } else {
-                        callSnackBar("Couldn't Submit Your Application For Outing! :(");
-                        AppError appError = new AppError(ErrorCode.ORF002.getErrorCode(), studentMailId);
-                        onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported");
-                    }
-                });
-
-
+        outingForm.put("timestamp", new Timestamp(new Date()));
+        checkForDuplicateNApply(Objects.requireNonNull(outingForm.get("visitDate")).toString());
     }
 
-    private boolean validateStudentName(TextInputEditText editText) {
-        final String name = Objects.requireNonNull(editText.getText()).toString().trim();
-        if (TextUtils.isEmpty(name)) {
-            editText.setError("Student Name is required");
-            editText.requestFocus();
-            return false;
-        }
-        char[] letters = name.toCharArray();
-        for (char l : letters) {
-            if (Character.isDigit(l)) {
-                editText.setError("Name cannot contain digits");
-                editText.requestFocus();
-                return false;
+    private void checkForDuplicateNApply(String visitDate) {
+        outingFormSection.
+                document(Mod.OFORM.toString()).collection(Mod.DET.toString()).whereEqualTo("studentMailId", studentMailId).whereEqualTo("visitDate", visitDate).get().addOnCompleteListener(task2 -> {
+            if (task2.getResult().isEmpty()) {
+
+                DocumentReference formDoc = outingFormSection.
+                        document(Mod.OSTACK.toString()).collection(Mod.DET.toString())
+                        .document();
+                outingForm.put("docID", formDoc.getId());
+
+                outingFormSection.
+                        document(Mod.OSTACK.toString()).collection(Mod.DET.toString())
+                        .document(formDoc.getId()).set(outingForm).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        AlertDisplay alertDisplay = new AlertDisplay("Application Submitted", "Outing application has been submitted, track your application status in Outing Status Section.", getContext());
+                        alertDisplay.displayAlert();
+                    }
+                    progressBar.setVisibility(View.GONE);
+                }).addOnFailureListener(e -> {
+                    progressBar.setVisibility(View.GONE);
+                    callSnackBar(e.getMessage());
+                });
+
+            } else {
+                progressBar.setVisibility(View.GONE);
+                AlertDisplay alertDisplay = new AlertDisplay("Application Already Exist!", "Outing Application on this day is already present.Cannot submit new application on this day again.", getContext());
+                alertDisplay.displayAlert();
             }
-        }
-        oraUpload.setStudentName(name);
-        return true;
+        });
     }
 
     private boolean validateContactNumber(TextInputEditText editText) {
@@ -387,8 +383,7 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
             editText.requestFocus();
             return false;
         }
-
-        oraUpload.setParentNumber(number);
+        outingForm.put("parentNumber", number);
         return true;
     }
 
@@ -405,7 +400,8 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
             editText.requestFocus();
             return false;
         }
-        oraUpload.setVisitLocation(location);
+
+        outingForm.put("visitLocation", location);
         return true;
     }
 
@@ -422,7 +418,8 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
             editText.requestFocus();
             return false;
         }
-        oraUpload.setVisitPurpose(purpose);
+
+        outingForm.put("visitPurpose", purpose);
         return true;
     }
 
@@ -433,7 +430,8 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
             editText.requestFocus();
             return false;
         }
-        oraUpload.setCheckOut(time);
+
+        outingForm.put("checkOut", time);
 
         editText.setError(null);
         return true;
@@ -447,7 +445,9 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
             return false;
         }
         editText.setError(null);
-        oraUpload.setVisitDate(date);
+
+
+        outingForm.put("visitDate", date);
         return true;
     }
 

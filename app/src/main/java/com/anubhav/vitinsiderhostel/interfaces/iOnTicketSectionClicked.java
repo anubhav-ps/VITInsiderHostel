@@ -4,4 +4,6 @@ public interface iOnTicketSectionClicked {
     void roomTicketClicked();
 
     void blockTicketClicked();
+
+    void outingTicketClicked();
 }

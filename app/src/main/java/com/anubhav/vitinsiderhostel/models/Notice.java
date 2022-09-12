@@ -8,6 +8,7 @@ public class Notice {
     private String body;
     private String postedBy;
     private Timestamp postedOn;
+    private String block;
     private String imageUri;
     private String siteLink;
     private String noticeDocID;
@@ -20,13 +21,14 @@ public class Notice {
         this.noticeDocID = noticeDocID;
     }
 
-    public Notice(String title, String body, String postedBy, Timestamp postedOn, String siteLink, String imageUri, String noticeDocID, String urgency) {
+    public Notice(String title, String body, String postedBy, Timestamp postedOn, String block, String imageUri, String siteLink, String noticeDocID, String urgency) {
         this.title = title;
         this.body = body;
         this.postedBy = postedBy;
         this.postedOn = postedOn;
-        this.siteLink = siteLink;
+        this.block = block;
         this.imageUri = imageUri;
+        this.siteLink = siteLink;
         this.noticeDocID = noticeDocID;
         this.urgency = urgency;
     }
@@ -71,6 +73,13 @@ public class Notice {
         this.siteLink = siteLink;
     }
 
+    public String getBlock() {
+        return block;
+    }
+
+    public void setBlock(String block) {
+        this.block = block;
+    }
 
     public String getImageUri() {
         return imageUri;

@@ -36,6 +36,10 @@ public class User extends Application {
 
     private int avatar;
 
+    private boolean hasPublicProfile;
+
+    private String privateProfileID;
+
     public User() {
     }
 
@@ -152,5 +156,21 @@ public class User extends Application {
 
     public void setStudentRegisterNumber(String studentRegisterNumber) {
         this.studentRegisterNumber = studentRegisterNumber;
+    }
+
+    public boolean isHasPublicProfile() {
+        return hasPublicProfile;
+    }
+
+    public void setHasPublicProfile(boolean hasPublicProfile) {
+        this.hasPublicProfile = hasPublicProfile;
+    }
+
+    public String getPrivateProfileID() {
+        return privateProfileID;
+    }
+
+    public void setPrivateProfileID(String privateProfileID) {
+        this.privateProfileID = privateProfileID;
     }
 }

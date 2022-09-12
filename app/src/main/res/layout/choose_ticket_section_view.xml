@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
 
@@ -52,6 +52,18 @@
             android:textColor="#E6626161"
             android:textSize="18sp" />
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/chooseTicketOutingTxt"
+            style="@style/SelectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginTop="2dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="6dp"
+            android:text="Outing Tickets"
+            android:textColor="#E6626161"
+            android:textSize="18sp" />
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

@@ -1,51 +1,51 @@
 package com.anubhav.vitinsiderhostel.models;
 
+import com.anubhav.vitinsiderhostel.enums.OutingFormStatus;
 import com.google.firebase.Timestamp;
 
-public class ORApp {
+public class OutingForm {
 
-    private String studentName;
     private String studentRegisterNumber;
     private String studentMailId;
     private String studentContactNumber;
     private String studentRoomDetails;
+    private String studentBlock;
     private String parentNumber;
+
     private String visitLocation;
     private String visitPurpose;
     private String visitDate;
+
+
     private String checkOut;
     private String checkIn;
 
-    private String oraDocId;
-    private String oraStatus;
-    private Timestamp uploadTimestamp;
+    private Timestamp timestamp;
 
-    public ORApp() {
+    private String status;
+    private String formId;
+    private String code;
+
+
+    public OutingForm() {
     }
 
-    public ORApp(String studentName, String studentRegisterNumber, String studentMailId, String studentContactNumber, String studentRoomDetails, String parentNumber, String visitLocation, String visitPurpose, String visitDate, String checkOut, String checkIn, String oraDocId, String oraStatus, Timestamp uploadTimestamp) {
-        this.studentName = studentName;
+    public OutingForm(String studentRegisterNumber, String studentMailId, String studentContactNumber, String studentRoomDetails, String studentBlock, String parentNumber, String visitLocation, String visitPurpose, String visitDate, String checkOut, String checkIn, Timestamp timestamp, String status, String formId, String code) {
         this.studentRegisterNumber = studentRegisterNumber;
         this.studentMailId = studentMailId;
         this.studentContactNumber = studentContactNumber;
         this.studentRoomDetails = studentRoomDetails;
+        this.studentBlock = studentBlock;
         this.parentNumber = parentNumber;
         this.visitLocation = visitLocation;
         this.visitPurpose = visitPurpose;
         this.visitDate = visitDate;
         this.checkOut = checkOut;
         this.checkIn = checkIn;
-        this.oraDocId = oraDocId;
-        this.oraStatus = oraStatus;
-        this.uploadTimestamp = uploadTimestamp;
-    }
-
-    public String getStudentName() {
-        return studentName;
-    }
-
-    public void setStudentName(String studentName) {
-        this.studentName = studentName;
+        this.timestamp = timestamp;
+        this.status = status;
+        this.formId = formId;
+        this.code = code;
     }
 
     public String getStudentRegisterNumber() {
@@ -78,6 +78,14 @@ public class ORApp {
 
     public void setStudentRoomDetails(String studentRoomDetails) {
         this.studentRoomDetails = studentRoomDetails;
+    }
+
+    public String getStudentBlock() {
+        return studentBlock;
+    }
+
+    public void setStudentBlock(String studentBlock) {
+        this.studentBlock = studentBlock;
     }
 
     public String getParentNumber() {
@@ -128,27 +136,35 @@ public class ORApp {
         this.checkIn = checkIn;
     }
 
-    public String getOraDocId() {
-        return oraDocId;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
-    public void setOraDocId(String oraDocId) {
-        this.oraDocId = oraDocId;
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
     }
 
-    public String getOraStatus() {
-        return oraStatus;
+    public String getStatus() {
+        return status;
     }
 
-    public void setOraStatus(String oraStatus) {
-        this.oraStatus = oraStatus;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public Timestamp getUploadTimestamp() {
-        return uploadTimestamp;
+    public String getFormId() {
+        return formId;
     }
 
-    public void setUploadTimestamp(Timestamp uploadTimestamp) {
-        this.uploadTimestamp = uploadTimestamp;
+    public void setFormId(String formId) {
+        this.formId = formId;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

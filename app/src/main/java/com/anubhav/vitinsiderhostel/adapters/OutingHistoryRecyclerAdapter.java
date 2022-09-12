@@ -9,9 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anubhav.vitinsiderhostel.R;
-import com.anubhav.vitinsiderhostel.enums.ORAStatus;
+import com.anubhav.vitinsiderhostel.enums.OutingFormStatus;
 import com.anubhav.vitinsiderhostel.interfaces.iOnOutingHistoryCardClicked;
-import com.anubhav.vitinsiderhostel.models.ORApp;
+import com.anubhav.vitinsiderhostel.models.OutingForm;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textview.MaterialTextView;
@@ -25,10 +25,10 @@ import java.util.Locale;
 public class OutingHistoryRecyclerAdapter extends RecyclerView.Adapter<OutingHistoryRecyclerAdapter.ViewHolder> {
 
 
-    private final List<ORApp> list;
+    private final List<OutingForm> list;
     private final iOnOutingHistoryCardClicked cardClicked;
 
-    public OutingHistoryRecyclerAdapter(List<ORApp> list, iOnOutingHistoryCardClicked cardClicked) {
+    public OutingHistoryRecyclerAdapter(List<OutingForm> list, iOnOutingHistoryCardClicked cardClicked) {
         this.list = list;
         this.cardClicked = cardClicked;
     }
@@ -44,27 +44,50 @@ public class OutingHistoryRecyclerAdapter extends RecyclerView.Adapter<OutingHis
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
 
-
-
-        holder.statusTxt.setText(list.get(position).getOraStatus());
-        holder.regNumTxt.setText(list.get(position).getStudentRegisterNumber());
+        holder.statusTxt.setText(list.get(position).getStatus());
         holder.visitLocationTxt.setText(list.get(position).getVisitLocation());
+        holder.visitPurposeTxt.setText(list.get(position).getVisitPurpose());
         holder.checkOutTxt.setText(list.get(position).getCheckOut());
         holder.checkInTxt.setText(list.get(position).getCheckIn());
 
+        holder.appliedOnTxt.setText(getAppliedOn(position));
+        holder.dateYearTxt.setText(getDate(position));
+        holder.monthTxt.setText(getMonth(position));
+
+        if (list.get(position).getStatus().equalsIgnoreCase(OutingFormStatus.APPROVED.toString())) {
+            holder.viewDopBtn.setVisibility(View.VISIBLE);
+            holder.viewDopBtn.setClickable(true);
+        } else {
+            holder.viewDopBtn.setVisibility(View.GONE);
+            holder.viewDopBtn.setClickable(false);
+        }
+
+        holder.viewDopBtn.setOnClickListener(v -> {
+            OutingForm outingForm = list.get(position);
+            cardClicked.outingHistoryViewQRCodeClicked(outingForm.getCode(), outingForm.getVisitDate(), outingForm.getStudentRegisterNumber());
+        });
+
+        holder.cardView.setOnLongClickListener(v -> {
+            cardClicked.outingHistoryCardLongPressed(position);
+            return true;
+        });
+    }
+
+    private String getAppliedOn(int position) {
         SimpleDateFormat formatToString = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-        String appliedDateString = formatToString.format(list.get(position).getUploadTimestamp().toDate());
-        final String appliedOn = "Applied on : " + appliedDateString;
+        String appliedDateString = formatToString.format(list.get(position).getTimestamp().toDate());
+        return "Applied on : " + appliedDateString;
+    }
 
-        holder.appliedOnTxt.setText(appliedOn);
-
+    private String getDate(int position) {
         final String visitDate = list.get(position).getVisitDate().trim();
-
         final String[] splitDate = visitDate.split("-");
-        final String dateYear = splitDate[0] + " - " + splitDate[2];
-        holder.dateYearTxt.setText(dateYear);
+        return splitDate[0] + " - " + splitDate[2];
+    }
 
-        formatToString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+    private String getMonth(int position) {
+        final String visitDate = list.get(position).getVisitDate().trim();
+        SimpleDateFormat formatToString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
         Date date = null;
 
         try {
@@ -75,45 +98,9 @@ public class OutingHistoryRecyclerAdapter extends RecyclerView.Adapter<OutingHis
 
         formatToString = new SimpleDateFormat("MMM", Locale.getDefault());
         assert date != null;
-        final String monthText = formatToString.format(date).toUpperCase(Locale.ROOT);
-
-        holder.monthTxt.setText(monthText);
-
-        if (list.get(position).getOraStatus().equalsIgnoreCase(ORAStatus.APPROVED.toString())) {
-            holder.viewDopBtn.setVisibility(View.VISIBLE);
-            holder.viewDopBtn.setClickable(true);
-        } else {
-            holder.viewDopBtn.setVisibility(View.GONE);
-            holder.viewDopBtn.setClickable(false);
-        }
-
-        holder.viewDopBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (list.get(position).getOraStatus().equalsIgnoreCase(ORAStatus.APPROVED.toString())) {
-                    cardClicked.outingHistoryViewDopClicked(list.get(position).getOraDocId(), position);
-                }
-            }
-        });
-
-        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (!list.get(position).getOraStatus().equalsIgnoreCase(ORAStatus.APPROVED.toString())) {
-                    cardClicked.outingHistoryCardLongPressed(position);
-                }
-                return true;
-            }
-        });
-
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cardClicked.outingHistoryCardClicked(position);
-            }
-        });
-
+        return formatToString.format(date).toUpperCase(Locale.ROOT);
     }
+
 
     @Override
     public int getItemCount() {
@@ -124,7 +111,7 @@ public class OutingHistoryRecyclerAdapter extends RecyclerView.Adapter<OutingHis
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         MaterialCardView cardView;
-        MaterialTextView monthTxt, dateYearTxt, statusTxt, regNumTxt, visitLocationTxt, checkOutTxt, checkInTxt, appliedOnTxt;
+        MaterialTextView monthTxt, dateYearTxt, statusTxt, visitLocationTxt, visitPurposeTxt, checkOutTxt, checkInTxt, appliedOnTxt;
         MaterialButton viewDopBtn;
 
         public ViewHolder(@NonNull View itemView) {
@@ -134,8 +121,8 @@ public class OutingHistoryRecyclerAdapter extends RecyclerView.Adapter<OutingHis
             monthTxt = itemView.findViewById(R.id.cellOutingHistoryMonthTxt);
             dateYearTxt = itemView.findViewById(R.id.cellOutingHistoryDateYearTxt);
             statusTxt = itemView.findViewById(R.id.cellOutingHistoryStatusTxt);
-            regNumTxt = itemView.findViewById(R.id.cellOutingHistoryRegNumTxt);
             visitLocationTxt = itemView.findViewById(R.id.cellOutingHistoryVisitLocationTxt);
+            visitPurposeTxt = itemView.findViewById(R.id.cellOutingHistoryVisitPurposeTxt);
             checkOutTxt = itemView.findViewById(R.id.cellOutingHistoryCheckOutTxt);
             checkInTxt = itemView.findViewById(R.id.cellOutingHistoryCheckInTxt);
             appliedOnTxt = itemView.findViewById(R.id.cellOutingHistoryAppliedOnTxt);

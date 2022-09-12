@@ -16,10 +16,8 @@ import com.anubhav.vitinsiderhostel.enums.FeaturedMenu;
 import com.anubhav.vitinsiderhostel.fragments.OutingHistoryFragment;
 import com.anubhav.vitinsiderhostel.fragments.OutingRequestFragment;
 import com.anubhav.vitinsiderhostel.fragments.TravelCompanionHomeFragment;
-import com.anubhav.vitinsiderhostel.interfaces.iOnDopClicked;
 
-public class FeaturedActivity extends AppCompatActivity implements View.OnClickListener, iOnDopClicked {
-
+public class FeaturedActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -40,7 +38,7 @@ public class FeaturedActivity extends AppCompatActivity implements View.OnClickL
             Fragment fragment = null;
             if (section.equalsIgnoreCase(FeaturedMenu.OUTING_REQUEST.toString())) {
                 fragment = new OutingRequestFragment();
-            }else if (section.equalsIgnoreCase(FeaturedMenu.TRAVEL_COMPANION.toString())){
+            } else if (section.equalsIgnoreCase(FeaturedMenu.TRAVEL_COMPANION.toString())) {
                 fragment = new TravelCompanionHomeFragment();
             }
             makeTransaction(fragment);
@@ -71,18 +69,6 @@ public class FeaturedActivity extends AppCompatActivity implements View.OnClickL
         fragmentTransaction.replace(R.id.featuredMenuContainer, fragment);
         fragmentTransaction.commit();
     }
-
-    @Override
-    public void viewDopClicked(String b, String y, String m, String d, String reqDocId) {
-        Intent intent = new Intent(FeaturedActivity.this, DOPActivity.class);
-        intent.putExtra("Block", b);
-        intent.putExtra("Year", y);
-        intent.putExtra("Month", m);
-        intent.putExtra("Date", d);
-        intent.putExtra("DocId", reqDocId);
-        activityResultLauncher.launch(intent);
-    }
-
 
 
 }

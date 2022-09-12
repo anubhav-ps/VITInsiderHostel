@@ -6,10 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:scrollIndicators="right"
-    android:scrollbarSize="4dp"
-    android:scrollbarFadeDuration="0"
     android:fadeScrollbars="false"
+    android:scrollIndicators="right"
+    android:scrollbarFadeDuration="0"
+    android:scrollbarSize="4dp"
     android:scrollbarThumbVertical="@android:color/darker_gray"
     android:scrollbars="vertical"
     android:verticalScrollbarPosition="right"
@@ -99,50 +99,6 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
-                android:padding="2dp"
-                android:text="@string/ora_pge_student_name_lbl"
-                android:textColor="@color/text_04"
-                android:textSize="16sp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/ora_pge_enter_name_hint"
-                android:textColorHint="#878787"
-                app:boxStrokeColor="@color/light_theme_green"
-                app:endIconMode="clear_text"
-                app:endIconTint="@color/light_theme_green"
-                app:endIconTintMode="src_atop"
-                app:hintTextColor="@color/light_theme_green">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/oraStudentNameEt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:textColor="@color/text_02">
-
-                </com.google.android.material.textfield.TextInputEditText>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:fontFamily="@font/duru_sans"
-                android:padding="2dp"
-                android:text="@string/ora_pge_enter_name_info_lbl"
-                android:textColor="#E6626161"
-                android:textSize="12sp" />
-
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
                 android:fontFamily="sans-serif"
                 android:padding="2dp"
                 android:text="@string/ora_pge_register_number_lbl"

@@ -1,6 +1,6 @@
 package com.anubhav.vitinsiderhostel.enums;
 
-public enum ORAStatus {
+public enum OutingFormStatus {
     APPLIED,
     APPROVED,
     REJECTED

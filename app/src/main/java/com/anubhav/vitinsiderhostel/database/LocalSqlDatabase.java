@@ -45,6 +45,8 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
     private static final String ROOM_TYPE = "ROOM_TYPE";
     private static final String IS_ADMIN = "IS_ADMIN";
     private static final String USER_AVATAR = "AVATAR";
+    private static final String HAS_PUBLIC_PROFILE ="HAS_PUBLIC_PROFILE";
+    private static final String PRIVATE_PROFILE="PRIVATE_PROFILE";
 
 
     private static ExecutorService executors;
@@ -54,14 +56,16 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
     iOnNotifyDbProcess notify;
     private int totalTenants;
 
+    private static final int DB_Version =2;
+
     //constructors
     public LocalSqlDatabase(@Nullable Context context) {
-        super(context, "INSIDER_HOSTEL_DB", null, 1);
+        super(context, "INSIDER_HOSTEL_DB", null, DB_Version);
         assert context != null;
     }
 
     public LocalSqlDatabase(@Nullable Context context, iOnNotifyDbProcess notify) {
-        super(context, "INSIDER_HOSTEL_DB", null, 1);
+        super(context, "INSIDER_HOSTEL_DB", null, DB_Version);
 
         this.notify = notify;
 
@@ -103,7 +107,10 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
                 STUDENT_NATIVE_LANGUAGE + " TEXT ," +
                 ROOM_NO + " TEXT ," +
                 ROOM_TYPE + " TEXT ," +
-                IS_ADMIN + " BOOL )";
+                IS_ADMIN + " BOOL ," +
+                HAS_PUBLIC_PROFILE + " BOOL ," +
+                PRIVATE_PROFILE + " TEXT"+
+        " )";
 
         db.execSQL(createTableStatement);
 
@@ -153,6 +160,8 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
         cv.put(ROOM_NO, user.getRoomNo());
         cv.put(ROOM_TYPE, user.getRoomType());
         cv.put(IS_ADMIN, user.getAdmin());
+        cv.put(HAS_PUBLIC_PROFILE,user.isHasPublicProfile());
+        cv.put(PRIVATE_PROFILE,user.getPrivateProfileID());
 
         long result = db.insert(USER_TABLE, null, cv);
         db.close();
@@ -180,6 +189,8 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
             user.setRoomNo(cursor.getString(10));
             user.setRoomType(cursor.getString(11));
             user.setAdmin(cursor.getInt(12) == 1);
+            user.setHasPublicProfile(cursor.getInt(13)==1);
+            user.setPrivateProfileID(cursor.getString(14));
         }
 
         cursor.close();
@@ -206,6 +217,8 @@ public class LocalSqlDatabase extends SQLiteOpenHelper {
             cv.put(USER_AVATAR, user.getAvatar());
             cv.put(USER_CONTACT_NUMBER, user.getUserContactNumber());
             cv.put(STUDENT_NATIVE_LANGUAGE, user.getStudentNativeLanguage());
+            cv.put(HAS_PUBLIC_PROFILE,user.isHasPublicProfile());
+            cv.put(PRIVATE_PROFILE,user.getPrivateProfileID());
 
             db.update(USER_TABLE, cv, "USER_ID = ?", new String[]{user.getUser_Id()});
             db.close();
