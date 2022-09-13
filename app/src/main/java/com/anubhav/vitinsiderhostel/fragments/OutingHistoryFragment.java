@@ -53,13 +53,11 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryC
     //firebase fire-store declaration
     private final FirebaseFirestore dB = FirebaseFirestore.getInstance();
     private final CollectionReference outingFormSection = dB.collection(Mod.OUSEC.toString());
-
+    private final ArrayList<OutingForm> outingForms = new ArrayList<>();
+    private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private LinearLayout linearLayoutLoading;
     private LinearLayout linearLayoutEmpty;
-    private RecyclerView recyclerView;
-
-    private final ArrayList<OutingForm> outingForms = new ArrayList<>();
     private OutingHistoryRecyclerAdapter outingHistoryRecyclerAdapter;
     private View rootView;
     private Dialog dialog;
@@ -162,12 +160,10 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryC
         OutingForm outingForm = outingForms.get(pos);
 
         if (outingForm.getStatus().equalsIgnoreCase("APPROVED")) {
-            if (!getVisitDate(outingForm.getVisitDate())) {
-                AlertDisplay alertDisplay = new AlertDisplay("Cannot Delete", "Outing application with approved status cannot be deleted before the visit date.", getContext());
+                AlertDisplay alertDisplay = new AlertDisplay("Cannot Delete", "Outing application with approved status cannot be deleted.", getContext());
                 alertDisplay.getBuilder().setPositiveButton("Ok", null);
                 alertDisplay.display();
                 return;
-            }
         }
         AlertDisplay alertDisplay = new AlertDisplay("Delete Outing Form ? ", "Are you sure you want to delete this outing form ? ", getContext());
         alertDisplay.getBuilder().setPositiveButton("Cancel", null);
@@ -219,11 +215,11 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryC
         processRecyclerAdapter();
     }
 
-    private boolean getVisitDate(String visitDate) {
+   /* private boolean getVisitDate(String visitDate) {
         Date visitDay = convertDateString(visitDate);
         Date today = new Date();
         return !(today.compareTo(visitDay) < 0 || today.compareTo(visitDay) == 0);
-    }
+    }*/
 
     private Date convertDateString(String stringDate) {
         SimpleDateFormat formatToString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());

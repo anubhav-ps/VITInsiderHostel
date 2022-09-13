@@ -10,20 +10,20 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cellRoomMateCardView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="106dp"
+        android:layout_height="106dp"
         android:layout_marginTop="10dp"
-        app:rippleColor="#1B303030"
         android:clickable="true"
         android:focusable="true"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="100dp"
-        app:cardElevation="2dp">
+        app:cardElevation="2dp"
+        app:rippleColor="#1B303030">
 
         <ImageView
             android:id="@+id/cellRoomMateAvatar"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
             android:src="@drawable/av_100" />
@@ -35,13 +35,13 @@
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif"
         android:gravity="center_horizontal"
         android:inputType="textMultiLine"
         android:maxLines="2"
-        android:textColor="#E6797979"
         android:scrollHorizontally="false"
-        android:fontFamily="sans-serif"
         android:text="@string/cell_room_mate_user_name_txt"
+        android:textColor="#E6797979"
         android:textIsSelectable="false"
         android:textSize="14sp">
 

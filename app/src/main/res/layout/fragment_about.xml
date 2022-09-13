@@ -65,10 +65,9 @@
                         android:src="@drawable/devloper_profile" />
 
                     <View
-                        android:layout_width="0dp"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1">
+                        android:layout_gravity="center_vertical">
 
                     </View>
 
@@ -77,7 +76,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="4dp"
+                        android:layout_marginEnd="8dp"
                         android:clickable="true"
                         android:focusable="true"
                         android:paddingStart="2dp"

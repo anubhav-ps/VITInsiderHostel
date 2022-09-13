@@ -168,7 +168,7 @@
     <string name="cell_room_ticket_raised_by_txt">Raised by : anubhav.pursottam2019@vitstudent.ac.in</string>
 
     /* dialog terms and condition */
-    <string name="dialog_terms_cond_rule_1_lbl">1. Once DOP (Digital Outing Passport) is generated,Student will be able to view the validity status of the DOP in it .</string>
+    <string name="dialog_terms_cond_rule_1_lbl">1. After outing is approved,user can view the QR code for the respective outing application in Account -> Ticket History ->Outing Tickets and scan it to verify its authenticity.</string>
     <string name="dialog_terms_cond_title_lbl"><![CDATA[Terms & Condition]]></string>
     <string name="dialog_terms_cond_rule_2_lbl">2. DOP Validity Status</string>
     <string name="dialog_terms_cond_inactive_title_lbl">Inactive</string>
@@ -179,8 +179,8 @@
     <string name="dialog_terms_cond_expired_lbl">DOP will expire after the check in time, irrespective of student has checked in or not at the specified check in time.</string>
     <string name="dialog_terms_cond_cancel_title_lbl">Cancelled</string>
     <string name="dialog_terms_cond_cancel_lbl">If the Name and Register Number in DOP does not match the details in Student Id Card (or) Student has failed to check out even 1 hr past the check out time specified.</string>
-    <string name="dialog_terms_cond_rule_3_lbl">3. Even after outing is approved it can be rejected by management citing student misconduct or other reasons.</string>
-    <string name="dialog_terms_cond_rule_4_lbl">4. Misuse of outing request feature for play or fun will lead to suspension of outing for 2 month for student who applied.</string>
+    <string name="dialog_terms_cond_rule_3_lbl">2. Even after outing is approved it can be rejected by management citing student misconduct or other reasons.</string>
+    <string name="dialog_terms_cond_rule_4_lbl">3. Misuse of outing request feature for play or fun will lead to suspension of outing for 2 month for student who applied.</string>
     <string name="dialog_terms_cond_captcha_lbl">captcha</string>
     <string name="dialog_terms_cond_confirm_lbl"><![CDATA[By entering the captcha I declare, I have read and I accept the terms & condition mentioned above.]]></string>
     <string name="dialog_terms_cond_proceed_btn_txt">Proceed</string>

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -113,6 +114,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
 
     //views
     private View rootView;
+    private ImageView avatarImg;
     private MaterialTextView usernameTxt, regNumTxt, bedsTxt, typeTxt, roomDetailTxt;
     private ProgressBar roomMateProgressBar;
     private ImageButton roomMateRefreshBtn;
@@ -125,6 +127,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
 
     //String objects
     private String roomNo, roomType, block, userMail, username, userRegNum, scrambleMailValue;
+    private int avatarId;
 
     //flags
     private boolean ac = false;
@@ -168,6 +171,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
         }
 
         //view initialization
+        avatarImg = rootView.findViewById(R.id.roomPgeUserAvatar);
         usernameTxt = rootView.findViewById(R.id.roomPgeUserName);
         regNumTxt = rootView.findViewById(R.id.roomPgeUserRegNum);
         bedsTxt = rootView.findViewById(R.id.roomPgeBeds);
@@ -189,6 +193,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
 
         // retrieve user data from user instance
         if (User.getInstance() != null) {
+            avatarId = User.getInstance().getAvatar();
             roomNo = User.getInstance().getRoomNo();
             roomType = User.getInstance().getRoomType();
             block = User.getInstance().getStudentBlock();
@@ -196,6 +201,8 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
             userRegNum = User.getInstance().getStudentRegisterNumber();
             userMail = User.getInstance().getUserMailID();
         }
+
+        setAvatar(avatarId);
         usernameTxt.setText(username);
         regNumTxt.setText(userRegNum);
 
@@ -236,8 +243,14 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
         return rootView;
     }
 
+    private void setAvatar(int icon){
+        final String iconStr = "av_"+icon;
+        int imageId = requireContext().getResources().getIdentifier(iconStr, "drawable", requireContext().getPackageName());
+        avatarImg.setImageResource(imageId);
+    }
+
     private void initialiseRoomMates() {
-        roomMateRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true));
+        roomMateRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         roomMateAdapter = new RoomMateAdapter(roomMates, getContext(), this);
         roomMateRecyclerView.setAdapter(roomMateAdapter);
     }

@@ -1,15 +1,19 @@
 package com.anubhav.vitinsiderhostel.fragments;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import androidx.core.content.ContextCompat;
@@ -37,6 +41,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,7 +52,6 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference userDetailsSection = db.collection(Mod.USD.toString());
-    private final CollectionReference hostelDetailsSection = db.collection(Mod.HOD.toString());
     private final CollectionReference feedbackSection = db.collection(Mod.FBK.toString());
     //listeners
     iOnAppErrorCreated onAppErrorCreated;
@@ -57,11 +61,14 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private FirebaseUser user;
     //views
     private View rootView;
+    private ImageView profileAvatar;
     private MaterialTextView userNameTxt, userMailIdTxt, contactNumberTxt, nativeLanguageTxt, branchTxt, registerNumberTxt;
     private ProgressBar progressBar;
     private Dialog dialog;
     //flags
     private boolean hasChanged = false;
+
+    private int icon_Id=100,avatar=100;
 
 
     public EditProfileFragment() {
@@ -96,6 +103,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         nativeLanguageTxt = rootView.findViewById(R.id.editPgeNativeLanguage);
         branchTxt = rootView.findViewById(R.id.editPgeBranch);
         registerNumberTxt = rootView.findViewById(R.id.editPgeRegisterNumber);
+        profileAvatar = rootView.findViewById(R.id.editPgeAvatarIcon);
 
         ImageButton cancelBtn = rootView.findViewById(R.id.editPgeCancelBtn);
         MaterialButton saveBtn = rootView.findViewById(R.id.editPgeSaveBtn);
@@ -113,6 +121,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         saveBtn.setOnClickListener(this);
 
         if (User.getInstance() != null) {
+            setAvatar(User.getInstance().getAvatar());
             userNameTxt.setText(User.getInstance().getUserName());
             userMailIdTxt.setText(User.getInstance().getUserMailID());
             contactNumberTxt.setText(User.getInstance().getUserContactNumber());
@@ -133,7 +142,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
         } else if (id == R.id.editPgeAvatar) {
             hasChanged = true;
-
+            openEditAvatarView();
         } else if (id == R.id.editPgeUserName) {
             hasChanged = true;
             openEditUserNameView();
@@ -169,7 +178,70 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             }
         } else if (id == R.id.editNameViewCancelBtn || id == R.id.editContactNumberViewCancelBtn || id == R.id.editNativeLangViewCancelBtn) {
             closeEditView();
+        }else if (id==R.id.avatar_2){
+            icon_Id = 201;
+            setAvatar(icon_Id);
+        }else if (id==R.id.avatar_3){
+            icon_Id = 202;
+            setAvatar(icon_Id);
+        }else if (id==R.id.avatar_4){
+            icon_Id = 203;
+            setAvatar(icon_Id);
+        }else if (id==R.id.avatar_5){
+            icon_Id = 204;
+            setAvatar(icon_Id);
+        }else if (id==R.id.avatar_6){
+            icon_Id = 205;
+            setAvatar(icon_Id);
+        }else if (id==R.id.avatar_7){
+            icon_Id = 206;
+            setAvatar(icon_Id);
+        }else if (id==R.id.avatar_8){
+            icon_Id = 207;
+            setAvatar(icon_Id);
         }
+    }
+
+    private void openEditAvatarView() {
+        dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_choose_avatar);
+
+        MaterialButton apply = dialog.findViewById(R.id.dialogChooseAvatarApplyBtn);
+
+        ImageView avatar_2 = dialog.findViewById(R.id.avatar_2);
+        ImageView avatar_3 = dialog.findViewById(R.id.avatar_3);
+        ImageView avatar_4 = dialog.findViewById(R.id.avatar_4);
+        ImageView avatar_5 = dialog.findViewById(R.id.avatar_5);
+        ImageView avatar_6 = dialog.findViewById(R.id.avatar_6);
+        ImageView avatar_7 = dialog.findViewById(R.id.avatar_7);
+        ImageView avatar_8 = dialog.findViewById(R.id.avatar_8);
+
+        avatar_2.setOnClickListener(this);
+        avatar_3.setOnClickListener(this);
+        avatar_4.setOnClickListener(this);
+        avatar_5.setOnClickListener(this);
+        avatar_6.setOnClickListener(this);
+        avatar_7.setOnClickListener(this);
+        avatar_8.setOnClickListener(this);
+
+        apply.setOnClickListener(v -> {
+            avatar = icon_Id;
+            dialog.dismiss();
+        });
+
+
+        dialog.show();
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().getAttributes().windowAnimations = R.style.BottomDialogAnimation;
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+    }
+
+    private void setAvatar(int icon){
+        final String iconStr = "av_"+icon;
+        int imageId = requireContext().getResources().getIdentifier(iconStr, "drawable", requireContext().getPackageName());
+        profileAvatar.setImageResource(imageId);
     }
 
     private void openEditRegisterNumberView() {
@@ -189,7 +261,6 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             final String userName = userNameTxt.getText().toString().trim();
             final String userContactNumber = contactNumberTxt.getText().toString().trim();
             final String userNativeLanguage = nativeLanguageTxt.getText().toString().trim();
-            final int avatar = 100;
 
             DocumentReference docUserRef = userDetailsSection
                     .document(Mod.USSTU.toString())

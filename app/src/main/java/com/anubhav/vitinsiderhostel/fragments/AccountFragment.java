@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,6 +47,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
     //view declaration
     private View rootView;
+    private ImageView avatarImg;
     private MaterialTextView userNameTxt, userMailIdTxt;
     private Dialog dialog;
 
@@ -93,6 +95,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         userNameTxt = rootView.findViewById(R.id.accountPgeUserName);
         userMailIdTxt = rootView.findViewById(R.id.accountPgeUserMail);
 
+        avatarImg = rootView.findViewById(R.id.accountPgeAvatarIcon);
+
         MaterialTextView userProfileTxt = rootView.findViewById(R.id.accountPgeViewUserProfile);
         MaterialTextView publicProfileTxt = rootView.findViewById(R.id.accountPgeViewPublicProfile);
         MaterialTextView ticketHistoryTxt = rootView.findViewById(R.id.accountPgeViewTicketHistory);
@@ -139,12 +143,19 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
     private void setUserDetails() {
         if (User.getInstance() != null) {
+            setAvatar(User.getInstance().getAvatar());
             username = User.getInstance().getUserName();
             userMailId = User.getInstance().getUserMailID();
         }
 
         userNameTxt.setText(username);
         userMailIdTxt.setText(userMailId);
+    }
+
+    private void setAvatar(int icon){
+        final String iconStr = "av_"+icon;
+        int imageId = requireContext().getResources().getIdentifier(iconStr, "drawable", requireContext().getPackageName());
+        avatarImg.setImageResource(imageId);
     }
 
     // on-click listeners onUserProfileCalledListener
@@ -231,12 +242,14 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
         roomTicket.setOnClickListener(v -> {
             dialog.dismiss();
-            openRoomTickets();
+            callSnackBar("Will be available in future update");
+           // openRoomTickets();
         });
 
         blockTicket.setOnClickListener(v -> {
             dialog.dismiss();
-            openBlockTickets();
+            callSnackBar("Will be available in future update");
+           // openBlockTickets();
         });
 
         outingTicket.setOnClickListener(v -> {

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -21,7 +22,7 @@ public class ViewUserProfileFragment extends Fragment implements View.OnClickLis
 
 
     private MaterialTextView userTypeTxt, userNameTxt, userMailIdTxt, userContactNumTxt, userNativeLanguageTxt, userBranchTxt ,userRegisterNumTxt;
-
+    private ImageView avatarIcon;
     private String userType;
     private String username;
     private String userMailId;
@@ -55,6 +56,7 @@ public class ViewUserProfileFragment extends Fragment implements View.OnClickLis
         editBtn = view.findViewById(R.id.viewUserProfilePgeEdit);
         closeAccountBtn = view.findViewById(R.id.viewUserProfilePgeCloseAccount);
 
+        avatarIcon = view.findViewById(R.id.viewUserProfilePgeAvatar);
         userTypeTxt = view.findViewById(R.id.viewUserProfilePgeUserTypeTxt);
         userNameTxt = view.findViewById(R.id.viewUserProfilePgeUsernameTxt);
         userMailIdTxt = view.findViewById(R.id.viewUserProfilePgeUserMailIdTxt);
@@ -67,6 +69,7 @@ public class ViewUserProfileFragment extends Fragment implements View.OnClickLis
         closeAccountBtn.setOnClickListener(this);
 
         if (User.getInstance() != null) {
+            setAvatar(User.getInstance().getAvatar());
             userType = User.getInstance().getUserType();
             username = User.getInstance().getUserName();
             userMailId = User.getInstance().getUserMailID();
@@ -99,6 +102,12 @@ public class ViewUserProfileFragment extends Fragment implements View.OnClickLis
             DeleteAccountFragment deleteAccountFragment = new DeleteAccountFragment();
             changeFragment(deleteAccountFragment);
         }
+    }
+
+    private void setAvatar(int icon){
+        final String iconStr = "av_"+icon;
+        int imageId = requireContext().getResources().getIdentifier(iconStr, "drawable", requireContext().getPackageName());
+        avatarIcon.setImageResource(imageId);
     }
 
     private void changeFragment(Fragment fragment){
