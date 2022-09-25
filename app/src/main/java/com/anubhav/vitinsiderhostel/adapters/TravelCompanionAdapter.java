@@ -42,7 +42,7 @@ public class TravelCompanionAdapter extends RecyclerView.Adapter<TravelCompanion
         String image = "av_" + publicProfile.getAvatar();
         int imageId = context.getResources().getIdentifier(image, "drawable", context.getPackageName());
         holder.avatar.setImageResource(imageId);
-        holder.usernameTxt.setText(publicProfiles.get(position).getUserName());
+        holder.usernameTxt.setText(publicProfiles.get(position).getName());
 
     }
 

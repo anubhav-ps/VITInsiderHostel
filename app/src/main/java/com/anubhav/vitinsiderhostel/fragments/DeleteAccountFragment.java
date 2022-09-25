@@ -20,7 +20,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.enums.ErrorCode;
-import com.anubhav.vitinsiderhostel.enums.Mod;
+import com.anubhav.vitinsiderhostel.enums.Path;
 import com.anubhav.vitinsiderhostel.enums.TicketStatus;
 import com.anubhav.vitinsiderhostel.interfaces.iOnAppErrorCreated;
 import com.anubhav.vitinsiderhostel.interfaces.iOnUserAccountDeleted;
@@ -38,8 +38,8 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
 
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference feedbackSection = db.collection(Mod.FBK.toString());
-    private final CollectionReference tokenSection = db.collection(Mod.FCM.toString());
+    private final CollectionReference feedbackSection = db.collection(Path.FEEDBACKS.getPath());
+
     //string objects
     private final String deleteKey = "DeLEtE";
     // firebase auth declaration
@@ -143,15 +143,16 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
     @Override
     public void checkIfAlreadyReported(AppError appError, String message) {
         feedbackSection
-                .document(Mod.REPISSU.toString())
-                .collection(Mod.USSTU.toString()).whereEqualTo("errorCode", appError.getErrorCode()).whereEqualTo("reporter", appError.getReporter()).whereEqualTo("status", TicketStatus.BOOKED.toString())
+                .document(Path.ISSUES.getPath())
+                .collection(Path.FILES.getPath())
+                .whereEqualTo("errorCode", appError.getErrorCode()).whereEqualTo("reporter", appError.getReporter()).whereEqualTo("status", TicketStatus.BOOKED.toString())
                 .get().addOnCompleteListener(task -> {
-            boolean flag = false;
-            if (task.isSuccessful()) {
-                flag = task.getResult().size() > 0;
-            }
-            onAppErrorCreated.getQueryResult(appError, message, flag);
-        });
+                    boolean flag = false;
+                    if (task.isSuccessful()) {
+                        flag = task.getResult().size() > 0;
+                    }
+                    onAppErrorCreated.getQueryResult(appError, message, flag);
+                });
     }
 
     @Override
@@ -166,14 +167,14 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
 
     private void reportIssue(AppError appError, String message) {
         feedbackSection
-                .document(Mod.REPISSU.toString())
-                .collection(Mod.USSTU.toString())
+                .document(Path.ISSUES.getPath())
+                .collection(Path.FILES.getPath())
                 .document()
                 .set(appError).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                onAppErrorCreated.IssueReported(message);
-            }
-        });
+                    if (task.isSuccessful()) {
+                        onAppErrorCreated.IssueReported(message);
+                    }
+                });
     }
 
     @Override
@@ -227,16 +228,14 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
     private void deleteAccountID() {
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            if (FirebaseAuth.getInstance().getCurrentUser()!=null){
-                tokenSection.document(User.getInstance().getUser_Id()).delete();
-            }
             user.delete().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     progressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(getContext(), "Account deleted successfully", Toast.LENGTH_LONG).show();
                     callBackToAccountDeletion.userAccountDeleted();
                 } else {
-                    AppError appError = new AppError(ErrorCode.DF002.getErrorCode(), User.getInstance().getUserMailID());
+                    progressBar.setVisibility(View.INVISIBLE);
+                    AppError appError = new AppError(ErrorCode.DF002.getErrorCode(), User.getInstance().getUserMailId());
                     onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported,You Will Be Contacted Soon");
                 }
             }).addOnFailureListener(e -> {

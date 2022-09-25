@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.adapters.OutingHistoryRecyclerAdapter;
-import com.anubhav.vitinsiderhostel.enums.Mod;
+import com.anubhav.vitinsiderhostel.enums.Path;
 import com.anubhav.vitinsiderhostel.interfaces.iOnOutingFormDownloaded;
 import com.anubhav.vitinsiderhostel.interfaces.iOnOutingHistoryCardClicked;
 import com.anubhav.vitinsiderhostel.models.AlertDisplay;
@@ -30,6 +30,7 @@ import com.anubhav.vitinsiderhostel.models.OutingForm;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -39,7 +40,6 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,7 +52,7 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryC
 
     //firebase fire-store declaration
     private final FirebaseFirestore dB = FirebaseFirestore.getInstance();
-    private final CollectionReference outingFormSection = dB.collection(Mod.OUSEC.toString());
+    private final CollectionReference outingFormSection = dB.collection(Path.OUTING_BASE.getPath());
     private final ArrayList<OutingForm> outingForms = new ArrayList<>();
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
@@ -105,35 +105,34 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryC
     private void downloadOutingForms() {
         outingForms.clear();
         outingFormSection
-                .document(Mod.OFORM.toString())
-                .collection(Mod.DET.toString())
-                .whereEqualTo("studentMailId", User.getInstance().getUserMailID())
+                .document(Path.OUTING_FORM.getPath())
+                .collection(Path.FILES.getPath())
+                .whereEqualTo("studentMailId", User.getInstance().getUserMailId())
                 .get().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                callSnackBar(Objects.requireNonNull(task.getException()).getMessage());
-                linearLayoutLoading.setVisibility(View.GONE);
-                progressBar.setVisibility(View.GONE);
-                return;
-            }
-            if (task.getResult().isEmpty()) {
-                linearLayoutEmpty.setVisibility(View.VISIBLE);
-                linearLayoutLoading.setVisibility(View.GONE);
-                progressBar.setVisibility(View.GONE);
-                return;
-            }
-            linearLayoutLoading.setVisibility(View.GONE);
-            progressBar.setVisibility(View.GONE);
-            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                OutingForm outingForm = documentSnapshot.toObject(OutingForm.class);
-                outingForms.add(outingForm);
-                System.out.println("Ticket number : " + outingForm.getFormId());
-                onOutingFormDownloaded.outingFormDownloaded();
-            }
-        }).addOnFailureListener(e -> {
-            linearLayoutLoading.setVisibility(View.GONE);
-            progressBar.setVisibility(View.GONE);
-            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        });
+                    if (!task.isSuccessful()) {
+                        callSnackBar(Objects.requireNonNull(task.getException()).getMessage());
+                        linearLayoutLoading.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
+                        return;
+                    }
+                    if (task.getResult().isEmpty()) {
+                        linearLayoutEmpty.setVisibility(View.VISIBLE);
+                        linearLayoutLoading.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
+                        return;
+                    }
+                    linearLayoutLoading.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                        OutingForm outingForm = documentSnapshot.toObject(OutingForm.class);
+                        outingForms.add(outingForm);
+                        onOutingFormDownloaded.outingFormDownloaded();
+                    }
+                }).addOnFailureListener(e -> {
+                    linearLayoutLoading.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
 
     }
 
@@ -157,41 +156,23 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryC
 
     @Override
     public void outingHistoryCardLongPressed(int pos) {
-        OutingForm outingForm = outingForms.get(pos);
-
-        if (outingForm.getStatus().equalsIgnoreCase("APPROVED")) {
-                AlertDisplay alertDisplay = new AlertDisplay("Cannot Delete", "Outing application with approved status cannot be deleted.", getContext());
-                alertDisplay.getBuilder().setPositiveButton("Ok", null);
-                alertDisplay.display();
-                return;
-        }
-        AlertDisplay alertDisplay = new AlertDisplay("Delete Outing Form ? ", "Are you sure you want to delete this outing form ? ", getContext());
-        alertDisplay.getBuilder().setPositiveButton("Cancel", null);
-        alertDisplay.getBuilder().setNegativeButton("Yes", (dialog, which) -> outingFormSection.document(Mod.OFORM.toString()).collection(Mod.DET.toString()).document(outingForm.getFormId()).delete().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                outingForms.remove(pos);
-                if (outingForms.isEmpty()) {
-                    linearLayoutEmpty.setVisibility(View.VISIBLE);
-                } else {
-                    processRecyclerAdapter();
-                }
-            }
-        }));
+        AlertDisplay alertDisplay = new AlertDisplay("Not Allowed", "Outing applications submitted cannot be deleted.", getContext());
+        alertDisplay.getBuilder().setPositiveButton("Ok", null);
         alertDisplay.display();
     }
 
     @Override
-    public void outingHistoryViewQRCodeClicked(String code, String visitDate, String registerNumber) {
-        if (code != null) {
+    public void outingHistoryViewQRCodeClicked(String code, Timestamp timestamp, String registerNumber) {
+        if (code != null && !code.equalsIgnoreCase("0")) {
             dialog.setContentView(R.layout.dialog_qr_code);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             MaterialTextView registerNumberTxt = dialog.findViewById(R.id.dialogQRRegisterNumberTxt);
             MaterialTextView visitDateTxt = dialog.findViewById(R.id.dialogQRVisitDateTxt);
             ImageView imageView = dialog.findViewById(R.id.dialogQRCodeImg);
-
+            Date date = timestamp.toDate();
             registerNumberTxt.setText(registerNumber);
             SimpleDateFormat formatToString = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-            visitDateTxt.setText(formatToString.format(convertDateString(visitDate)));
+            visitDateTxt.setText(formatToString.format(date));
 
             MultiFormatWriter writer = new MultiFormatWriter();
             final String verifyLink = "https://us-central1-vitinsiderhostel.cloudfunctions.net/insider_hostel/verifyouting/" + code;
@@ -208,10 +189,41 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryC
         }
     }
 
+    @Override
+    public void outingHistoryCardPressed(int pos) {
+        dialog.setContentView(R.layout.dialog_view_outing_detail);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        MaterialTextView visitLocationTxt, visitPurposeTxt, visitDescriptionTxt, visitDateTxt, checkInTxt, checkOutTxt, proctorMailIdTxt;
+        ImageView closeBtn = dialog.findViewById(R.id.dialogCloseViewBtn);
+        visitLocationTxt = dialog.findViewById(R.id.dialogVisitDetailLocationTxt);
+        visitPurposeTxt = dialog.findViewById(R.id.dialogVisitDetailPurposeTxt);
+        visitDescriptionTxt = dialog.findViewById(R.id.dialogVisitDetailDescriptionTxt);
+        visitDateTxt = dialog.findViewById(R.id.dialogVisitDetailVisitDateTxt);
+        checkOutTxt = dialog.findViewById(R.id.dialogVisitDetailCheckOutTxt);
+        checkInTxt = dialog.findViewById(R.id.dialogVisitDetailCheckInTxt);
+        proctorMailIdTxt = dialog.findViewById(R.id.dialogVisitDetailProctorMailIdTxt);
+
+        OutingForm outingForm = outingForms.get(pos);
+
+        visitLocationTxt.setText(outingForm.getVisitLocation());
+        visitPurposeTxt.setText(outingForm.getVisitPurpose());
+        visitDescriptionTxt.setText(outingForm.getVisitDescription());
+        visitDateTxt.setText(outingForm.getVisitDateStr());
+        checkOutTxt.setText(outingForm.getCheckOutStr());
+        checkInTxt.setText(outingForm.getCheckInStr());
+        proctorMailIdTxt.setText(outingForm.getProctorMailId());
+
+        closeBtn.setOnClickListener(v -> dialog.dismiss());
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+
+    }
+
 
     @Override
     public void outingFormDownloaded() {
-        outingForms.sort((o1, o2) -> Long.compare(o2.getTimestamp().getSeconds(), o1.getTimestamp().getSeconds()));
+        outingForms.sort((o1, o2) -> Long.compare(o2.getTimeStamp().getSeconds(), o1.getTimeStamp().getSeconds()));
         processRecyclerAdapter();
     }
 
@@ -220,18 +232,6 @@ public class OutingHistoryFragment extends Fragment implements iOnOutingHistoryC
         Date today = new Date();
         return !(today.compareTo(visitDay) < 0 || today.compareTo(visitDay) == 0);
     }*/
-
-    private Date convertDateString(String stringDate) {
-        SimpleDateFormat formatToString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-        Date date = null;
-        try {
-            date = formatToString.parse(stringDate);
-        } catch (ParseException parseException) {
-            parseException.printStackTrace();
-        }
-        return date;
-    }
-
 
     // snack bar method
     private void callSnackBar(String message) {

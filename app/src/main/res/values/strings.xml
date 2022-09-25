@@ -58,8 +58,8 @@
     <string name="user_profile_pge_user_mail_id_txt">abc.student2019</string>
     <string name="user_profile_pge_contact_number_lbl">Contact Number</string>
     <string name="user_profile_pge_contact_num_txt">+919150472796</string>
-    <string name="user_profile_pge_native_language_lbl">Native Language</string>
-    <string name="user_profile_pge_native_language_txt">Hindi</string>
+    <string name="user_profile_pge_native_language_lbl">Native State</string>
+    <string name="user_profile_pge_native_language_txt">Odisha</string>
     <string name="user_profile_pge_branch_lbl">Branch</string>
     <string name="user_profile_pge_branch_txt"><![CDATA[Electrical & Electronics Engineering]]></string>
     <string name="user_profile_pge_edit_lbl">Edit</string>
@@ -180,7 +180,7 @@
     <string name="dialog_terms_cond_cancel_title_lbl">Cancelled</string>
     <string name="dialog_terms_cond_cancel_lbl">If the Name and Register Number in DOP does not match the details in Student Id Card (or) Student has failed to check out even 1 hr past the check out time specified.</string>
     <string name="dialog_terms_cond_rule_3_lbl">2. Even after outing is approved it can be rejected by management citing student misconduct or other reasons.</string>
-    <string name="dialog_terms_cond_rule_4_lbl">3. Misuse of outing request feature for play or fun will lead to suspension of outing for 2 month for student who applied.</string>
+    <string name="dialog_terms_cond_rule_4_lbl">3. Misuse of outing request feature for play or fun will lead to suspension of outing for 1 month for student who applied.</string>
     <string name="dialog_terms_cond_captcha_lbl">captcha</string>
     <string name="dialog_terms_cond_confirm_lbl"><![CDATA[By entering the captcha I declare, I have read and I accept the terms & condition mentioned above.]]></string>
     <string name="dialog_terms_cond_proceed_btn_txt">Proceed</string>
@@ -229,8 +229,8 @@
     <string name="dialog_edit_contact_enter_lbl">Enter new contact number</string>
     <string name="dialog_edit_username_lbl">Username</string>
     <string name="dialog_edit_enter_username_lbl">Enter new username</string>
-    <string name="dialog_edit_native_language_lbl">Native Language</string>
-    <string name="dialog_edit_enter_native_language_lbl">Enter Native Language</string>
+    <string name="dialog_edit_native_language_lbl">Native State</string>
+    <string name="dialog_edit_enter_native_language_lbl">Enter Native State</string>
 
     /*room tickets*/
     <string name="room_ticket_pge_title_lbl">Room Tickets</string>
@@ -246,18 +246,20 @@
     <string name="ora_pge_enter_name_hint">Enter Name</string>
     <string name="ora_pge_enter_name_info_lbl">Enter correct name as in your ID Card</string>
     <string name="ora_pge_register_number_lbl">Register Number</string>
-    <string name="ora_pge_mail_id_lbl">Mail ID</string>
-    <string name="ora_pge_contact_number_lbl">Contact Number</string>
+    <string name="ora_pge_mail_id_lbl">Student Email ID</string>
+    <string name="ora_pge_contact_number_lbl">Student Contact Number</string>
     <string name="ora_pge_room_detail_lbl">Room Detail</string>
     <string name="ora_pge_parent_contact_number_lbl">Parent Contact Number</string>
     <string name="ora_pge_parent_contact_number_hint">Prefix Country Code (Ex: +91)</string>
     <string name="ora_pge_visit_details_lbl">Visit Details</string>
     <string name="ora_pge_visit_location_lbl">Visit Location</string>
     <string name="ora_pge_visit_purpose_lbl">Purpose of Visit</string>
+    <string name="ora_pge_visit_description_lbl">Description</string>
     <string name="ora_pge_visit_purpose_hint">State Purpose Of Visit</string>
+    <string name="ora_pge_visit_description_hint">Few Lines of Description</string>
     <string name="ora_pge_apply_btn_txt">Apply</string>
     <string name="ora_pge_check_in_limit_lbl">*Limit for Check In is 18:00</string>
-    <string name="ora_pge_check_out_limit_lbl">*Possible Check Out Time is from 05:00 to 20:59</string>
+    <string name="ora_pge_check_out_limit_lbl">*Possible Check Out Time is from 05:00 to 17:00</string>
     <string name="ora_pge_check_out_hint">24 Hr Format</string>
     <string name="ora_pge_check_out_lbl">Check Out</string>
     <string name="ora_pge_visit_date_hint">DD/MM/YYYY</string>
@@ -288,5 +290,79 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_notice_page">NoticePageActivity</string>
+
+
+    <string-array name="visit_purpose">
+
+        <item>Select</item>
+        <item>Academic Purposes</item>
+        <item>Conference</item>
+        <item>Competition</item>
+        <item>Device Repairing</item>
+        <item>Shopping</item>
+        <item>Movie</item>
+        <item>Medical or Diagnosis</item>
+        <item>Personal Emergency</item>
+        <item>Religious Place</item>
+        <item>Visit Local Guardian</item>
+
+
+    </string-array>
+
+    <string-array name="visit_day_all">
+
+        <item>Select</item>
+        <item>Today</item>
+        <item>Tomorrow</item>
+
+    </string-array>
+
+    <string-array name="visit_day_tmrw">
+
+        <item>Select</item>
+        <item>Tomorrow</item>
+
+    </string-array>
+
+    <string-array name="native_state">
+
+        <item>Select</item>
+        <item>Andhra Pradesh</item>
+        <item>Andaman and Nicobar Islands</item>
+        <item>Arunachal Pradesh</item>
+        <item>Assam</item>
+        <item>Bihar</item>
+        <item>Chandigarh</item>
+        <item>Chhattisgarh</item>
+        <item>Dadar and Nagar Haveli</item>
+        <item>Daman and Diu</item>
+        <item>Delhi</item>
+        <item>Lakshadweep</item>
+        <item>Puducherry</item>
+        <item>Goa</item>
+        <item>Gujarat</item>
+        <item>Haryana</item>
+        <item>Himachal Pradesh</item>
+        <item>Jammu and Kashmir</item>
+        <item>Jharkhand</item>
+        <item>Karnataka</item>
+        <item>Kerala</item>
+        <item>Madhya Pradesh</item>
+        <item>Maharashtra</item>
+        <item>Manipur</item>
+        <item>Meghalaya</item>
+        <item>Mizoram</item>
+        <item>Nagaland</item>
+        <item>Odisha</item>
+        <item>Punjab</item>
+        <item>Rajasthan</item>
+        <item>Sikkim</item>
+        <item>Tamil Nadu</item>
+        <item>Telangana</item>
+        <item>Tripura</item>
+        <item>Uttar Pradesh</item>
+        <item>Uttarakhand</item>
+        <item>West Bengal</item>
+    </string-array>
 
 </resources>

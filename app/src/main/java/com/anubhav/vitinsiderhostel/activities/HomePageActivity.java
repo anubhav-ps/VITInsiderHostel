@@ -16,7 +16,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.anubhav.vitinsiderhostel.enums.FeaturedMenu;
-import com.anubhav.vitinsiderhostel.enums.Mod;
 import com.anubhav.vitinsiderhostel.enums.SettingsMenu;
 import com.anubhav.vitinsiderhostel.fragments.AccountFragment;
 import com.anubhav.vitinsiderhostel.fragments.BlockFragment;
@@ -31,10 +30,7 @@ import com.anubhav.vitinsiderhostel.notifications.AppNotification;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingService;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
 public class HomePageActivity extends AppCompatActivity implements iOnAccountMenuClicked, iOnTicketSectionClicked, iOnOutingSectionClicked, iOnNoticeActivityCalled, iOnFeaturedActivityCalled {

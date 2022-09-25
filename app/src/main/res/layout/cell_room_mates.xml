@@ -43,7 +43,7 @@
         android:text="@string/cell_room_mate_user_name_txt"
         android:textColor="#E6797979"
         android:textIsSelectable="false"
-        android:textSize="14sp">
+        android:textSize="12sp">
 
     </com.google.android.material.textview.MaterialTextView>
 

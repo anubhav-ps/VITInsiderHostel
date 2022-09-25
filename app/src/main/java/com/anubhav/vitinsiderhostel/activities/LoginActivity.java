@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,22 +20,17 @@ import androidx.core.content.ContextCompat;
 
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
-import com.anubhav.vitinsiderhostel.enums.ErrorCode;
-import com.anubhav.vitinsiderhostel.enums.Mod;
-import com.anubhav.vitinsiderhostel.enums.TicketStatus;
-import com.anubhav.vitinsiderhostel.interfaces.iOnAppErrorCreated;
+import com.anubhav.vitinsiderhostel.enums.Path;
 import com.anubhav.vitinsiderhostel.interfaces.iOnFCMTokenGenerated;
 import com.anubhav.vitinsiderhostel.interfaces.iOnNotifyDbProcess;
 import com.anubhav.vitinsiderhostel.interfaces.iOnRoomTenantListDownloaded;
-import com.anubhav.vitinsiderhostel.models.AlertDisplay;
-import com.anubhav.vitinsiderhostel.models.AppError;
 import com.anubhav.vitinsiderhostel.models.RoomTenants;
-import com.anubhav.vitinsiderhostel.models.Scramble;
 import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.anubhav.vitinsiderhostel.notifications.AppNotification;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -45,8 +40,8 @@ import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -56,19 +51,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, iOnNotifyDbProcess, iOnRoomTenantListDownloaded, iOnAppErrorCreated, iOnFCMTokenGenerated {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, iOnNotifyDbProcess, iOnRoomTenantListDownloaded, iOnFCMTokenGenerated {
 
 
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference userDetailsSection = db.collection(Mod.USD.toString());
-    private final CollectionReference hostelDetailsSection = db.collection(Mod.HOD.toString());
-    private final CollectionReference feedbackSection = db.collection(Mod.FBK.toString());
-    private final CollectionReference tokenSection = db.collection(Mod.FCM.toString());
+    private final CollectionReference accountSection = db.collection(Path.ACCOUNTS.getPath());
+    private final CollectionReference roomMatesSection = db.collection(Path.ROOM_MATES.getPath());
+    private final CollectionReference roomMatesDetailSection = db.collection(Path.ROOM_MATE_DETAILS.getPath());
+    private final CollectionReference tokenSection = db.collection(Path.FCM_TOKEN.getPath());
 
     //string objects
     private final String studentMailPattern = "@vitstudent.ac.in";
@@ -80,7 +74,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextInputEditText mailEt, passwordEt;
     private ProgressBar progressBar;
     //array list
-    private List<String> roomMatesHashList;
+    private List<String> roomMatesList;
     private String inputMail, inputPassword;
 
     //flags
@@ -91,7 +85,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //listeners
     private iOnRoomTenantListDownloaded onRoomTenantListDownloaded;
-    private iOnAppErrorCreated onAppErrorCreated;
     private iOnFCMTokenGenerated onFCMTokenGenerated;
 
 
@@ -116,7 +109,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         //listeners
         onRoomTenantListDownloaded = this;
-        onAppErrorCreated = this;
         onFCMTokenGenerated = this;
 
         // mail id change listeners
@@ -287,181 +279,170 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
     //logging user using firebase
-    private void loginUser(String mailID, String password) throws NoSuchAlgorithmException {
-
-        final String scrambleMailValue = Scramble.getScramble(mailID.toLowerCase(Locale.ROOT));
+    private void loginUser(String mailID, String password) {
 
         firebaseAuth
                 .signInWithEmailAndPassword(mailID, password)
                 .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                if (Objects.requireNonNull(firebaseAuth.getCurrentUser()).isEmailVerified()) {
 
-                                    hostelDetailsSection
-                                            .document(Mod.HOS.toString())
-                                            .collection(Mod.DET.toString())
-                                            .document(scrambleMailValue)
-                                            .get().addOnSuccessListener(documentSnapshot -> {
-                                        if (documentSnapshot.exists()) {
-                                            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                                            assert firebaseUser != null;
+                    if (task.isSuccessful()) {
 
-                                            final String currentUserMailId = firebaseUser.getEmail();
-                                            final String currentUserId = firebaseUser.getUid();
+                        if (Objects.requireNonNull(firebaseAuth.getCurrentUser()).isEmailVerified()) {
 
-                                            assert currentUserMailId != null;
+                            firebaseUser = firebaseAuth.getCurrentUser();
+                            assert firebaseUser != null;
 
-                                            DocumentReference document = userDetailsSection.document(Mod.USSTU.toString()).collection(Mod.DET.toString()).document(currentUserId);
-                                            document
-                                                    .get()
-                                                    .addOnSuccessListener(documentSnapshot1 -> {
-                                                        if (documentSnapshot1.exists()) {
+                            final String currentUserMailId = firebaseUser.getEmail();
+                            final String currentUserId = firebaseUser.getUid();
 
-                                                            final String userID = Objects.requireNonNull(documentSnapshot1.get("user_Id")).toString();
-                                                            final String userName = Objects.requireNonNull(documentSnapshot1.get("userName")).toString();
-                                                            final String userMail = Objects.requireNonNull(documentSnapshot1.get("userMailID")).toString();
-                                                            final Long userAvatar = (Long) Objects.requireNonNull(documentSnapshot1.get("avatar"));
+                            assert currentUserMailId != null;
 
-                                                            final String userContactNum = Objects.requireNonNull(documentSnapshot1.get("userContactNumber")).toString();
 
-                                                            final String userType = Objects.requireNonNull(documentSnapshot1.get("userType")).toString();
-                                                            final String studentBlock = Objects.requireNonNull(documentSnapshot1.get("studentBlock")).toString();
 
-                                                            final String studentRegisterNumber = Objects.requireNonNull(documentSnapshot1.get("studentRegisterNumber")).toString();
-                                                            final String studentBranch = Objects.requireNonNull(documentSnapshot1.get("studentBranch")).toString();
-                                                            final String studentNativeLanguage = Objects.requireNonNull(documentSnapshot1.get("studentNativeLanguage")).toString();
-                                                            final String studentRoomNo = Objects.requireNonNull(documentSnapshot1.get("roomNo")).toString();
-                                                            final String studentRoomType = Objects.requireNonNull(documentSnapshot1.get("roomType")).toString();
-                                                            final String admin = Objects.requireNonNull(documentSnapshot1.get("isAdmin")).toString();
-                                                            final boolean hasPublicProfile = (boolean) Objects.requireNonNull(documentSnapshot1.get("hasPublicProfile"));
-                                                            final String  privateDocId = Objects.requireNonNull(documentSnapshot1.get("privateProfileID")).toString();
+                            accountSection.document(Path.STUDENTS.getPath())
+                                    .collection(Path.FILES.getPath())
+                                    .document(currentUserId)
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
 
-                                                            User user = User.getInstance();
-                                                            user.setUser_Id(userID);
-                                                            user.setUserName(userName);
-                                                            user.setUserMailID(userMail);
-                                                            user.setAvatar(userAvatar.intValue());
-                                                            user.setStudentRegisterNumber(studentRegisterNumber);
-                                                            user.setUserContactNumber(userContactNum);
-                                                            user.setUserType(userType);
-                                                            user.setStudentBlock(studentBlock);
-                                                            user.setStudentBranch(studentBranch);
-                                                            user.setStudentNativeLanguage(studentNativeLanguage);
-                                                            user.setRoomNo(studentRoomNo);
-                                                            user.setRoomType(studentRoomType);
-                                                            boolean adminVal = false;
-                                                            if (admin.equalsIgnoreCase("1")) {
-                                                                adminVal = true;
+                                                User user = User.getInstance();
+
+                                                DocumentSnapshot documentSnapshot = task.getResult();
+
+                                                final String user_UID = Objects.requireNonNull(documentSnapshot.get("user_UID")).toString();
+                                                final String userMailId = Objects.requireNonNull(documentSnapshot.get("userMailId")).toString();
+                                                final String studentRegisterNumber = Objects.requireNonNull(documentSnapshot.get("studentRegisterNumber")).toString();
+                                                final String studentName = Objects.requireNonNull(documentSnapshot.get("studentName")).toString();
+                                                final String userName = Objects.requireNonNull(documentSnapshot.get("userName")).toString();
+                                                final String studentBranch = Objects.requireNonNull(documentSnapshot.get("studentBranch")).toString();
+                                                final String userContactNumber = Objects.requireNonNull(documentSnapshot.get("userContactNumber")).toString();
+                                                final String studentNativeState = Objects.requireNonNull(documentSnapshot.get("studentNativeState")).toString();
+                                                final Long nativeStateChanges = (Long) Objects.requireNonNull(documentSnapshot.get("nativeStateChanges"));
+                                                final String userType = Objects.requireNonNull(documentSnapshot.get("userType")).toString();
+                                                final Long avatar = (Long) Objects.requireNonNull(documentSnapshot.get("avatar"));
+                                                final String parentMailId = Objects.requireNonNull(documentSnapshot.get("parentMailId")).toString();
+                                                final String studentBlock = Objects.requireNonNull(documentSnapshot.get("studentBlock")).toString();
+                                                final String roomNo = Objects.requireNonNull(documentSnapshot.get("roomNo")).toString();
+                                                final Long beds = (Long) Objects.requireNonNull(documentSnapshot.get("beds"));
+                                                final boolean ac = (boolean) Objects.requireNonNull(documentSnapshot.get("ac"));
+                                                final String mess = Objects.requireNonNull(documentSnapshot.get("mess")).toString();
+                                                final boolean hasPublicProfile = (boolean) Objects.requireNonNull(documentSnapshot.get("hasPublicProfile"));
+                                                final String publicBio = Objects.requireNonNull(documentSnapshot.get("publicBio")).toString();
+                                                final Long publicColor = (Long) Objects.requireNonNull(documentSnapshot.get("publicColor"));
+                                                final String privateProfileId = Objects.requireNonNull(documentSnapshot.get("privateProfileId")).toString();
+                                                final String fcmToken = Objects.requireNonNull(documentSnapshot.get("fcmToken")).toString();
+
+                                                user.setUser_UID(user_UID);
+                                                user.setUserMailId(userMailId);
+                                                user.setStudentRegisterNumber(studentRegisterNumber);
+                                                user.setStudentName(studentName);
+                                                user.setUserName(userName);
+                                                user.setStudentBranch(studentBranch);
+                                                user.setUserContactNumber(userContactNumber);
+                                                user.setStudentNativeState(studentNativeState);
+                                                user.setNativeStateChanges(nativeStateChanges.intValue());
+                                                user.setUserType(userType);
+                                                user.setAvatar(avatar.intValue());
+                                                user.setParentMailId(parentMailId);
+                                                user.setStudentBlock(studentBlock);
+                                                user.setRoomNo(roomNo);
+                                                user.setBeds(beds.intValue());
+                                                user.setAc(ac);
+                                                user.setMess(mess);
+                                                user.setHasPublicProfile(hasPublicProfile);
+                                                user.setPublicBio(publicBio);
+                                                user.setPublicColor(publicColor.intValue());
+                                                user.setPrivateProfileId(privateProfileId);
+                                                user.setFcmToken(fcmToken);
+
+                                                localSqlDatabase = new LocalSqlDatabase(LoginActivity.this, LoginActivity.this);
+                                                assert user != null;
+                                                localSqlDatabase.addUser(user);
+
+                                                roomMatesList = new ArrayList<>();
+
+                                                roomMatesSection.document(User.getInstance().getStudentBlock())
+                                                        .collection(Path.FILES.getPath())
+                                                        .document(User.getInstance().getRoomNo())
+                                                        .get()
+                                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                                                    if (documentSnapshot.exists()) {
+                                                                        final RoomTenants tenantMailList = documentSnapshot.toObject(RoomTenants.class);
+                                                                        assert tenantMailList != null;
+                                                                        localSqlDatabase.setTotalTenants(tenantMailList.getList().size() - 1);
+                                                                        for (String t : tenantMailList.getList()) {
+                                                                            if (t.equals(User.getInstance().getUserMailId()))
+                                                                                continue;
+                                                                            roomMatesList.add(t);
+                                                                        }
+                                                                        onRoomTenantListDownloaded.notifyCompleteListDownload();
+                                                                    }
+                                                                } else {
+                                                                    progressBar.setVisibility(View.GONE);
+                                                                    callSnackBar("Room Not Found");
+                                                                }
                                                             }
-                                                            user.setAdmin(adminVal);
-                                                            user.setHasPublicProfile(hasPublicProfile);
-                                                            user.setPrivateProfileID(privateDocId);
-
-
-                                                            //Toast.makeText(LoginActivity.this,tNum , Toast.LENGTH_SHORT).show();
-
-                                                            localSqlDatabase = new LocalSqlDatabase(LoginActivity.this, LoginActivity.this);
-
-                                                            localSqlDatabase.addUser(user);
-
-                                                            String scrambleRoomValue = "";
-
-                                                            try {
-                                                                scrambleRoomValue = Scramble.getScramble(studentRoomNo);
-                                                            } catch (NoSuchAlgorithmException e) {
-                                                                e.printStackTrace();
-                                                            }
-
-                                                            roomMatesHashList = new ArrayList<>();
-                                                            hostelDetailsSection
-                                                                    .document(Mod.HOT.toString())
-                                                                    .collection(Mod.getBlock(studentBlock))
-                                                                    .document(scrambleRoomValue)
-                                                                    .get()
-                                                                    .addOnCompleteListener(
-                                                                            task12 -> {
-                                                                                if (task12.isSuccessful()) {
-                                                                                    DocumentSnapshot documentSnapshot22 = task12.getResult();
-                                                                                    if (documentSnapshot22.exists()) {
-                                                                                        final RoomTenants tenantHashMailList = documentSnapshot22.toObject(RoomTenants.class);
-                                                                                        assert tenantHashMailList != null;
-                                                                                        localSqlDatabase.setTotalTenants(tenantHashMailList.getList().size() - 1);
-                                                                                        for (String t : tenantHashMailList.getList()) {
-                                                                                            if (t.equals(scrambleMailValue))
-                                                                                                continue;
-                                                                                            roomMatesHashList.add(t);
-                                                                                        }
-
-                                                                                    }
-                                                                                }
-                                                                                onRoomTenantListDownloaded.notifyCompleteListDownload();
-                                                                            }
-                                                                    );
-
-                                                        } else {
-                                                            progressBar.setVisibility(View.INVISIBLE);
-                                                            callSnackBar("User Record Not Found");
-                                                        }
-                                                    })
-                                                    .addOnFailureListener(e -> {
-                                                        progressBar.setVisibility(View.INVISIBLE);
-                                                        callSnackBar(e.getMessage());
-                                                    });
-                                        } else {
-                                            // in case user  record doesn't match with the hostlers section
-                                            progressBar.setVisibility(View.INVISIBLE);
-                                            AlertDisplay alertDisplay = new AlertDisplay("ERROR CODE " + ErrorCode.LA001.getErrorCode(), ErrorCode.LA001.getErrorMessage(), LoginActivity.this);
-                                            alertDisplay.getBuilder().setPositiveButton("But I'm Hosteler", (dialogInterface, i) -> {
-                                                AppError appError = new AppError(ErrorCode.RA001.getErrorCode(), mailID);
-                                                onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported,You Will Be Contacted Soon");
-                                            });
-                                            alertDisplay.getBuilder().setNegativeButton("Back", null);
-                                            alertDisplay.display();
+                                                        }).addOnFailureListener(LoginActivity.this::onFailure);
+                                            } else {
+                                                progressBar.setVisibility(View.GONE);
+                                                callSnackBar("User Record Not Found");
+                                            }
                                         }
-                                    }).addOnFailureListener(e -> {
-                                        progressBar.setVisibility(View.INVISIBLE);
-                                        callSnackBar(e.getMessage());
-                                    });
+                                    }).addOnFailureListener(this::onFailure);
 
-
-                                } else {
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                    //Display an alert dialog for  not verifying the mail ID
-                                    MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(
-                                            LoginActivity.this);
-                                    materialAlertDialogBuilder.setTitle("Not Verified User");
-                                    materialAlertDialogBuilder.setMessage("Verify the link sent to your V.I.T mail during registration");
-                                    materialAlertDialogBuilder.setPositiveButton("Resend Verification Link", (dialog, which) -> {
-                                        //second onComplete listener
-                                        Objects.requireNonNull(firebaseAuth.getCurrentUser())
-                                                .sendEmailVerification()
-                                                .addOnCompleteListener(task1 -> {
-
-                                                    //goTo login activity on successful email verification
-                                                    if (task1.isSuccessful()) {
-                                                        //create intent for going to login activity
-                                                        new MaterialAlertDialogBuilder(LoginActivity.this)
-                                                                .setTitle("Verification Link has been sent")
-                                                                .setMessage("Please check your V.I.T mail for verification, and then login again").show();
-                                                    } else {
-                                                        callSnackBar(Objects.requireNonNull(task1.getException()).getMessage());
-                                                    }
-                                                });
-                                    });
-                                    materialAlertDialogBuilder.setNegativeButton("Ok", (dialog, which) -> {
-
-                                    });
-                                    materialAlertDialogBuilder.show();
-                                }
-                            } else {
-                                progressBar.setVisibility(View.INVISIBLE);
-                                callSnackBar(Objects.requireNonNull(task.getException()).getMessage());
-                            }
+                        } else {
+                            // prompt to verify mail
+                            promptVerifyMail();
                         }
-                ).addOnFailureListener(e -> {
-            progressBar.setVisibility(View.INVISIBLE);
-            callSnackBar(e.getMessage());
+                    }
+                })
+                .addOnFailureListener(this::onFailure);
+    }
+
+    private void onFailure(Exception e) {
+        progressBar.setVisibility(View.INVISIBLE);
+        callSnackBar(e.getMessage());
+    }
+
+    private void promptVerifyMail() {
+        progressBar.setVisibility(View.INVISIBLE);
+        //Display an alert dialog for  not verifying the mail ID
+        MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(
+                LoginActivity.this);
+        materialAlertDialogBuilder.setTitle("Not Verified User");
+        materialAlertDialogBuilder.setMessage("Verify the link sent to your V.I.T mail during registration");
+        materialAlertDialogBuilder.setPositiveButton("Resend Verification Link", (dialog, which) -> {
+            //second onComplete listener
+            Objects.requireNonNull(firebaseAuth.getCurrentUser())
+                    .sendEmailVerification()
+                    .addOnCompleteListener(task1 -> {
+
+                        //goTo login activity on successful email verification
+                        if (task1.isSuccessful()) {
+                            //create intent for going to login activity
+                            new MaterialAlertDialogBuilder(LoginActivity.this)
+                                    .setTitle("Verification Link has been sent")
+                                    .setMessage("Please check your V.I.T mail for verification, and then login again")
+                                    .setPositiveButton("ok",null)
+                                    .setCancelable(false)
+                                    .show();
+                        } else {
+                            callSnackBar(Objects.requireNonNull(task1.getException()).getMessage());
+                        }
+                    });
         });
+        materialAlertDialogBuilder.setNegativeButton("Ok", (dialog, which) -> {
+
+        });
+        materialAlertDialogBuilder.setCancelable(false);
+        materialAlertDialogBuilder.show();
     }
 
 
@@ -477,13 +458,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Map<String, Object> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
         tokenMap.put("lastUpdated", new Timestamp(new Date()));
-        tokenSection.document(User.getInstance().getUser_Id()).set(tokenMap).addOnCompleteListener(task -> {
+        tokenSection.document(User.getInstance().getUser_UID()).set(tokenMap).addOnCompleteListener(task -> {
 
-            if(!task.isSuccessful()){
+            if (!task.isSuccessful()) {
                 progressBar.setVisibility(View.INVISIBLE);
                 callSnackBar("Try logging in again after sometime");
                 logoutUser();
-            }else{
+            } else {
                 progressBar.setVisibility(View.INVISIBLE);
                 onFCMTokenGenerated.onTokenPushed();
             }
@@ -508,14 +489,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void uploadToken() {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
-                if (!task.isSuccessful()){
-                    progressBar.setVisibility(View.INVISIBLE);
-                    callSnackBar(Objects.requireNonNull(task.getException()).getMessage());
-                    callSnackBar("Try logging in again after sometime");
-                    logoutUser();
-                }else{
-                     onFCMTokenGenerated.onTokenGenerated(task.getResult());
-                }
+            if (!task.isSuccessful()) {
+                progressBar.setVisibility(View.INVISIBLE);
+                callSnackBar(Objects.requireNonNull(task.getException()).getMessage());
+                callSnackBar("Try logging in again after sometime");
+                logoutUser();
+            } else {
+                onFCMTokenGenerated.onTokenGenerated(task.getResult());
+            }
         }).addOnFailureListener(e -> {
             progressBar.setVisibility(View.INVISIBLE);
             callSnackBar(e.getMessage());
@@ -523,12 +504,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             logoutUser();
         });
     }
+
     @Override
     public void notifyUserUpdated() {
 
     }
 
-    private void logoutUser(){
+    private void logoutUser() {
         FirebaseAuth.getInstance().signOut();
         localSqlDatabase.deleteAllTenants();
         localSqlDatabase.deleteCurrentUser();
@@ -536,11 +518,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void notifyCompleteListDownload() {
-        for (String mailHash : roomMatesHashList) {
-            hostelDetailsSection
-                    .document(Mod.TED.toString())
-                    .collection(Mod.DET.toString())
-                    .document(mailHash)
+        for (String mail : roomMatesList) {
+            roomMatesDetailSection
+                    .document(mail)
                     .get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
@@ -552,49 +532,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         }
                     });
         }
-        roomMatesHashList.clear();
+        roomMatesList.clear();
     }
 
-    @Override
-    public void checkIfAlreadyReported(AppError appError, String message) {
-        feedbackSection
-                .document(Mod.REPISSU.toString())
-                .collection(Mod.USSTU.toString()).whereEqualTo("errorCode", appError.getErrorCode()).whereEqualTo("reporter", appError.getReporter()).whereEqualTo("status", TicketStatus.BOOKED.toString())
-                .get().addOnCompleteListener(task -> {
-            boolean flag = false;
-            if (task.isSuccessful()) {
-                flag = task.getResult().size() > 0;
-            }
-            onAppErrorCreated.getQueryResult(appError, message, flag);
-        });
-    }
-
-    @Override
-    public void getQueryResult(AppError appError, String message, boolean flag) {
-        if (flag) {
-            callSnackBar("Issue has already been reported");
-        } else {
-            reportIssue(appError, message);
-        }
-    }
-
-
-    private void reportIssue(AppError appError, String message) {
-        feedbackSection
-                .document(Mod.REPISSU.toString())
-                .collection(Mod.USSTU.toString())
-                .document()
-                .set(appError).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                onAppErrorCreated.IssueReported(message);
-            }
-        });
-    }
-
-    @Override
-    public void IssueReported(String message) {
-        callSnackBar(message);
-    }
 
     // snack bar method
     private void callSnackBar(String message) {
@@ -610,8 +550,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
-        firebaseUser = firebaseAuth.getCurrentUser();
         firebaseAuth.addAuthStateListener(authStateListener);
+        firebaseUser = firebaseAuth.getCurrentUser();
     }
 
     @Override
@@ -621,7 +561,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             firebaseAuth.removeAuthStateListener(authStateListener);
         }
     }
-
 
 
 }

@@ -17,10 +17,10 @@ import androidx.fragment.app.DialogFragment;
 
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.models.Tenant;
-import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
 
+import java.util.Locale;
 import java.util.Objects;
 
 public class ViewTenantDialog extends DialogFragment implements View.OnClickListener {
@@ -48,8 +48,9 @@ public class ViewTenantDialog extends DialogFragment implements View.OnClickList
         MaterialTextView userNameTxt = view.findViewById(R.id.dialogTenantName);
         MaterialTextView mailIdTxt = view.findViewById(R.id.dialogTenantMail);
         MaterialTextView contactNumTxt = view.findViewById(R.id.dialogTenantContactNum);
-        MaterialTextView nativeLanguageTxt = view.findViewById(R.id.dialogTenantNativeLanguage);
+        MaterialTextView nativeStateTxt = view.findViewById(R.id.dialogTenantNativeState);
         MaterialTextView branchTxt = view.findViewById(R.id.dialogTenantBranch);
+        MaterialTextView messTxt = view.findViewById(R.id.dialogTenantMess);
 
         backButton.setOnClickListener(this);
         copyMailId.setOnClickListener(this);
@@ -60,11 +61,19 @@ public class ViewTenantDialog extends DialogFragment implements View.OnClickList
             Objects.requireNonNull(getDialog()).dismiss();
         }
 
-        userNameTxt.setText(tenant.getTenantUserName());
+        String name = transformText(tenant.getTenantName().split(" "));
+        userNameTxt.setText(name);
         mailIdTxt.setText(tenant.getTenantMailID());
-        contactNumTxt.setText(tenant.getTenantContactNumber());
-        nativeLanguageTxt.setText(tenant.getTenantNativeLanguage());
+        String contactNumber = tenant.getTenantContactNumber();
+        String contact = contactNumber==null ? "N/A" : contactNumber;
+        contactNumTxt.setText(contact);
+        String nativeState = tenant.getTenantNativeState();
+        String nativeS = contactNumber==null ? "N/A" : nativeState;
+        nativeStateTxt.setText(nativeS);
         branchTxt.setText(tenant.getTenantBranch());
+        messTxt.setText(tenant.getTenantMess());
+
+        this.setCancelable(false);
 
         return view;
     }
@@ -91,7 +100,7 @@ public class ViewTenantDialog extends DialogFragment implements View.OnClickList
 
     private void callTenant() {
         if (tenant.getTenantContactNumber() != null) {
-            if (tenant.getTenantContactNumber() != null && !Objects.requireNonNull(tenant.getTenantContactNumber()).equalsIgnoreCase("N/A") && !tenant.getTenantMailID().equalsIgnoreCase(User.getInstance().getUserMailID())) {
+            if (tenant.getTenantContactNumber() != null && !Objects.requireNonNull(tenant.getTenantContactNumber()).equalsIgnoreCase("N/A") && !tenant.getTenantContactNumber().isEmpty()) {
                 Intent intent = new Intent(Intent.ACTION_DIAL,
                         Uri.parse("tel:()" + tenant.getTenantContactNumber()));
                 requireActivity().startActivity(intent);
@@ -101,17 +110,38 @@ public class ViewTenantDialog extends DialogFragment implements View.OnClickList
         }
     }
 
+    private String transformText(String[] words) {
+        StringBuilder name = new StringBuilder();
+        for (String w : words) {
+            String n = firstCaps(w) + " ";
+            name.append(n);
+        }
+        return name.toString();
+    }
+
+    private String firstCaps(String name) {
+        name = name.toLowerCase(Locale.ROOT);
+        char[] arr = name.toCharArray();
+        arr[0] = String.valueOf(arr[0]).toUpperCase(Locale.ROOT).charAt(0);
+        return String.valueOf(arr);
+    }
+
     private Tenant extractTenantFromBundle() {
         Bundle args = getArguments();
         if (args != null) {
-            String tenantName = args.getString("tenantName");
+            String tenantName = args.getString("tenantStudentName");
             String tenantMailId = args.getString("tenantMailId");
             String tenantContactNumber = args.getString("tenantContactNumber");
-            String tenantNativeLanguage = args.getString("tenantNativeLanguage");
+            String tenantNativeState = args.getString("tenantNativeState");
             String tenantBranch = args.getString("tenantBranch");
-            return new Tenant(tenantName, tenantMailId,0, tenantContactNumber, tenantNativeLanguage, tenantBranch);
+            String tenantMess = args.getString("tenantMess");
+            return new Tenant(tenantMailId, tenantName, tenantContactNumber, tenantNativeState, tenantBranch, 100, tenantMess);
         }
         return new Tenant();
     }
 
+    @Override
+    public void setCancelable(boolean cancelable) {
+        super.setCancelable(cancelable);
+    }
 }

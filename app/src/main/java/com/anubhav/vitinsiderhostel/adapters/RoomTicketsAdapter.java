@@ -51,7 +51,7 @@ public class RoomTicketsAdapter extends RecyclerView.Adapter<RoomTicketsAdapter.
         String dateString = formatToString.format(model.getItemTimeStamp().toDate());
         final String raisedOn = "Raised on : " + dateString;
         String raisedBy = "Raised by : ";
-        if (model.getUploaderMailId().equalsIgnoreCase(User.getInstance().getUserMailID())) {
+        if (model.getUploaderMailId().equalsIgnoreCase(User.getInstance().getUserMailId())) {
             raisedBy = raisedBy + "You";
         } else {
             raisedBy = raisedBy + model.getUploaderMailId();

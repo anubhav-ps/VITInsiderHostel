@@ -2,7 +2,6 @@ package com.anubhav.vitinsiderhostel.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.adapters.TravelCompanionAdapter;
-import com.anubhav.vitinsiderhostel.enums.Mod;
 import com.anubhav.vitinsiderhostel.interfaces.iOnTrainNumberDownloaded;
 import com.anubhav.vitinsiderhostel.models.AlertDisplay;
 import com.anubhav.vitinsiderhostel.models.IRCTC;
@@ -29,33 +28,26 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 public class TravelCompanionHomeFragment extends Fragment implements View.OnClickListener, iOnTrainNumberDownloaded {
 
 
     //firebase fireStore
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    /*private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference travelSection = db.collection(Mod.TRAVEL.toString());
-    private final CollectionReference publicSection = db.collection(Mod.PUBL.toString());
+    private final CollectionReference publicSection = db.collection(Mod.PUBL.toString());*/
 
     private final OkHttpClient client = new OkHttpClient();
     private final Gson gson = new Gson();
@@ -67,11 +59,6 @@ public class TravelCompanionHomeFragment extends Fragment implements View.OnClic
     private MaterialButton searchBtn, joinNetworkBtn, createNJoinNetworkBtn, exitNetworkBtn;
     private int travelMode = 0;  // 0 - train , 1 - flight
     private MaterialTextView trainNameTitleTxt, trainNameTxt;
-
-
-
-
-
 
 
     private ProgressBar progressBar;
@@ -101,6 +88,7 @@ public class TravelCompanionHomeFragment extends Fragment implements View.OnClic
         chooseTravelMode = rootView.findViewById(R.id.travelPgeRadioGrp);
         trainBtn = rootView.findViewById(R.id.travelPgeTrainRadioBtn);
         flightBtn = rootView.findViewById(R.id.travelPgeFlightRadioBtn);
+        flightBtn.setClickable(false);
 
         trainPnrET = rootView.findViewById(R.id.travelPgeTrainPnrNumberEt);
 
@@ -152,14 +140,14 @@ public class TravelCompanionHomeFragment extends Fragment implements View.OnClic
         if (id == R.id.travelPgeSearchBtn) {
             processSearch(travelMode);
         } else if (id == R.id.travelPgeCreateNJoinNetworkBtn) {
-            if (!User.getInstance().isHasPublicProfile()) {
+            if (!User.getInstance().getHasPublicProfile()) {
                 AlertDisplay alertDisplay = new AlertDisplay("Enable Public Profile", "To Join the network enable public profile.Open Account Page -> Public Profile.", getContext());
                 alertDisplay.displayAlert();
                 return;
             }
             createNJoinNetwork(PNR_RESULT.getData().getTrain_number(), PNR_RESULT.getData().getJourney_date());
         } else if (id == R.id.travelPgeJoinNetworkBtn) {
-            if (!User.getInstance().isHasPublicProfile()) {
+            if (!User.getInstance().getHasPublicProfile()) {
                 AlertDisplay alertDisplay = new AlertDisplay("Enable Public Profile", "To Join the network enable public profile.Open Account Page -> Public Profile.", getContext());
                 alertDisplay.displayAlert();
                 return;
@@ -177,10 +165,11 @@ public class TravelCompanionHomeFragment extends Fragment implements View.OnClic
     }
 
     private void processSearch(int travelMode) {
+        callSnackBar("Feature has been locked");
         exitNetworkBtn.setVisibility(View.GONE);
         joinNetworkBtn.setVisibility(View.GONE);
         createNJoinNetworkBtn.setVisibility(View.GONE);
-        if (travelMode == 0) {
+       /* if (travelMode == 0) {
 
             String pnrInput = Objects.requireNonNull(trainPnrET.getText()).toString().trim();
 
@@ -208,8 +197,7 @@ public class TravelCompanionHomeFragment extends Fragment implements View.OnClic
 
             //todo hard-edit
             //downloadPNRStatus(pnrInput);
-        }
-
+        }*/
 
     }
 
@@ -223,7 +211,7 @@ public class TravelCompanionHomeFragment extends Fragment implements View.OnClic
         client.newCall(request).enqueue(new Callback() {
 
             @Override
-            public void onFailure(Request request, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 requireActivity().runOnUiThread(() -> {
                     onTrainNumberDownloaded.hideAllViews();
                 });
@@ -231,13 +219,15 @@ public class TravelCompanionHomeFragment extends Fragment implements View.OnClic
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+
                 if (!response.isSuccessful()) {
                     requireActivity().runOnUiThread(() -> {
                         onTrainNumberDownloaded.hideAllViews();
                     });
                     callSnackBar("Invalid PNR Number");
                 } else {
+                    assert response.body() != null;
                     PNR_Result pnr_result = gson.fromJson(response.body().charStream(), PNR_Result.class);
                     if (!pnr_result.getStatus()) {
                         requireActivity().runOnUiThread(() -> {
@@ -251,9 +241,22 @@ public class TravelCompanionHomeFragment extends Fragment implements View.OnClic
                             onTrainNumberDownloaded.checkForTrainNoExistence(pnr_result.getData().getTrain_number(), pnr_result.getData().getJourney_date());
                         });
                     }
-
                 }
 
+        /*    @Override
+            public void onFailure(Request request, IOException e) {
+                requireActivity().runOnUiThread(() -> {
+                    onTrainNumberDownloaded.hideAllViews();
+                });
+                callSnackBar("Network Failure,Try again later");
+            }*/
+
+          /*  @Override
+            public void onResponse(Response response) throws IOException {
+
+
+                }
+*/
             }
 
         });
@@ -287,7 +290,7 @@ public class TravelCompanionHomeFragment extends Fragment implements View.OnClic
     @Override
     public void checkForTrainNoExistence(String trainNo, String date) {
         String newDate = date.replace("/", "");
-        travelSection
+       /* travelSection
                 .document(Mod.TRAIN.toString())
                 .collection(newDate).document(trainNo).get().addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
@@ -313,26 +316,26 @@ public class TravelCompanionHomeFragment extends Fragment implements View.OnClic
                 joinNetworkBtn.setVisibility(View.GONE);
                 createNJoinNetworkBtn.setVisibility(View.VISIBLE);
             }
-        });
+        });*/
     }
 
     @Override
     public void downloadPublicProfile(TravelNetworkList travelNetworkList) {
-        allCompanions.clear();
+      /*  allCompanions.clear();
         progressBar.setVisibility(View.VISIBLE);
         final String userMailID = User.getInstance().getUserMailID();
         for (String mailId : travelNetworkList.getList()) {
             if (mailId.equalsIgnoreCase(userMailID)) {
                 continue;
             }
-            publicSection.document(mailId).get().addOnCompleteListener(task -> {
+          *//*  publicSection.document(mailId).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     PublicProfile publicProfile = task.getResult().toObject(PublicProfile.class);
                     allCompanions.add(publicProfile);
                 }
                 onTrainNumberDownloaded.publicProfileDownloaded();
-            });
-        }
+            });*//*
+        }*/
     }
 
     @Override
@@ -350,7 +353,7 @@ public class TravelCompanionHomeFragment extends Fragment implements View.OnClic
         alertDisplay.getBuilder().setNegativeButton("Join Network", (dialog, which) -> {
 
             String newDate = date.replace("/", "");
-            travelSection
+         /*   travelSection
                     .document(Mod.TRAIN.toString())
                     .collection(newDate).document(trainNo).update("list", FieldValue.arrayUnion(User.getInstance().getUserMailID())).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -359,7 +362,7 @@ public class TravelCompanionHomeFragment extends Fragment implements View.OnClic
                     exitNetworkBtn.setVisibility(View.VISIBLE);
                     callSnackBar("You have been added to the network");
                 }
-            }).addOnFailureListener(e -> callSnackBar(e.getMessage()));
+            }).addOnFailureListener(e -> callSnackBar(e.getMessage()));*/
 
         });
         alertDisplay.display();
@@ -369,11 +372,11 @@ public class TravelCompanionHomeFragment extends Fragment implements View.OnClic
 
     private void createNJoinNetwork(String trainNo, String date) {
 
-        AlertDisplay alertDisplay = new AlertDisplay("Join the Network ?", "Other users in the network will be able to find you and ping.Lets you ping other users in the network", getContext());
+      /*  AlertDisplay alertDisplay = new AlertDisplay("Join the Network ?", "Other users in the network will be able to find you and ping.Lets you ping other users in the network", getContext());
         alertDisplay.getBuilder().setPositiveButton("Cancel", null);
         alertDisplay.getBuilder().setNegativeButton("Join Network", (dialog, which) -> {
             String newDate = date.replace("/", "");
-            String[] mails = new String[]{User.getInstance().getUserMailID()};
+            String[] mails = new String[]{User.getInstance().getUserMailId()};
             Map<String, Object> list = new HashMap<>();
             list.put("list", Arrays.asList(mails));
             travelSection
@@ -387,11 +390,11 @@ public class TravelCompanionHomeFragment extends Fragment implements View.OnClic
                 }
             }).addOnFailureListener(e -> callSnackBar(e.getMessage()));
         });
-        alertDisplay.display();
+        alertDisplay.display();*/
     }
 
     private void exitNetwork(String trainNo, String date) {
-        System.out.println(trainNo + " - " + date);
+      /*  System.out.println(trainNo + " - " + date);
         AlertDisplay alertDisplay = new AlertDisplay("Leave the Network ?", "Other users will not be able to find or ping you anymore in the network.", getContext());
         alertDisplay.getBuilder().setPositiveButton("Cancel", null);
         alertDisplay.getBuilder().setNegativeButton("Leave Network", (dialog, which) -> {
@@ -406,7 +409,7 @@ public class TravelCompanionHomeFragment extends Fragment implements View.OnClic
             }).addOnFailureListener(e -> callSnackBar(e.getMessage()));
         });
         alertDisplay.display();
-
+*/
 
     }
 

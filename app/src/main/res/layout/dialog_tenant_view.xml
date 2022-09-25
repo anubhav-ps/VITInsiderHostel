@@ -30,16 +30,18 @@
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/duru_sans"
+            android:fontFamily="@font/cabin_medium"
             android:padding="2dp"
-            android:text="@string/user_profile_pge_username_lbl"
+            android:text="Student Name"
             android:textColor="#E6626161" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dialogTenantName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:fontFamily="sans-serif"
+            android:inputType="textMultiLine"
             android:padding="2dp"
             android:text="@string/user_profile_pge_username_txt"
             android:textColor="#E6626161"
@@ -58,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:fontFamily="@font/duru_sans"
+            android:fontFamily="@font/cabin_medium"
             android:padding="2dp"
             android:text="@string/user_profile_pge_user_mail_id_lbl"
             android:textColor="#E6626161" />
@@ -108,7 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:fontFamily="@font/duru_sans"
+            android:fontFamily="@font/cabin_medium"
             android:padding="2dp"
             android:text="@string/user_profile_pge_contact_number_lbl"
             android:textColor="#E6626161" />
@@ -125,6 +127,7 @@
                 android:id="@+id/dialogTenantContactNum"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:layout_weight="90"
                 android:fontFamily="sans-serif"
                 android:padding="2dp"
@@ -158,15 +161,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:fontFamily="@font/duru_sans"
+            android:fontFamily="@font/cabin_medium"
             android:padding="2dp"
             android:text="@string/user_profile_pge_native_language_lbl"
             android:textColor="#E6626161" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/dialogTenantNativeLanguage"
+            android:id="@+id/dialogTenantNativeState"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:fontFamily="sans-serif"
             android:padding="2dp"
             android:text="@string/user_profile_pge_native_language_txt"
@@ -185,7 +189,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:fontFamily="@font/duru_sans"
+            android:fontFamily="@font/cabin_medium"
             android:padding="2dp"
             android:text="@string/user_profile_pge_branch_lbl"
             android:textColor="#E6626161" />
@@ -194,9 +198,38 @@
             android:id="@+id/dialogTenantBranch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:fontFamily="sans-serif"
             android:padding="2dp"
             android:text="@string/user_profile_pge_branch_txt"
+            android:textColor="#E6626161"
+            android:textSize="14sp">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/darker_gray" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:fontFamily="@font/cabin_medium"
+            android:padding="2dp"
+            android:text="Mess"
+            android:textColor="#E6626161" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/dialogTenantMess"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:fontFamily="sans-serif"
+            android:padding="2dp"
+            android:text="NON-VEG"
             android:textColor="#E6626161"
             android:textSize="14sp">
 

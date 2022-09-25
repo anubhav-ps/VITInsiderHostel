@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="8dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="12dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="6dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:fontFamily="@font/open_sans_semibold"
+                android:paddingStart="18dp"
+                android:paddingEnd="38dp"
+                android:text="Visit Detail"
+                android:textColor="@color/light_theme_green"
+                android:textSize="26sp">
+
+            </com.google.android.material.textview.MaterialTextView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:paddingEnd="18dp"
+                android:gravity="center_vertical|end"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/dialogCloseViewBtn"
+                    style="@style/ForArrowTheme"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_margin="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/ic_baseline_close_24"
+                    app:tint="@color/light_theme_green">
+
+                </ImageView>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="1dp"
+                android:layout_marginEnd="1dp"
+                android:orientation="vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="2dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/average_sans"
+                    android:text="Visit Location"
+                    android:textColor="@color/text_01"
+                    android:textSize="14sp">
+
+                </com.google.android.material.textview.MaterialTextView>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/dialogVisitDetailLocationTxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="VIT Vellore Campus"
+                    android:textColor="@color/text_01"
+                    android:textSize="12sp">
+
+                </com.google.android.material.textview.MaterialTextView>
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/average_sans"
+                    android:text="Visit Purpose"
+                    android:textColor="@color/text_01"
+                    android:textSize="14sp">
+
+                </com.google.android.material.textview.MaterialTextView>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/dialogVisitDetailPurposeTxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="For Tech Fest"
+                    android:textColor="@color/text_01"
+                    android:textSize="12sp">
+
+                </com.google.android.material.textview.MaterialTextView>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/average_sans"
+                    android:text="Visit Description"
+                    android:textColor="@color/text_01"
+                    android:textSize="14sp">
+
+                </com.google.android.material.textview.MaterialTextView>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/dialogVisitDetailDescriptionTxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="sans-serif-light"
+                    android:inputType="textMultiLine"
+                    android:text="For Tech Fest"
+                    android:textColor="@color/text_01"
+                    android:textSize="12sp">
+
+                </com.google.android.material.textview.MaterialTextView>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:fontFamily="@font/average_sans"
+                        android:paddingEnd="8dp"
+                        android:text="Date of Visit"
+                        android:textColor="@color/text_01"
+                        android:textSize="14sp">
+
+                    </com.google.android.material.textview.MaterialTextView>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/dialogVisitDetailVisitDateTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="sans-serif-light"
+                        android:text="Thu, Sept 29 2022"
+                        android:textColor="@color/text_01"
+                        android:textSize="12sp">
+
+                    </com.google.android.material.textview.MaterialTextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:fontFamily="@font/average_sans"
+                            android:paddingEnd="8dp"
+                            android:text="Check Out"
+                            android:textColor="@color/text_01"
+                            android:textSize="14sp">
+
+                        </com.google.android.material.textview.MaterialTextView>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/dialogVisitDetailCheckOutTxt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="2dp"
+                            android:fontFamily="sans-serif-light"
+                            android:text="10:30"
+                            android:textColor="@color/text_01"
+                            android:textSize="12sp">
+
+                        </com.google.android.material.textview.MaterialTextView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:fontFamily="@font/average_sans"
+                            android:paddingEnd="8dp"
+                            android:text="Check In"
+                            android:textColor="@color/text_01"
+                            android:textSize="14sp">
+
+                        </com.google.android.material.textview.MaterialTextView>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/dialogVisitDetailCheckInTxt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="2dp"
+                            android:fontFamily="sans-serif-light"
+                            android:text="12:30"
+                            android:textColor="@color/text_01"
+                            android:textSize="12sp">
+
+                        </com.google.android.material.textview.MaterialTextView>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="@font/average_sans"
+                    android:text="Proctor Mail Id"
+                    android:textColor="@color/text_01"
+                    android:textSize="14sp">
+
+                </com.google.android.material.textview.MaterialTextView>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/dialogVisitDetailProctorMailIdTxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="For Tech Fest"
+                    android:textColor="@color/text_01"
+                    android:textSize="12sp">
+
+                </com.google.android.material.textview.MaterialTextView>
+
+
+            </LinearLayout>
+
+
+        </ScrollView>
+
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

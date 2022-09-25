@@ -1,3 +1,4 @@
+/*
 package com.anubhav.vitinsiderhostel.enums;
 
 import androidx.annotation.NonNull;
@@ -46,6 +47,34 @@ public enum Mod {
 
     TRAVEL("-93-11726-3220806579-44-2-98321022-104-102"),
     FLIGHT("3380-123-48-69-35-14-98-107-93188511416-4844"),
+
+
+    FILES("FILES"),
+    FCM_TOKEN("FCM_TOKEN"),
+
+    OUTING_BASE("OUTING_BASE"),
+    CLIENT_OUTING_Q("LEVEL_1"),   //Security -> allow create,read , deny update and delete  // done
+    OUTING_FORM("LEVEL_2"),       //Security -> allow read , deny write                     // done
+    OUTING_RECORDS("LEVEL_3"),    //Security -> allow read , deny write                     // done
+    PROCTOR_AUTH_CODE("LEVEL_4"), //Security -> deny read and write                         // done
+    PARENT_AUTH_CODE("LEVEL_5"),  //Security -> deny read and write                         // done
+    VERIFY_PARENT_AUTH("LEVEL_6"), //Security -> allow create , deny read , update , delete  // done
+    FORM_AUTH_CODE("LEVEL_7"),
+    CHIEF_STATUS_Q("LEVEL_8"),
+
+
+    //OUTING_BASE/LEVEL_4/FILES
+    // OUTING BASE/LEVEL_8/FILES
+    //OUTING_BASE/LEVEL_1/FILES
+    //OUTING_BASE/LEVEL_7/FILES
+
+    PROCTOR("PROCTOR"),
+    PROCTOR_MAIL("LEVEL_1"),
+
+    //PROCTOR/LEVEL_1/FILES
+    //OUTING_BASE/LEVEL_4/FILES
+
+
     TRAIN("-49114669151-57-68-58-47105437-109-31-88-79");
 
 
@@ -63,16 +92,5 @@ public enum Mod {
     }
 
 
-    public static String getBlock(String value){
-        if (value.equalsIgnoreCase("A")){
-            return BLA.toString();
-        }else if (value.equalsIgnoreCase("B")){
-            return BLB.toString();
-        }else if (value.equalsIgnoreCase("C")){
-            return BLC.toString();
-        }else{
-            return BLD.toString();
-        }
-    }
-
 }
+*/

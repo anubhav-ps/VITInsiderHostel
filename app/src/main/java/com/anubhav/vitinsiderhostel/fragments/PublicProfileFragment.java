@@ -13,27 +13,24 @@ import androidx.fragment.app.Fragment;
 
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
-import com.anubhav.vitinsiderhostel.enums.Mod;
+import com.anubhav.vitinsiderhostel.enums.Path;
 import com.anubhav.vitinsiderhostel.interfaces.iOnNotifyDbProcess;
-import com.anubhav.vitinsiderhostel.models.Scramble;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class PublicProfileFragment extends Fragment implements View.OnClickListener, iOnNotifyDbProcess {
 
     //firebase fireStore
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference publicSection = db.collection(Mod.PUBL.toString());
-    private final CollectionReference userDetailsSection = db.collection(Mod.USD.toString());
+    private final CollectionReference accountsSection = db.collection(Path.ACCOUNTS.getPath());
 
     private View rootView;
     private TextInputEditText topicEt;
@@ -66,7 +63,7 @@ public class PublicProfileFragment extends Fragment implements View.OnClickListe
 
         // check for null value before accessing object data members or methods
         if (User.getInstance() != null) {
-            enableSwitch.setChecked(User.getInstance().isHasPublicProfile());
+            enableSwitch.setChecked(User.getInstance().getHasPublicProfile());
         }
 
         enableSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -93,56 +90,58 @@ public class PublicProfileFragment extends Fragment implements View.OnClickListe
 
     private void updateProfileStatus() throws NoSuchAlgorithmException {
         final boolean flag = enableSwitch.isChecked();
-        final String mail = User.getInstance().getUserMailID();
-        final String interests = Objects.requireNonNull(topicEt.getText()).toString().trim();
+        final String bio = Objects.requireNonNull(topicEt.getText()).toString().trim();
 
-        if (flag){
-            if (TextUtils.isEmpty(interests)) {
+        if (flag) {
+            if (TextUtils.isEmpty(bio)) {
                 topicEt.setError("Cannot Be Empty");
                 topicEt.requestFocus();
                 return;
             }
         }
 
-        if (flag) {
-            Map<String, Object> publicProfile = new HashMap<>();
-            publicProfile.put("userName", User.getInstance().getUserName());
-            publicProfile.put("avatar", User.getInstance().getAvatar());
-            publicProfile.put("userMailID", User.getInstance().getUserMailID());
-            publicProfile.put("branch", User.getInstance().getStudentBranch());
-            publicProfile.put("interests", interests);
+        DocumentReference docUserRef = accountsSection
+                .document(Path.STUDENTS.getPath())
+                .collection(Path.FILES.getPath())
+                .document(User.getInstance().getUser_UID());
 
-            publicSection.document(mail).set(publicProfile).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    userDetailsSection
-                            .document(Mod.USSTU.toString())
-                            .collection(Mod.DET.toString())
-                            .document(User.getInstance().getUser_Id())
-                            .update("hasPublicProfile", true).addOnCompleteListener(task12 -> {
-                        if (task12.isSuccessful()) {
-                            callSnackBar("Public Profile Has Been Turned On");
+        if (flag) {
+
+            docUserRef.update(
+                            "hasPublicProfile", true,
+                            "publicBio", bio,
+                            "publicColor", Color.BLACK)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+
+                            callSnackBar("Successfully Updated, Public Profile Created");
+
                             User.getInstance().setHasPublicProfile(true);
+                            User.getInstance().setPublicBio(bio);
+                            User.getInstance().setPublicColor(Color.BLACK);
+
                             LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getContext(), PublicProfileFragment.this);
                             localSqlDatabase.updateUserInBackground(User.getInstance());
+
                         }
-                    });
-                }
-            });
+                    }).addOnFailureListener(e -> callSnackBar("Couldn't perform the update,Please try again after sometime"));
 
         } else {
 
-            publicSection.document(mail).delete().addOnCompleteListener(task -> userDetailsSection
-                    .document(Mod.USSTU.toString())
-                    .collection(Mod.DET.toString())
-                    .document(User.getInstance().getUser_Id())
-                    .update("hasPublicProfile", false).addOnCompleteListener(task1 -> {
-                        if (task1.isSuccessful()) {
-                            callSnackBar("Public Profile Has Been Turned Off");
+            docUserRef.update("hasPublicProfile", false)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+
+                            callSnackBar("Successfully Updated, Public Profile Deleted");
+
                             User.getInstance().setHasPublicProfile(false);
+
                             LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getContext(), PublicProfileFragment.this);
                             localSqlDatabase.updateUserInBackground(User.getInstance());
+
                         }
-                    })).addOnFailureListener(e -> callSnackBar(e.getMessage()));
+                    }).addOnFailureListener(e -> callSnackBar("Couldn't perform the update,Please try again after sometime"));
+
 
         }
 

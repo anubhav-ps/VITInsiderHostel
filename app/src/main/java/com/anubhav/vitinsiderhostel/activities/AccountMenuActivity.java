@@ -96,21 +96,13 @@ public class AccountMenuActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void userAccountDeleted() {
-        callSnackBar("User Account Deleted");
         Intent intent = new Intent();
         setResult(99, intent);
         finish();
     }
 
     // snack bar method
-    private void callSnackBar(String message) {
-        Snackbar snackbar = Snackbar
-                .make(AccountMenuActivity.this, findViewById(R.id.userProfileActivity), message, Snackbar.LENGTH_LONG);
-        snackbar.setTextColor(Color.WHITE);
-        View snackBarView = snackbar.getView();
-        snackBarView.setBackgroundColor(ContextCompat.getColor(AccountMenuActivity.this, R.color.navy_blue));
-        snackbar.show();
-    }
+
 
 
 }

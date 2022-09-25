@@ -27,8 +27,7 @@ import com.anubhav.vitinsiderhostel.adapters.FeaturedMenuAdapter;
 import com.anubhav.vitinsiderhostel.adapters.NoticeAdapter;
 import com.anubhav.vitinsiderhostel.adapters.OutingAdapter;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
-import com.anubhav.vitinsiderhostel.enums.Mod;
-import com.anubhav.vitinsiderhostel.enums.OutingFormStatus;
+import com.anubhav.vitinsiderhostel.enums.Path;
 import com.anubhav.vitinsiderhostel.enums.ServiceType;
 import com.anubhav.vitinsiderhostel.interfaces.iOnBlockServiceCardClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnFeaturedActivityCalled;
@@ -42,7 +41,6 @@ import com.anubhav.vitinsiderhostel.models.BlockService;
 import com.anubhav.vitinsiderhostel.models.Featured;
 import com.anubhav.vitinsiderhostel.models.Notice;
 import com.anubhav.vitinsiderhostel.models.Outing;
-import com.anubhav.vitinsiderhostel.models.Scramble;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.anubhav.vitinsiderhostel.notifications.AppNotification;
 import com.google.android.material.snackbar.Snackbar;
@@ -53,24 +51,21 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 
 public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOnBlockServiceCardClicked, iOnOutingStatusDownloaded, iOnNoticeDownloaded, iOnFeaturedMenuClicked, iOnNoticeCardClicked {
 
 
-    //firebase fireStore
+    //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference hostelDetailsSection = db.collection(Mod.HOD.toString());
-    private final CollectionReference outingStatusCR = db.collection("OutingStatus");
-    private final CollectionReference noticeSection = db.collection(Mod.NOS.toString());
+    private final CollectionReference noticeSection = db.collection(Path.NOTICE.getPath());
+
     //recycler lists
     private final List<Outing> outingList = new ArrayList<>();
     private final List<Notice> noticeList = new ArrayList<>();
@@ -168,23 +163,23 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
     private void fetchNoticeData() {
         noticeList.clear();
         noticeSection
-                .document(Mod.getBlock(User.getInstance().getStudentBlock()))
-                .collection(Mod.DET.toString())
+                .document(User.getInstance().getStudentBlock())
+                .collection(Path.FILES.getPath())
                 .get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                    noticeList.add(documentSnapshot.toObject(Notice.class));
-                }
-                onNoticeDownloaded.noticeDownloaded();
-            } else {
-                //todo display No notice
-                callSnackBar("No Notice Has Been Posted");
-                noticeProgress.setVisibility(View.GONE);
-            }
-        }).addOnFailureListener(e -> {
-            noticeProgress.setVisibility(View.GONE);
-            callSnackBar("Failed To Fetch Notice Data - " + e.getMessage());
-        });
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                            noticeList.add(documentSnapshot.toObject(Notice.class));
+                        }
+                        onNoticeDownloaded.noticeDownloaded();
+                    } else {
+                        //todo display No notice
+                        callSnackBar("No Notice Has Been Posted");
+                        noticeProgress.setVisibility(View.GONE);
+                    }
+                }).addOnFailureListener(e -> {
+                    noticeProgress.setVisibility(View.GONE);
+                    callSnackBar("Failed To Fetch Notice Data - " + e.getMessage());
+                });
 
 
     }
@@ -382,12 +377,12 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
         try {
             this.onFeaturedActivityCalled = (iOnFeaturedActivityCalled) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + "is not implementing on iOnFeaturedActivityCalled");
+            throw new ClassCastException(activity + "is not implementing on iOnFeaturedActivityCalled");
         }
         try {
             this.onNoticeActivityCalled = (iOnNoticeActivityCalled) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + "is not implementing iOnNoticeActivityCalled");
+            throw new ClassCastException(activity + "is not implementing iOnNoticeActivityCalled");
         }
 
     }
@@ -406,57 +401,39 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onStop() {
+        super.onStop();
+
+        if (firebaseAuth != null) {
+            firebaseAuth.removeAuthStateListener(authStateListener);
+        }
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        user = firebaseAuth.getCurrentUser();
+        firebaseAuth.addAuthStateListener(authStateListener);
+
         if (User.getInstance() == null) {
             User user = null;
             user = localSqlDatabase.getCurrentUser();
         }
 
-        user = firebaseAuth.getCurrentUser();
-        firebaseAuth.addAuthStateListener(authStateListener);
-
         if (user == null) {
+            AppNotification.getInstance().unSubscribeAllTopics();
             FirebaseAuth.getInstance().signOut();
-            logOutUser("Logging Out Abruptly :(");
             localSqlDatabase.deleteCurrentUser();
             localSqlDatabase.deleteAllTenants();
-        } else {
-            String scrambleMailValue = "";
-            try {
-                scrambleMailValue = Scramble.getScramble(Objects.requireNonNull(user.getEmail()).toLowerCase(Locale.ROOT));
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
-            hostelDetailsSection
-                    .document(Mod.HOS.toString())
-                    .collection(Mod.DET.toString())
-                    .document(scrambleMailValue)
-                    .get().addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists()) {
-                    String roomNo = Objects.requireNonNull(documentSnapshot.get("roomNo")).toString();
-                    String studentBlock = Objects.requireNonNull(documentSnapshot.get("studentBlock")).toString();
-                    String registerNum = Objects.requireNonNull(documentSnapshot.get("studentRegisterNumber")).toString();
-
-                    if (!roomNo.equals(User.getInstance().getRoomNo()) || !studentBlock.equals(User.getInstance().getStudentBlock()) || !registerNum.equals(User.getInstance().getStudentRegisterNumber())) {
-                        AppNotification.getInstance().unSubscribeAllTopics();
-                        FirebaseAuth.getInstance().signOut();
-                        logOutUser("Updates in room details, Login again!");
-                        localSqlDatabase.deleteCurrentUser();
-                        localSqlDatabase.deleteAllTenants();
-                    }
-
-                } else {
-                    AppNotification.getInstance().unSubscribeAllTopics();
-                    FirebaseAuth.getInstance().signOut();
-                    logOutUser("Logging Out Abruptly :(");
-                    localSqlDatabase.deleteCurrentUser();
-                    localSqlDatabase.deleteAllTenants();
-                }
-            });
+            logOutUser("Logging Out Abruptly :(");
         }
     }
-
 
     private void logOutUser(String message) {
         if (message != null) {

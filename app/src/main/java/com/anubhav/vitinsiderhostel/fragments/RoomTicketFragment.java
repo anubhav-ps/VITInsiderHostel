@@ -21,12 +21,10 @@ import com.anubhav.vitinsiderhostel.interfaces.iOnRoomTicketCardClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnTicketListDownloaded;
 import com.anubhav.vitinsiderhostel.models.AlertDisplay;
 import com.anubhav.vitinsiderhostel.models.Ticket;
-import com.anubhav.vitinsiderhostel.models.TicketIDs;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -46,7 +44,7 @@ public class RoomTicketFragment extends Fragment implements iOnTicketListDownloa
     private RoomTicketsAdapter adapter;
     private View rootView;
     private ArrayList<Ticket> raisedTicketList;
-    private ArrayList<TicketIDs> ticketIDsList;
+    // ArrayList<TicketIDs> ticketIDsList;
     private Dialog dialog;
 
     public RoomTicketFragment() {
@@ -77,7 +75,7 @@ public class RoomTicketFragment extends Fragment implements iOnTicketListDownloa
 
 
         raisedTicketList = new ArrayList<>();
-        ticketIDsList = new ArrayList<>();
+        //ticketIDsList = new ArrayList<>();
 
         onTicketListDownloaded = this;
 
@@ -100,26 +98,26 @@ public class RoomTicketFragment extends Fragment implements iOnTicketListDownloa
                 document(User.getInstance().getRoomNo()).
                 collection("TicketsRaised")
                 .get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                if (task.getResult().size() == 0) {
-                    //todo display no tickets
-                    progressBar.setVisibility(View.GONE);
-                    linearLayout.setVisibility(View.GONE);
+                    if (task.isSuccessful()) {
+                        if (task.getResult().size() == 0) {
+                            //todo display no tickets
+                            progressBar.setVisibility(View.GONE);
+                            linearLayout.setVisibility(View.GONE);
 
-                    AlertDisplay alertDisplay = new AlertDisplay("No Tickets Raised", "There are no tickets raised for your room", getContext());
-                    alertDisplay.getBuilder().setPositiveButton("Ok", null);
-                    alertDisplay.display();
-                } else {
-                    processGetTickets(task);
-                }
-            }
-        });
+                            AlertDisplay alertDisplay = new AlertDisplay("No Tickets Raised", "There are no tickets raised for your room", getContext());
+                            alertDisplay.getBuilder().setPositiveButton("Ok", null);
+                            alertDisplay.display();
+                        } else {
+                            processGetTickets(task);
+                        }
+                    }
+                });
     }
 
     private void processGetTickets(Task<QuerySnapshot> task) {
 
 
-        for (QueryDocumentSnapshot document : task.getResult()) {
+       /* for (QueryDocumentSnapshot document : task.getResult()) {
 
             TicketIDs ticketIDs = new TicketIDs();
             ticketIDs.setTicketId(Objects.requireNonNull(document.get("all_ticket_Doc_Id")).toString().trim());
@@ -143,7 +141,7 @@ public class RoomTicketFragment extends Fragment implements iOnTicketListDownloa
                     });
 
 
-        }
+        }*/
 
     }
 
@@ -164,10 +162,10 @@ public class RoomTicketFragment extends Fragment implements iOnTicketListDownloa
     @Override
     public void onStop() {
         super.onStop();
-        if (ticketIDsList != null && adapter != null) {
+       /* if (ticketIDsList != null && adapter != null) {
             ticketIDsList.clear();
             adapter = null;
-        }
+        }*/
     }
 
     @Override
@@ -195,44 +193,44 @@ public class RoomTicketFragment extends Fragment implements iOnTicketListDownloa
                 document("Room")
                 .collection(User.getInstance().getStudentBlock())
                 .document(docID).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    collectionReferenceToTicketHistory.
-                            document("Room").
-                            collection(User.getInstance().getStudentBlock()).
-                            document(User.getInstance().getRoomNo()).
-                            collection("TicketsRaised").whereEqualTo("all_ticket_Doc_Id", docID).limit(1).get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                            final String id = Objects.requireNonNull(document.get("doc_Id")).toString();
-                                            collectionReferenceToTicketHistory.
-                                                    document("Room").
-                                                    collection(User.getInstance().getStudentBlock()).
-                                                    document(User.getInstance().getRoomNo()).
-                                                    collection("TicketsRaised").document(id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-                                                        Toast.makeText(getContext(), "Ticket Deleted Successfully", Toast.LENGTH_LONG).show();
-                                                        raisedTicketList.remove(pos);
-                                                        processRecyclerAdapter();
-                                                    } else {
-                                                        //report couldn't delete
-                                                    }
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            collectionReferenceToTicketHistory.
+                                    document("Room").
+                                    collection(User.getInstance().getStudentBlock()).
+                                    document(User.getInstance().getRoomNo()).
+                                    collection("TicketsRaised").whereEqualTo("all_ticket_Doc_Id", docID).limit(1).get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                    final String id = Objects.requireNonNull(document.get("doc_Id")).toString();
+                                                    collectionReferenceToTicketHistory.
+                                                            document("Room").
+                                                            collection(User.getInstance().getStudentBlock()).
+                                                            document(User.getInstance().getRoomNo()).
+                                                            collection("TicketsRaised").document(id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        Toast.makeText(getContext(), "Ticket Deleted Successfully", Toast.LENGTH_LONG).show();
+                                                                        raisedTicketList.remove(pos);
+                                                                        processRecyclerAdapter();
+                                                                    } else {
+                                                                        //report couldn't delete
+                                                                    }
+                                                                }
+                                                            });
                                                 }
-                                            });
+                                            } else {
+                                                //todo couldnt delete ticket
+                                            }
                                         }
-                                    } else {
-                                        //todo couldnt delete ticket
-                                    }
-                                }
-                            });
-                }
-            }
-        });
+                                    });
+                        }
+                    }
+                });
     }
 }

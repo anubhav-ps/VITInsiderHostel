@@ -31,7 +31,7 @@ import com.anubhav.vitinsiderhostel.adapters.RoomMateAdapter;
 import com.anubhav.vitinsiderhostel.adapters.RoomServiceRecyclerAdapter;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.anubhav.vitinsiderhostel.dialogViews.ViewTenantDialog;
-import com.anubhav.vitinsiderhostel.enums.Mod;
+import com.anubhav.vitinsiderhostel.enums.Path;
 import com.anubhav.vitinsiderhostel.enums.ServiceType;
 import com.anubhav.vitinsiderhostel.interfaces.iOnNotifyDbProcess;
 import com.anubhav.vitinsiderhostel.interfaces.iOnRoomMateCardClicked;
@@ -40,7 +40,6 @@ import com.anubhav.vitinsiderhostel.interfaces.iOnRoomTenantListDownloaded;
 import com.anubhav.vitinsiderhostel.models.AlertDisplay;
 import com.anubhav.vitinsiderhostel.models.RoomService;
 import com.anubhav.vitinsiderhostel.models.RoomTenants;
-import com.anubhav.vitinsiderhostel.models.Scramble;
 import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.anubhav.vitinsiderhostel.notifications.AppNotification;
@@ -54,12 +53,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -69,10 +65,8 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference roomTickets = db.collection("RoomTickets");
-    private final CollectionReference hostelDetailsSection = db.collection(Mod.HOD.toString());
-
-    /* private final CollectionReference allTickets = db.collection("AllTickets");
-     private final CollectionReference ticketHistory = db.collection("TicketHistory");*/
+    private final CollectionReference roomMatesSection = db.collection(Path.ROOM_MATES.getPath());
+    private final CollectionReference roomMatesDetailSection = db.collection(Path.ROOM_MATE_DETAILS.getPath());
 
 
     // adapter for non ac student
@@ -100,7 +94,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
 
 
     //roomMate Hash List
-    private List<String> roomMatesHashList;
+    private List<String> roomMatesList;
 
     //roomMate details List
     private List<Tenant> roomMates;
@@ -126,7 +120,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
 
 
     //String objects
-    private String roomNo, roomType, block, userMail, username, userRegNum, scrambleMailValue;
+    private String roomNo, block, userMail, username, userRegNum;
     private int avatarId;
 
     //flags
@@ -191,15 +185,17 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
         onRoomTenantListDownloaded = this;
         dialog = new Dialog(getContext());
 
+
         // retrieve user data from user instance
         if (User.getInstance() != null) {
+
             avatarId = User.getInstance().getAvatar();
             roomNo = User.getInstance().getRoomNo();
-            roomType = User.getInstance().getRoomType();
             block = User.getInstance().getStudentBlock();
             username = User.getInstance().getUserName();
             userRegNum = User.getInstance().getStudentRegisterNumber();
-            userMail = User.getInstance().getUserMailID();
+            userMail = User.getInstance().getUserMailId();
+
         }
 
         setAvatar(avatarId);
@@ -208,28 +204,18 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
 
 
         // get bed type
-        final String totalBeds = roomType.split("\\|")[0];
-        final String finalBed = totalBeds + " BED";
-        bedsTxt.setText(finalBed);
+        final String beds = User.getInstance().getBeds() + " BED";
+        bedsTxt.setText(beds);
 
         // get room type
-        final boolean isAc = roomType.split("\\|")[1].equalsIgnoreCase("AC");
-        ac = isAc;
-        String typeStr = "NON-A/C";
-        typeTxt.setText(typeStr);
+        String type = User.getInstance().getAc() ? "AC" : "NON-A/C";
+        typeTxt.setText(type);
         //set adapter
-        if (isAc) {
-            initialiseRoomServices(true);
-            typeStr = "A/C";
-            typeTxt.setText(typeStr);
-        } else {
-            initialiseRoomServices(false);
-        }
+        initialiseRoomServices(User.getInstance().getAc());
 
         // get room details
         final String roomDetail = roomNo + "-" + block;
         roomDetailTxt.setText(roomDetail);
-
 
         //retrieve roommate from database
         retrieveRoomTenantsFromDB();
@@ -243,8 +229,8 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
         return rootView;
     }
 
-    private void setAvatar(int icon){
-        final String iconStr = "av_"+icon;
+    private void setAvatar(int icon) {
+        final String iconStr = "av_" + icon;
         int imageId = requireContext().getResources().getIdentifier(iconStr, "drawable", requireContext().getPackageName());
         avatarImg.setImageResource(imageId);
     }
@@ -280,52 +266,6 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
         }
     }
 
-    @Override
-    public void inviteUser(int pos) {
-        dialog.setContentView(R.layout.invite_user_view);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        MaterialButton inviteUser = dialog.findViewById(R.id.inviteUserBtn);
-        MaterialTextView messageTxt = dialog.findViewById(R.id.inviteUserMessage);
-        MaterialTextView mailNameTxt = dialog.findViewById(R.id.inviteUserMailName);
-        final Tenant tenant = roomMates.get(pos);
-
-        String mail = tenant.getTenantMailID();
-        String name;
-
-        String delimiter = "[^a-zA-Z]+";
-        String[] splitPhrase = mail.split("@")[0].split(delimiter);
-
-        if (splitPhrase.length > 1) {
-            name = firstCaps(splitPhrase[0]) + " " + firstCaps(splitPhrase[1]);
-        } else {
-            name = firstCaps(splitPhrase[0]);
-        }
-
-        final String message = "Your  roommate  from " + tenant.getTenantBranch() + " has  not  installed  the  app.Invite  your  roommate  via  mail  to  get  their  details.";
-        mailNameTxt.setText(name);
-        messageTxt.setText(message);
-        inviteUser.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            final String mailTo = tenant.getTenantMailID();
-            final String mailSubject = "Invite to VIT Insider Hostel Edition";
-            final String mailContent = "Your roommate " + User.getInstance().getUserName() + " from " + User.getInstance().getStudentBranch() + " has invited you to VIT Insider Hostel Edition. Install the application from google playstore \n Link -> https://play.google.com/store/apps/details?id=com.anubhav.vitinsiderhostel";
-            if (mailTo != null) {
-                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{mailTo});
-                intent.putExtra(Intent.EXTRA_SUBJECT, mailSubject);
-                intent.putExtra(Intent.EXTRA_TEXT, mailContent);
-            }
-            intent.setType("message/rfc822");
-            v.getContext().startActivity(Intent.createChooser(intent, "Choose an Email client :"));
-        });
-        dialog.show();
-    }
-
-    //make the first letter caps
-    private String firstCaps(String s) {
-        char[] arr = s.toCharArray();
-        arr[0] = String.valueOf(arr[0]).toUpperCase(Locale.ROOT).charAt(0);
-        return String.valueOf(arr);
-    }
 
     //show the tenant dialog
     @Override
@@ -346,11 +286,12 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
     private Bundle getTenantBundle(int pos) {
         Bundle args = new Bundle();
         final Tenant tenant = roomMates.get(pos);
-        args.putString("tenantName", tenant.getTenantUserName());
+        args.putString("tenantStudentName", tenant.getTenantName());
         args.putString("tenantMailId", tenant.getTenantMailID());
         args.putString("tenantContactNumber", tenant.getTenantContactNumber());
-        args.putString("tenantNativeLanguage", tenant.getTenantNativeLanguage());
+        args.putString("tenantNativeState", tenant.getTenantNativeState());
         args.putString("tenantBranch", tenant.getTenantBranch());
+        args.putString("tenantMess", tenant.getTenantMess());
         return args;
     }
 
@@ -550,50 +491,40 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
     }
 
     private void downloadRoomMates() {
-        roomMatesHashList = new ArrayList<>();
-        String scrambleRoomValue = "";
-        try {
-            scrambleRoomValue = Scramble.getScramble(User.getInstance().getRoomNo());
-            scrambleMailValue = Scramble.getScramble(User.getInstance().getUserMailID());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-
-        hostelDetailsSection
-                .document(Mod.HOT.toString())
-                .collection(Mod.getBlock(User.getInstance().getStudentBlock()))
-                .document(scrambleRoomValue)
+        roomMatesList = new ArrayList<>();
+        roomMatesSection
+                .document(User.getInstance().getStudentBlock())
+                .collection(Path.FILES.getPath())
+                .document(User.getInstance().getRoomNo())
                 .get()
                 .addOnCompleteListener(
-                        task -> {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot documentSnapshot = task.getResult();
-                                if (documentSnapshot.exists()) {
-                                    final RoomTenants tenantHashMailList = documentSnapshot.toObject(RoomTenants.class);
-                                    assert tenantHashMailList != null;
-                                    localSqlDatabase.setTotalTenants(tenantHashMailList.getList().size() - 1);
-                                    for (String t : tenantHashMailList.getList()) {
-                                        if (t.equals(scrambleMailValue)) continue;
-                                        roomMatesHashList.add(t);
+                        task12 -> {
+                            if (task12.isSuccessful()) {
+                                DocumentSnapshot documentSnapshot22 = task12.getResult();
+                                if (documentSnapshot22.exists()) {
+                                    final RoomTenants tenantMailList = documentSnapshot22.toObject(RoomTenants.class);
+                                    assert tenantMailList != null;
+                                    localSqlDatabase.setTotalTenants(tenantMailList.getList().size() - 1);
+                                    for (String t : tenantMailList.getList()) {
+                                        if (t.equals(User.getInstance().getUserMailId()))
+                                            continue;
+                                        roomMatesList.add(t);
                                     }
+                                    onRoomTenantListDownloaded.notifyCompleteListDownload();
                                 }
                             }
-                            onRoomTenantListDownloaded.notifyCompleteListDownload();
                         }
                 ).addOnFailureListener(e -> {
-            roomMateProgressBar.setVisibility(View.INVISIBLE);
-            Toast.makeText(getContext(), "Failed To Download Latest Room Mates Details", Toast.LENGTH_LONG).show();
-        });
+                    roomMateProgressBar.setVisibility(View.INVISIBLE);
+                    Toast.makeText(getContext(), "Failed To Download Latest Room Mates Details", Toast.LENGTH_LONG).show();
+                });
     }
 
     @Override
     public void notifyCompleteListDownload() {
-        for (String tenantHashMail : roomMatesHashList) {
-            hostelDetailsSection
-                    .document(Mod.TED.toString())
-                    .collection(Mod.DET.toString())
-                    .document(tenantHashMail)
+        for (String mail : roomMatesList) {
+            roomMatesDetailSection
+                    .document(mail)
                     .get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
@@ -605,7 +536,7 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
                         }
                     });
         }
-
+        roomMatesList.clear();
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -644,16 +575,6 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
 
     //process 0 and process 1 functions
     @Override
-    public void onStart() {
-        super.onStart();
-        if (localSqlDatabase==null){
-            localSqlDatabase = new LocalSqlDatabase(getContext(), this);
-        }
-        user = firebaseAuth.getCurrentUser();
-        firebaseAuth.addAuthStateListener(authStateListener);
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         if (firebaseAuth != null) {
@@ -667,50 +588,21 @@ public class RoomFragment extends Fragment implements View.OnClickListener, iOnR
     @Override
     public void onResume() {
         super.onResume();
+
+        user = firebaseAuth.getCurrentUser();
+        firebaseAuth.addAuthStateListener(authStateListener);
+
         if (User.getInstance() == null) {
             User user = null;
             user = localSqlDatabase.getCurrentUser();
         }
 
-        user = firebaseAuth.getCurrentUser();
-        firebaseAuth.addAuthStateListener(authStateListener);
         if (user == null) {
+            AppNotification.getInstance().unSubscribeAllTopics();
             FirebaseAuth.getInstance().signOut();
             localSqlDatabase.deleteCurrentUser();
             localSqlDatabase.deleteAllTenants();
             logOutUser("Logging Out Abruptly :(");
-        } else {
-            String scrambleMailValue = "";
-            try {
-                scrambleMailValue = Scramble.getScramble(Objects.requireNonNull(user.getEmail()).toLowerCase(Locale.ROOT));
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
-            hostelDetailsSection
-                    .document(Mod.HOS.toString())
-                    .collection(Mod.DET.toString())
-                    .document(scrambleMailValue)
-                    .get().addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists()) {
-                    String roomNo = Objects.requireNonNull(documentSnapshot.get("roomNo")).toString();
-                    String studentBlock = Objects.requireNonNull(documentSnapshot.get("studentBlock")).toString();
-                    String registerNum = Objects.requireNonNull(documentSnapshot.get("studentRegisterNumber")).toString();
-
-                    if (!roomNo.equals(User.getInstance().getRoomNo()) || !studentBlock.equals(User.getInstance().getStudentBlock()) || !registerNum.equals(User.getInstance().getStudentRegisterNumber())) {
-                        AppNotification.getInstance().unSubscribeAllTopics();
-                        FirebaseAuth.getInstance().signOut();
-                        localSqlDatabase.deleteCurrentUser();
-                        localSqlDatabase.deleteAllTenants();
-                        logOutUser("Updates in room details, Login again!");
-                    }
-                } else {
-                    AppNotification.getInstance().unSubscribeAllTopics();
-                    FirebaseAuth.getInstance().signOut();
-                    localSqlDatabase.deleteCurrentUser();
-                    localSqlDatabase.deleteAllTenants();
-                    logOutUser("Logging Out Abruptly :(");
-                }
-            });
         }
 
     }

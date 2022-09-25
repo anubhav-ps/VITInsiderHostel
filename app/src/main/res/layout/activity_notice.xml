@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/noticeActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    android:paddingEnd="4dp"
     android:paddingStart="4dp"
-    android:id="@+id/noticeActivity"
+    android:paddingEnd="4dp"
     tools:context=".activities.NoticeActivity">
 
     <LinearLayout
@@ -29,7 +29,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/noticePgeTitleTxt"
-                android:layout_width="260dp"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="6dp"
@@ -39,28 +39,36 @@
                 android:textColor="@color/medium_theme_green"
                 android:textSize="46sp" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/noticePgeCloseCardView"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="top|center_horizontal"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="18dp"
-                android:layout_marginEnd="18dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardBackgroundColor="@color/black"
-                app:cardCornerRadius="50dp"
-                app:cardElevation="8dp"
-                app:rippleColor="@color/white">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|top"
+                android:orientation="horizontal"
+                android:paddingTop="14sp"
+                android:paddingBottom="10dp">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_baseline_close_24" />
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/noticePgeCloseCardView"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="3dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@color/black"
+                    app:cardCornerRadius="50dp"
+                    app:cardElevation="8dp"
+                    app:rippleColor="@color/white">
 
-            </com.google.android.material.card.MaterialCardView>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_baseline_close_24" />
+
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+
         </LinearLayout>
 
         <LinearLayout

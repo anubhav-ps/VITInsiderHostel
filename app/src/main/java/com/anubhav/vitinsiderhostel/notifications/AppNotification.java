@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.anubhav.vitinsiderhostel.activities.HomePageActivity;
-import com.anubhav.vitinsiderhostel.enums.Mod;
+import com.anubhav.vitinsiderhostel.enums.Path;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +33,7 @@ public class AppNotification extends FirebaseMessagingService {
     private static AppNotification appNotification;
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference tokenSection = db.collection(Mod.FCM.toString());
+    private final CollectionReference tokenSection = db.collection(Path.FCM_TOKEN.getPath());
 
 
     public AppNotification() {
@@ -144,8 +144,6 @@ public class AppNotification extends FirebaseMessagingService {
         FirebaseMessaging.getInstance().unsubscribeFromTopic(topic1);
         String topic2 = "NOTICE_" + User.getInstance().getStudentBlock();
         FirebaseMessaging.getInstance().unsubscribeFromTopic(topic2);
-        String topic3 = "CHANGE_" + User.getInstance().getStudentRegisterNumber();
-        FirebaseMessaging.getInstance().unsubscribeFromTopic(topic3);
     }
 
     public void subscribeAllTopics() {
@@ -154,7 +152,5 @@ public class AppNotification extends FirebaseMessagingService {
         FirebaseMessaging.getInstance().subscribeToTopic(topic1);
         String topic2 = "NOTICE_" + User.getInstance().getStudentBlock();
         FirebaseMessaging.getInstance().subscribeToTopic(topic2);
-        String topic3 = "CHANGE_" + User.getInstance().getStudentRegisterNumber();
-        FirebaseMessaging.getInstance().subscribeToTopic(topic3);
     }
 }

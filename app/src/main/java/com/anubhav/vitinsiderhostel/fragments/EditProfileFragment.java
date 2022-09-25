@@ -1,7 +1,6 @@
 package com.anubhav.vitinsiderhostel.fragments;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -11,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -24,7 +25,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
 import com.anubhav.vitinsiderhostel.enums.ErrorCode;
-import com.anubhav.vitinsiderhostel.enums.Mod;
+import com.anubhav.vitinsiderhostel.enums.Path;
 import com.anubhav.vitinsiderhostel.enums.TicketStatus;
 import com.anubhav.vitinsiderhostel.interfaces.iOnAppErrorCreated;
 import com.anubhav.vitinsiderhostel.interfaces.iOnNotifyDbProcess;
@@ -40,8 +41,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.Objects;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,8 +51,8 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference userDetailsSection = db.collection(Mod.USD.toString());
-    private final CollectionReference feedbackSection = db.collection(Mod.FBK.toString());
+    private final CollectionReference accountsSection = db.collection(Path.ACCOUNTS.getPath());
+    private final CollectionReference feedbackSection = db.collection(Path.FEEDBACKS.getPath());
     //listeners
     iOnAppErrorCreated onAppErrorCreated;
     // firebase declaration
@@ -62,13 +62,15 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     //views
     private View rootView;
     private ImageView profileAvatar;
-    private MaterialTextView userNameTxt, userMailIdTxt, contactNumberTxt, nativeLanguageTxt, branchTxt, registerNumberTxt;
+    private MaterialTextView userNameTxt, studentNameTxt, parentMailIdTxt, userMailIdTxt, contactNumberTxt, nativeStateTxt, branchTxt, registerNumberTxt;
     private ProgressBar progressBar;
     private Dialog dialog;
     //flags
     private boolean hasChanged = false;
+    private String[] nativeStates;
+    private ArrayAdapter<String> nativeStateAdapter;
 
-    private int icon_Id=100,avatar=100;
+    private int icon_Id = 100, avatar = 100;
 
 
     public EditProfileFragment() {
@@ -98,9 +100,11 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         MaterialTextView changeAvatarTxt = rootView.findViewById(R.id.editPgeAvatar);
         progressBar = rootView.findViewById(R.id.editPgeProgressBar);
         userNameTxt = rootView.findViewById(R.id.editPgeUserName);
+        studentNameTxt = rootView.findViewById(R.id.editPgeStudentName);
+        parentMailIdTxt = rootView.findViewById(R.id.editPgeParentMailId);
         userMailIdTxt = rootView.findViewById(R.id.editPgeMailId);
         contactNumberTxt = rootView.findViewById(R.id.editPgeContactNumber);
-        nativeLanguageTxt = rootView.findViewById(R.id.editPgeNativeLanguage);
+        nativeStateTxt = rootView.findViewById(R.id.editPgeNativeState);
         branchTxt = rootView.findViewById(R.id.editPgeBranch);
         registerNumberTxt = rootView.findViewById(R.id.editPgeRegisterNumber);
         profileAvatar = rootView.findViewById(R.id.editPgeAvatarIcon);
@@ -109,26 +113,36 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         MaterialButton saveBtn = rootView.findViewById(R.id.editPgeSaveBtn);
 
         dialog = new Dialog(getContext());
-
-        changeAvatarTxt.setOnClickListener(this);
-        userNameTxt.setOnClickListener(this);
-        userMailIdTxt.setOnClickListener(this);
-        contactNumberTxt.setOnClickListener(this);
-        nativeLanguageTxt.setOnClickListener(this);
-        branchTxt.setOnClickListener(this);
-        registerNumberTxt.setOnClickListener(this);
-        cancelBtn.setOnClickListener(this);
-        saveBtn.setOnClickListener(this);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
 
         if (User.getInstance() != null) {
             setAvatar(User.getInstance().getAvatar());
             userNameTxt.setText(User.getInstance().getUserName());
-            userMailIdTxt.setText(User.getInstance().getUserMailID());
+
+            String name = transformText(User.getInstance().getStudentName().split(" "));
+            studentNameTxt.setText(name);
+            userMailIdTxt.setText(User.getInstance().getUserMailId());
+            parentMailIdTxt.setText(User.getInstance().getParentMailId());
             contactNumberTxt.setText(User.getInstance().getUserContactNumber());
-            nativeLanguageTxt.setText(User.getInstance().getStudentNativeLanguage());
+            nativeStateTxt.setText(User.getInstance().getStudentNativeState());
             branchTxt.setText(User.getInstance().getStudentBranch());
             registerNumberTxt.setText(User.getInstance().getStudentRegisterNumber());
+            avatar = User.getInstance().getAvatar();
         }
+
+        profileAvatar.setOnClickListener(this);
+        changeAvatarTxt.setOnClickListener(this);
+        userNameTxt.setOnClickListener(this);
+        studentNameTxt.setOnClickListener(this);
+        userMailIdTxt.setOnClickListener(this);
+        parentMailIdTxt.setOnClickListener(this);
+        contactNumberTxt.setOnClickListener(this);
+        nativeStateTxt.setOnClickListener(this);
+        branchTxt.setOnClickListener(this);
+        registerNumberTxt.setOnClickListener(this);
+        cancelBtn.setOnClickListener(this);
+        saveBtn.setOnClickListener(this);
 
         return rootView;
     }
@@ -139,7 +153,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
         if (id == R.id.editPgeAvatarIcon) {
             hasChanged = true;
-
+            openEditAvatarView();
         } else if (id == R.id.editPgeAvatar) {
             hasChanged = true;
             openEditAvatarView();
@@ -149,12 +163,22 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         } else if (id == R.id.editPgeMailId) {
             hasChanged = false;
             openEditMailIdView();
+        } else if (id == R.id.editPgeStudentName) {
+            hasChanged = false;
+            openEditStudentName();
+        } else if (id == R.id.editPgeParentMailId) {
+            hasChanged = false;
+            openEditParentMailId();
         } else if (id == R.id.editPgeContactNumber) {
             hasChanged = true;
             openEditContactNumberView();
-        } else if (id == R.id.editPgeNativeLanguage) {
+        } else if (id == R.id.editPgeNativeState) {
             hasChanged = true;
-            openEditNativeLanguageView();
+            if (User.getInstance().getNativeStateChanges() < 3) {
+                openEditNativeStateView();
+            } else {
+                callSnackBar("You cannot edit your native state anymore!");
+            }
         } else if (id == R.id.editPgeBranch) {
             hasChanged = false;
             openEditBranchView();
@@ -166,40 +190,45 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                 AlertDisplay alertDisplay = new AlertDisplay("Unsaved changes", "You have unsaved changes. Are you sure you want to cancel?", getContext());
                 alertDisplay.getBuilder().setPositiveButton("Yes", (dialogInterface, i) -> editCancelBtn());
                 alertDisplay.getBuilder().setNegativeButton("No", null);
+                alertDisplay.getBuilder().setCancelable(false);
                 alertDisplay.display();
             } else {
                 editCancelBtn();
             }
         } else if (id == R.id.editPgeSaveBtn) {
-            try {
-                editSaveBtn();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
+            editSaveBtn();
         } else if (id == R.id.editNameViewCancelBtn || id == R.id.editContactNumberViewCancelBtn || id == R.id.editNativeLangViewCancelBtn) {
             closeEditView();
-        }else if (id==R.id.avatar_2){
+        } else if (id == R.id.avatar_2) {
             icon_Id = 201;
             setAvatar(icon_Id);
-        }else if (id==R.id.avatar_3){
+        } else if (id == R.id.avatar_3) {
             icon_Id = 202;
             setAvatar(icon_Id);
-        }else if (id==R.id.avatar_4){
+        } else if (id == R.id.avatar_4) {
             icon_Id = 203;
             setAvatar(icon_Id);
-        }else if (id==R.id.avatar_5){
+        } else if (id == R.id.avatar_5) {
             icon_Id = 204;
             setAvatar(icon_Id);
-        }else if (id==R.id.avatar_6){
+        } else if (id == R.id.avatar_6) {
             icon_Id = 205;
             setAvatar(icon_Id);
-        }else if (id==R.id.avatar_7){
+        } else if (id == R.id.avatar_7) {
             icon_Id = 206;
             setAvatar(icon_Id);
-        }else if (id==R.id.avatar_8){
+        } else if (id == R.id.avatar_8) {
             icon_Id = 207;
             setAvatar(icon_Id);
         }
+    }
+
+    private void openEditParentMailId() {
+        callSnackBar("Cannot update parent mail Id");
+    }
+
+    private void openEditStudentName() {
+        callSnackBar("Cannot update student name");
     }
 
     private void openEditAvatarView() {
@@ -232,14 +261,14 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
 
         dialog.show();
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().getAttributes().windowAnimations = R.style.BottomDialogAnimation;
         dialog.getWindow().setGravity(Gravity.BOTTOM);
     }
 
-    private void setAvatar(int icon){
-        final String iconStr = "av_"+icon;
+    private void setAvatar(int icon) {
+        final String iconStr = "av_" + icon;
         int imageId = requireContext().getResources().getIdentifier(iconStr, "drawable", requireContext().getPackageName());
         profileAvatar.setImageResource(imageId);
     }
@@ -252,7 +281,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         dialog.dismiss();
     }
 
-    private void editSaveBtn() throws NoSuchAlgorithmException {
+    private void editSaveBtn() {
 
         if (hasChanged) {
 
@@ -260,18 +289,19 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             progressBar.setVisibility(View.VISIBLE);
             final String userName = userNameTxt.getText().toString().trim();
             final String userContactNumber = contactNumberTxt.getText().toString().trim();
-            final String userNativeLanguage = nativeLanguageTxt.getText().toString().trim();
+            final String userNativeState = nativeStateTxt.getText().toString().trim();
 
-            DocumentReference docUserRef = userDetailsSection
-                    .document(Mod.USSTU.toString())
-                    .collection(Mod.DET.toString())
-                    .document(User.getInstance().getUser_Id());
+            DocumentReference docUserRef = accountsSection
+                    .document(Path.STUDENTS.getPath())
+                    .collection(Path.FILES.getPath())
+                    .document(User.getInstance().getUser_UID());
 
             docUserRef.update(
-                    "userName", userName,
-                    "userContactNumber", userContactNumber,
-                    "studentNativeLanguage", userNativeLanguage,
-                    "avatar", avatar)
+                            "userName", userName,
+                            "userContactNumber", userContactNumber,
+                            "studentNativeState", userNativeState,
+                            "nativeStateChanges", User.getInstance().getNativeStateChanges(),
+                            "avatar", avatar)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
 
@@ -281,7 +311,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
                             User.getInstance().setUserName(userName);
                             User.getInstance().setUserContactNumber(userContactNumber);
-                            User.getInstance().setStudentNativeLanguage(userNativeLanguage);
+                            User.getInstance().setStudentNativeState(userNativeState);
                             User.getInstance().setAvatar(avatar);
 
                             LocalSqlDatabase localSqlDatabase = new LocalSqlDatabase(getContext(), EditProfileFragment.this);
@@ -290,7 +320,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                             progressBar.setVisibility(View.GONE);
                             AlertDisplay alertDisplay = new AlertDisplay(ErrorCode.EPF001.getErrorCode(), ErrorCode.EPF001.getErrorMessage(), getContext());
                             alertDisplay.displayAlert();
-                            AppError appError = new AppError(ErrorCode.EPF001.getErrorCode(), User.getInstance().getUserMailID());
+                            AppError appError = new AppError(ErrorCode.EPF001.getErrorCode(), User.getInstance().getUserMailId());
                             onAppErrorCreated.checkIfAlreadyReported(appError, "Issue Has Been Reported,Will Be Looked Upon");
                         }
                     }).addOnFailureListener(e -> callSnackBar("Couldn't perform the update,Please try again after sometime"));
@@ -313,26 +343,54 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         callSnackBar("Cannot update branch");
     }
 
-    private void openEditNativeLanguageView() {
-        dialog.setContentView(R.layout.edit_native_language_view);
+    private void openEditNativeStateView() {
+        dialog.setContentView(R.layout.edit_native_state_view);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        EditText nativeLanguageEt = dialog.findViewById(R.id.editNativeLangViewEt);
+        AutoCompleteTextView nativeStateEt = dialog.findViewById(R.id.editNativeStateViewEt);
+        nativeStateEt.setAdapter(nativeStateAdapter);
+        nativeStateEt.setSelection(0);
         ImageButton cancelBtn = dialog.findViewById(R.id.editNativeLangViewCancelBtn);
-        ImageButton saveBtn = dialog.findViewById(R.id.editNativeLangViewSaveBtn);
+        ImageButton saveBtn = dialog.findViewById(R.id.editNativeStateViewSaveBtn);
 
-        saveBtn.setOnClickListener(v -> {
-            final String nativeLanguage = nativeLanguageEt.getText().toString().trim();
-            if (TextUtils.isEmpty(nativeLanguage)) {
-                nativeLanguageEt.setError("Language cannot be empty");
+        nativeStateEt.setOnItemClickListener((parent, view, position, id) -> {
+            if (position == 0) {
+                nativeStateEt.setError("Select a valid state name");
+                nativeStateEt.requestFocus();
                 return;
             }
-            setTextFieldValue(nativeLanguageTxt, nativeLanguage);
+        });
+
+        saveBtn.setOnClickListener(v -> {
+            final String nativeState = nativeStateEt.getText().toString().trim();
+            if (nativeState.equalsIgnoreCase("SELECT")) {
+                nativeStateEt.setError("Select a valid state name");
+                nativeStateEt.requestFocus();
+                return;
+            }
+            User.getInstance().setNativeStateChanges(User.getInstance().getNativeStateChanges() + 1);
+            setTextFieldValue(nativeStateTxt, nativeState);
             closeEditView();
         });
 
 
         cancelBtn.setOnClickListener(this);
         dialog.show();
+    }
+
+    private String transformText(String[] words) {
+        StringBuilder name = new StringBuilder();
+        for (String w : words) {
+            String n = firstCaps(w) + " ";
+            name.append(n);
+        }
+        return name.toString();
+    }
+
+    private String firstCaps(String name) {
+        name = name.toLowerCase(Locale.ROOT);
+        char[] arr = name.toCharArray();
+        arr[0] = String.valueOf(arr[0]).toUpperCase(Locale.ROOT).charAt(0);
+        return String.valueOf(arr);
     }
 
     private void openEditContactNumberView() {
@@ -401,15 +459,16 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     @Override
     public void checkIfAlreadyReported(AppError appError, String message) {
         feedbackSection
-                .document(Mod.REPISSU.toString())
-                .collection(Mod.USSTU.toString()).whereEqualTo("errorCode", appError.getErrorCode()).whereEqualTo("reporter", appError.getReporter()).whereEqualTo("status", TicketStatus.BOOKED.toString())
+                .document(Path.ISSUES.getPath())
+                .collection(Path.FILES.getPath())
+                .whereEqualTo("errorCode", appError.getErrorCode()).whereEqualTo("reporter", appError.getReporter()).whereEqualTo("status", TicketStatus.BOOKED.toString())
                 .get().addOnCompleteListener(task -> {
-            boolean flag = false;
-            if (task.isSuccessful()) {
-                flag = task.getResult().size() > 0;
-            }
-            onAppErrorCreated.getQueryResult(appError, message, flag);
-        });
+                    boolean flag = false;
+                    if (task.isSuccessful()) {
+                        flag = task.getResult().size() > 0;
+                    }
+                    onAppErrorCreated.getQueryResult(appError, message, flag);
+                });
     }
 
     @Override
@@ -423,14 +482,14 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
     private void reportIssue(AppError appError, String message) {
         feedbackSection
-                .document(Mod.REPISSU.toString())
-                .collection(Mod.USSTU.toString())
+                .document(Path.ISSUES.getPath())
+                .collection(Path.FILES.getPath())
                 .document()
                 .set(appError).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                onAppErrorCreated.IssueReported(message);
-            }
-        });
+                    if (task.isSuccessful()) {
+                        onAppErrorCreated.IssueReported(message);
+                    }
+                });
     }
 
     @Override
@@ -478,5 +537,11 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        nativeStates = getResources().getStringArray(R.array.native_state);
+        nativeStateAdapter = new ArrayAdapter<>(requireContext(), R.layout.visit_purpose_drop_down_item, nativeStates);
 
+    }
 }

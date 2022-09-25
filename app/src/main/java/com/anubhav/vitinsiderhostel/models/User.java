@@ -10,35 +10,50 @@ public class User extends Application {
 
     private static User instance;
     // 12 data members
-    private String user_Id;
+    private String user_UID;
 
-    private String userName;
-
-    private String userMailID;
-
-    private String userContactNumber;
-
-    private String userType;           // F->Faculty            S->Student
-
-    private String studentBlock;         // A , B , C
-
-    private String studentBranch;
+    private String userMailId;
 
     private String studentRegisterNumber;
 
-    private String studentNativeLanguage;
+    private String studentName;
 
-    private String roomNo;           //  block,RoomNo
+    private String userName;
 
-    private String roomType;         //  bed,1   or bed,0         1-> AC , 2-> Non-Ac
+    private String studentBranch;
 
-    private Boolean isAdmin = false;   // false = 0 , true = 1
+    private String userContactNumber;
+
+    private String studentNativeState;
+
+    private int nativeStateChanges;
+
+    private String userType;           // F->Faculty            S->Student
 
     private int avatar;
 
+    private String parentMailId;
+
+    private String studentBlock;         // A , B , C
+
+    private String roomNo;           //  block,RoomNo
+
+    private int beds;         //  bed,1   or bed,0         1-> AC , 2-> Non-Ac
+
+    private boolean ac;
+
+    private String mess;
+
     private boolean hasPublicProfile;
 
-    private String privateProfileID;
+    private String publicBio;
+
+    private int publicColor;
+
+    private String privateProfileId;
+
+    private String fcmToken;
+
 
     public User() {
     }
@@ -54,12 +69,13 @@ public class User extends Application {
         User.instance = instance;
     }
 
-    public String getUser_Id() {
-        return user_Id;
+
+    public String getUser_UID() {
+        return user_UID;
     }
 
-    public void setUser_Id(String userId) {
-        this.user_Id = userId;
+    public void setUser_UID(String user_UID) {
+        this.user_UID = user_UID;
     }
 
     public String getUserName() {
@@ -70,12 +86,12 @@ public class User extends Application {
         this.userName = userName;
     }
 
-    public String getUserMailID() {
-        return userMailID;
+    public String getUserMailId() {
+        return userMailId;
     }
 
-    public void setUserMailID(String userMailID) {
-        this.userMailID = userMailID;
+    public void setUserMailId(String userMailId) {
+        this.userMailId = userMailId;
     }
 
     public String getUserContactNumber() {
@@ -94,6 +110,14 @@ public class User extends Application {
         this.userType = userType;
     }
 
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
     public String getStudentBlock() {
         return studentBlock;
     }
@@ -110,12 +134,28 @@ public class User extends Application {
         this.studentBranch = studentBranch;
     }
 
-    public String getStudentNativeLanguage() {
-        return studentNativeLanguage;
+    public String getStudentRegisterNumber() {
+        return studentRegisterNumber;
     }
 
-    public void setStudentNativeLanguage(String studentNativeLanguage) {
-        this.studentNativeLanguage = studentNativeLanguage;
+    public void setStudentRegisterNumber(String studentRegisterNumber) {
+        this.studentRegisterNumber = studentRegisterNumber;
+    }
+
+    public String getStudentNativeState() {
+        return studentNativeState;
+    }
+
+    public void setStudentNativeState(String studentNativeState) {
+        this.studentNativeState = studentNativeState;
+    }
+
+    public String getParentMailId() {
+        return parentMailId;
+    }
+
+    public void setParentMailId(String parentMailId) {
+        this.parentMailId = parentMailId;
     }
 
     public String getRoomNo() {
@@ -126,20 +166,28 @@ public class User extends Application {
         this.roomNo = roomNo;
     }
 
-    public String getRoomType() {
-        return roomType;
+    public int getBeds() {
+        return beds;
     }
 
-    public void setRoomType(String roomType) {
-        this.roomType = roomType;
+    public void setBeds(int beds) {
+        this.beds = beds;
     }
 
-    public Boolean getAdmin() {
-        return isAdmin;
+    public boolean getAc() {
+        return ac;
     }
 
-    public void setAdmin(Boolean admin) {
-        isAdmin = admin;
+    public void setAc(boolean ac) {
+        this.ac = ac;
+    }
+
+    public String getMess() {
+        return mess;
+    }
+
+    public void setMess(String mess) {
+        this.mess = mess;
     }
 
     public int getAvatar() {
@@ -150,15 +198,15 @@ public class User extends Application {
         this.avatar = avatar;
     }
 
-    public String getStudentRegisterNumber() {
-        return studentRegisterNumber;
+    public int getNativeStateChanges() {
+        return nativeStateChanges;
     }
 
-    public void setStudentRegisterNumber(String studentRegisterNumber) {
-        this.studentRegisterNumber = studentRegisterNumber;
+    public void setNativeStateChanges(int nativeStateChanges) {
+        this.nativeStateChanges = nativeStateChanges;
     }
 
-    public boolean isHasPublicProfile() {
+    public boolean getHasPublicProfile() {
         return hasPublicProfile;
     }
 
@@ -166,11 +214,35 @@ public class User extends Application {
         this.hasPublicProfile = hasPublicProfile;
     }
 
-    public String getPrivateProfileID() {
-        return privateProfileID;
+    public String getPrivateProfileId() {
+        return privateProfileId;
     }
 
-    public void setPrivateProfileID(String privateProfileID) {
-        this.privateProfileID = privateProfileID;
+    public void setPrivateProfileId(String privateProfileId) {
+        this.privateProfileId = privateProfileId;
+    }
+
+    public String getPublicBio() {
+        return publicBio;
+    }
+
+    public void setPublicBio(String publicBio) {
+        this.publicBio = publicBio;
+    }
+
+    public int getPublicColor() {
+        return publicColor;
+    }
+
+    public void setPublicColor(int publicColor) {
+        this.publicColor = publicColor;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 }

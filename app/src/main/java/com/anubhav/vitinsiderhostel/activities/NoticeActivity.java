@@ -14,7 +14,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.anubhav.vitinsiderhostel.R;
-import com.anubhav.vitinsiderhostel.enums.Mod;
+import com.anubhav.vitinsiderhostel.enums.Path;
 import com.anubhav.vitinsiderhostel.enums.Urgency;
 import com.anubhav.vitinsiderhostel.interfaces.iOnNoticeDownloaded;
 import com.anubhav.vitinsiderhostel.models.Notice;
@@ -32,7 +32,7 @@ public class NoticeActivity extends AppCompatActivity implements View.OnClickLis
 
     //firebase fireStore
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference noticeSection = db.collection(Mod.NOS.toString());
+    private final CollectionReference noticeSection = db.collection(Path.NOTICE.getPath());
 
     //listeners
     private iOnNoticeDownloaded onNoticeDownloaded;
@@ -103,19 +103,19 @@ public class NoticeActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void downloadNotice(String docID) {
-        noticeSection.document(Mod.getBlock(User.getInstance().getStudentBlock()))
-                .collection(Mod.DET.toString())
+        noticeSection.document(User.getInstance().getStudentBlock())
+                .collection(Path.FILES.getPath())
                 .document(docID).get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                notice = documentSnapshot.toObject(Notice.class);
-                onNoticeDownloaded.noticeDownloaded();
-            } else {
-                //todo no notice
-                progressBar.setVisibility(View.GONE);
-                displayError();
-            }
+                    if (documentSnapshot.exists()) {
+                        notice = documentSnapshot.toObject(Notice.class);
+                        onNoticeDownloaded.noticeDownloaded();
+                    } else {
+                        //todo no notice
+                        progressBar.setVisibility(View.GONE);
+                        displayError();
+                    }
 
-        });
+                });
     }
 
     private void displayError() {

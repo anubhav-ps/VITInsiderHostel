@@ -1,24 +1,21 @@
 package com.anubhav.vitinsiderhostel.models;
 
 import com.anubhav.vitinsiderhostel.enums.ErrorCode;
-import com.anubhav.vitinsiderhostel.enums.Mod;
 import com.anubhav.vitinsiderhostel.enums.TicketStatus;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.CollectionReference;
 
 import java.util.Date;
 
 public class AppError {
 
+    private static boolean flag = false;
     private String errorCode;
     private String errorMessage;
     private String reporter;
     private String userType;
-
     private String status;
     private String userContactNumber;
     private Timestamp timestamp;
-    private static boolean flag = false;
 
     public AppError() {
     }
@@ -43,6 +40,14 @@ public class AppError {
         this.errorCode = ErrorCode.OTH.getErrorCode();
         this.userType = "STUDENT";
         this.status = TicketStatus.BOOKED.toString();
+    }
+
+    public static boolean isFlag() {
+        return flag;
+    }
+
+    public static void setFlag(boolean flag) {
+        AppError.flag = flag;
     }
 
     public String getErrorCode() {
@@ -99,14 +104,6 @@ public class AppError {
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public static boolean isFlag() {
-        return flag;
-    }
-
-    public static void setFlag(boolean flag) {
-        AppError.flag = flag;
     }
 }
 

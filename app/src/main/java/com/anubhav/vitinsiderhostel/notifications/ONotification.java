@@ -53,6 +53,7 @@ public class ONotification extends ContextWrapper {
     public Notification.Builder getOreoNotification(String title, String body) {
         return new Notification.Builder(getApplicationContext(), CHANNEL_ID)
                 .setAutoCancel(true)
+                .setStyle(new Notification.BigTextStyle().bigText(body))
                 .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())

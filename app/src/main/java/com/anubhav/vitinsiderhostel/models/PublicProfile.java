@@ -3,22 +3,25 @@ package com.anubhav.vitinsiderhostel.models;
 public class PublicProfile {
 
     private int avatar;
-    private String userName;
+    private String name;
     private String branch;
-    private String userMailID;
-    private String interests;
+    private String userMailId;
+    private String nativeState;
+    private String bio;
+    private int color;
 
     public PublicProfile() {
     }
 
-    public PublicProfile(int avatar, String userName, String branch, String userMailID, String interests) {
+    public PublicProfile(int avatar, String name, String branch, String userMailId, String nativeState, String bio, int color) {
         this.avatar = avatar;
-        this.userName = userName;
+        this.name = name;
         this.branch = branch;
-        this.userMailID = userMailID;
-        this.interests = interests;
+        this.userMailId = userMailId;
+        this.nativeState = nativeState;
+        this.bio = bio;
+        this.color = color;
     }
-
 
     public int getAvatar() {
         return avatar;
@@ -28,12 +31,12 @@ public class PublicProfile {
         this.avatar = avatar;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getBranch() {
@@ -44,20 +47,36 @@ public class PublicProfile {
         this.branch = branch;
     }
 
-    public String getUserMailID() {
-        return userMailID;
+    public String getUserMailId() {
+        return userMailId;
     }
 
-    public void setUserMailID(String userMailID) {
-        this.userMailID = userMailID;
+    public void setUserMailId(String userMailId) {
+        this.userMailId = userMailId;
     }
 
-    public String getInterests() {
-        return interests;
+    public String getNativeState() {
+        return nativeState;
     }
 
-    public void setInterests(String interests) {
-        this.interests = interests;
+    public void setNativeState(String nativeState) {
+        this.nativeState = nativeState;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 }
 

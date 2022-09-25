@@ -227,7 +227,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/roomPgeRoomMateRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="185dp"
+            android:layout_height="175dp"
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal"
             android:visibility="visible">

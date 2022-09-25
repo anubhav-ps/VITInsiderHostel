@@ -17,11 +17,12 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+
 import com.anubhav.vitinsiderhostel.BuildConfig;
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.activities.LoginActivity;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
-import com.anubhav.vitinsiderhostel.enums.Mod;
+import com.anubhav.vitinsiderhostel.enums.Path;
 import com.anubhav.vitinsiderhostel.interfaces.iOnAccountMenuClicked;
 import com.anubhav.vitinsiderhostel.interfaces.iOnTicketSectionClicked;
 import com.anubhav.vitinsiderhostel.models.User;
@@ -38,7 +39,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
     //firebase fire store declaration
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference tokenSection = db.collection(Mod.FCM.toString());
+    private final CollectionReference tokenSection = db.collection(Path.FCM_TOKEN.getPath());
+
 
     // firebase declaration
     private FirebaseAuth firebaseAuth;
@@ -145,15 +147,15 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         if (User.getInstance() != null) {
             setAvatar(User.getInstance().getAvatar());
             username = User.getInstance().getUserName();
-            userMailId = User.getInstance().getUserMailID();
+            userMailId = User.getInstance().getUserMailId();
         }
 
         userNameTxt.setText(username);
         userMailIdTxt.setText(userMailId);
     }
 
-    private void setAvatar(int icon){
-        final String iconStr = "av_"+icon;
+    private void setAvatar(int icon) {
+        final String iconStr = "av_" + icon;
         int imageId = requireContext().getResources().getIdentifier(iconStr, "drawable", requireContext().getPackageName());
         avatarImg.setImageResource(imageId);
     }
@@ -243,13 +245,13 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         roomTicket.setOnClickListener(v -> {
             dialog.dismiss();
             callSnackBar("Will be available in future update");
-           // openRoomTickets();
+            // openRoomTickets();
         });
 
         blockTicket.setOnClickListener(v -> {
             dialog.dismiss();
             callSnackBar("Will be available in future update");
-           // openBlockTickets();
+            // openBlockTickets();
         });
 
         outingTicket.setOnClickListener(v -> {
@@ -281,7 +283,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         AppNotification.getInstance().unSubscribeAllTopics();
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            tokenSection.document(User.getInstance().getUser_Id()).delete();
+            tokenSection.document(User.getInstance().getUser_UID()).delete();
         }
 
         FirebaseAuth.getInstance().signOut();
@@ -310,8 +312,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        user = firebaseAuth.getCurrentUser();
         firebaseAuth.addAuthStateListener(authStateListener);
+        user = firebaseAuth.getCurrentUser();
 
         if (User.getInstance() == null) {
             User user = null;
@@ -340,7 +342,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         try {
             this.onTicketSectionChosen = (iOnTicketSectionClicked) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + "is not implementing iOnTicketSectionClicked");
+            throw new ClassCastException(activity + "is not implementing iOnTicketSectionClicked");
         }
 
     }

@@ -26,6 +26,7 @@
             android:fontFamily="@font/harmattan"
             android:gravity="center_horizontal"
             android:text="@string/invite_dialog_invite_txt"
+            android:justificationMode="inter_word"
             android:textColor="@color/medium_theme_green"
             android:textSize="34sp" />
 

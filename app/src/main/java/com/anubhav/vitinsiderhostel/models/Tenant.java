@@ -8,13 +8,15 @@ public class Tenant {
 
     private String tenantMailID;
 
-    private String tenantUserName;
+    private String tenantName;
 
     private String tenantContactNumber;
 
-    private String tenantNativeLanguage;
+    private String tenantNativeState;
 
     private String tenantBranch;
+
+    private String tenantMess;
 
     private int tenantAvatar;
 
@@ -26,21 +28,14 @@ public class Tenant {
         this.tenantMailID = tenantMailID;
     }
 
-    public Tenant(String tenantUserName, String tenantMailID,int tenantAvatar, String tenantContactNumber, String tenantNativeLanguage, String tenantBranch) {
-        this.tenantUserName = tenantUserName;
+    public Tenant(String tenantMailID, String tenantName, String tenantContactNumber, String tenantNativeState, String tenantBranch, int tenantAvatar, String tenantMess) {
         this.tenantMailID = tenantMailID;
-        this.tenantAvatar = tenantAvatar;
+        this.tenantName = tenantName;
         this.tenantContactNumber = tenantContactNumber;
-        this.tenantNativeLanguage = tenantNativeLanguage;
+        this.tenantNativeState = tenantNativeState;
         this.tenantBranch = tenantBranch;
-    }
-
-    public String getTenantUserName() {
-        return tenantUserName;
-    }
-
-    public void setTenantUserName(String tenantUserName) {
-        this.tenantUserName = tenantUserName;
+        this.tenantAvatar = tenantAvatar;
+        this.tenantMess = tenantMess;
     }
 
     public String getTenantMailID() {
@@ -51,6 +46,14 @@ public class Tenant {
         this.tenantMailID = tenantMailID;
     }
 
+    public String getTenantName() {
+        return tenantName;
+    }
+
+    public void setTenantName(String tenantName) {
+        this.tenantName = tenantName;
+    }
+
     public String getTenantContactNumber() {
         return tenantContactNumber;
     }
@@ -59,12 +62,12 @@ public class Tenant {
         this.tenantContactNumber = tenantContactNumber;
     }
 
-    public String getTenantNativeLanguage() {
-        return tenantNativeLanguage;
+    public String getTenantNativeState() {
+        return tenantNativeState;
     }
 
-    public void setTenantNativeLanguage(String tenantNativeLanguage) {
-        this.tenantNativeLanguage = tenantNativeLanguage;
+    public void setTenantNativeState(String tenantNativeState) {
+        this.tenantNativeState = tenantNativeState;
     }
 
     public String getTenantBranch() {
@@ -73,6 +76,14 @@ public class Tenant {
 
     public void setTenantBranch(String tenantBranch) {
         this.tenantBranch = tenantBranch;
+    }
+
+    public String getTenantMess() {
+        return tenantMess;
+    }
+
+    public void setTenantMess(String tenantMess) {
+        this.tenantMess = tenantMess;
     }
 
     public int getTenantAvatar() {

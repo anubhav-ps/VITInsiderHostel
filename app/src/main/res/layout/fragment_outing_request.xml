@@ -96,9 +96,45 @@
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
+
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:fontFamily="sans-serif"
+                android:padding="2dp"
+                android:text="Student Name"
+                android:textColor="@color/text_04"
+                android:textSize="16sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:longClickable="false"
+                android:textColorHint="#878787"
+                android:textIsSelectable="false"
+                app:boxStrokeColor="@color/light_theme_green">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/oraStudentNameEt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:inputType="textCapCharacters"
+                    android:longClickable="false"
+                    android:textColor="@color/text_02"
+                    android:textIsSelectable="false">
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
                 android:fontFamily="sans-serif"
                 android:padding="2dp"
                 android:text="@string/ora_pge_register_number_lbl"
@@ -210,7 +246,6 @@
                 android:textColor="@color/text_04"
                 android:textSize="16sp" />
 
-
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
@@ -244,16 +279,17 @@
                 android:layout_marginTop="18dp"
                 android:fontFamily="sans-serif"
                 android:padding="2dp"
-                android:text="@string/ora_pge_parent_contact_number_lbl"
+                android:text="Parent Email Id"
                 android:textColor="@color/text_04"
                 android:textSize="16sp" />
+
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/ora_pge_parent_contact_number_hint"
-                android:maxLength="14"
+                android:focusable="false"
+                android:longClickable="false"
                 android:textColorHint="#878787"
                 app:boxStrokeColor="@color/light_theme_green"
                 app:endIconMode="clear_text"
@@ -262,16 +298,19 @@
                 app:hintTextColor="@color/light_theme_green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/oraStudentParentContactNumberEt"
+                    android:id="@+id/oraStudentParentMailIdEt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="phone"
-                    android:maxLength="14"
-                    android:textColor="@color/text_02">
+                    android:focusable="false"
+                    android:inputType="textEmailAddress"
+                    android:longClickable="false"
+                    android:textColor="@color/text_03"
+                    android:textIsSelectable="false">
 
                 </com.google.android.material.textfield.TextInputEditText>
 
             </com.google.android.material.textfield.TextInputLayout>
+
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
@@ -288,7 +327,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="8dp"
                 android:fontFamily="sans-serif"
                 android:padding="2dp"
                 android:text="@string/ora_pge_visit_location_lbl"
@@ -304,9 +343,8 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="80"
                     android:focusable="false"
                     android:hint="@string/ora_pge_visit_location_hint"
                     android:textColorHint="#878787"
@@ -332,25 +370,52 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
 
-                <ImageView
-                    android:id="@+id/oraVisitLocationPickerBtn"
-                    android:layout_width="0dp"
-                    android:layout_height="26dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="8"
-                    android:background="?attr/selectableItemBackground"
-                    android:src="@drawable/location_picker" />
-
             </LinearLayout>
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="8dp"
                 android:fontFamily="sans-serif"
                 android:padding="2dp"
                 android:text="@string/ora_pge_visit_purpose_lbl"
+                android:textColor="@color/text_04"
+                android:textSize="16sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:hint="Select"
+                android:textColorHint="@color/text_02"
+                android:theme="@style/TextInputLayoutStyle"
+                app:boxBackgroundColor="@color/white"
+                app:boxStrokeColor="@color/light_theme_green"
+                app:boxStrokeErrorColor="@color/light_theme_green"
+                app:hintAnimationEnabled="true"
+                app:hintEnabled="true"
+                app:hintTextColor="@color/text_01">
+
+                <AutoCompleteTextView
+                    android:id="@+id/oraVisitPurposeEt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:inputType="none"
+                    android:textColor="@color/text_01">
+
+                </AutoCompleteTextView>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif"
+                android:padding="2dp"
+                android:text="@string/ora_pge_visit_description_lbl"
                 android:textColor="@color/text_04"
                 android:textSize="16sp" />
 
@@ -359,7 +424,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:focusable="false"
-                android:hint="@string/ora_pge_visit_purpose_hint"
+                android:hint="@string/ora_pge_visit_description_hint"
                 android:inputType="text|textMultiLine|textCapSentences"
                 android:scrollbars="vertical"
                 android:textColorHint="#878787"
@@ -373,7 +438,7 @@
                 app:hintTextColor="@color/light_theme_green">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/oraVisitPurposeEt"
+                    android:id="@+id/oraVisitDescriptionEt"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:inputType="text|textMultiLine|textCapSentences"
@@ -387,66 +452,65 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif"
+                android:padding="2dp"
+                android:paddingStart="5dp"
+                android:text="@string/ora_pge_visit_date_lbl"
+                android:textColor="@color/text_04"
+                android:textSize="16sp"
+                tools:ignore="RtlSymmetry" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:hint="@string/ora_pge_visit_date_hint"
+                android:longClickable="false"
+                android:textColorHint="#878787"
+                app:boxStrokeColor="@color/light_theme_green"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/light_theme_green"
+                app:endIconTintMode="src_atop"
+                app:hintTextColor="@color/light_theme_green">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/oraVisitDateEt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:focusable="false"
+                    android:inputType="date"
+                    android:longClickable="false"
+                    android:textColor="@color/text_03"
+                    android:textIsSelectable="false">
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
             <LinearLayout
+                android:id="@+id/visiTimingLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:baselineAligned="false"
                 android:orientation="horizontal"
-                android:weightSum="100">
+                android:weightSum="120">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="50"
-                    android:orientation="vertical">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif"
-                        android:padding="2dp"
-                        android:paddingStart="5dp"
-                        android:text="@string/ora_pge_visit_date_lbl"
-                        android:textColor="@color/text_04"
-                        android:textSize="16sp"
-                        tools:ignore="RtlSymmetry" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="140dp"
-                        android:layout_height="wrap_content"
-                        android:focusable="false"
-                        android:hint="@string/ora_pge_visit_date_hint"
-                        android:longClickable="false"
-                        android:textColorHint="#878787"
-                        app:boxStrokeColor="@color/light_theme_green"
-                        app:endIconMode="clear_text"
-                        app:endIconTint="@color/light_theme_green"
-                        app:endIconTintMode="src_atop"
-                        app:hintTextColor="@color/light_theme_green">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/oraVisitDateEt"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:focusable="false"
-                            android:inputType="date"
-                            android:longClickable="false"
-                            android:textColor="@color/text_03"
-                            android:textIsSelectable="false">
-
-                        </com.google.android.material.textfield.TextInputEditText>
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="50"
-                    android:orientation="vertical">
+                    android:layout_marginBottom="4dp"
+                    android:layout_weight="60"
+                    android:orientation="vertical"
+                    android:paddingStart="1dp"
+                    android:paddingEnd="10dp">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
@@ -477,7 +541,57 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:focusable="false"
-                            android:inputType="time"
+                            android:inputType="none"
+                            android:longClickable="false"
+                            android:textColor="@color/text_03"
+                            android:textIsSelectable="false">
+
+                        </com.google.android.material.textfield.TextInputEditText>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_weight="60"
+                    android:orientation="vertical"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:padding="2dp"
+                        android:text="Check In"
+                        android:textColor="@color/text_04"
+                        android:textSize="16sp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:hint="@string/ora_pge_check_out_hint"
+                        android:longClickable="false"
+                        android:textColorHint="#878787"
+                        app:boxStrokeColor="@color/light_theme_green"
+                        app:endIconMode="clear_text"
+                        app:endIconTint="@color/light_theme_green"
+                        app:endIconTintMode="src_atop"
+                        app:hintTextColor="@color/light_theme_green">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/oraVisitCheckInEt"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:focusable="false"
+                            android:inputType="none"
                             android:longClickable="false"
                             android:textColor="@color/text_03"
                             android:textIsSelectable="false">
@@ -491,28 +605,6 @@
 
 
             </LinearLayout>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:fontFamily="sans-serif-light"
-                android:paddingEnd="4dp"
-                android:text="@string/ora_pge_check_out_limit_lbl"
-                android:textColor="@color/text_01"
-                android:textSize="14sp"
-                tools:ignore="RtlSymmetry" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:fontFamily="sans-serif-light"
-                android:paddingEnd="4dp"
-                android:text="@string/ora_pge_check_in_limit_lbl"
-                android:textColor="@color/text_01"
-                android:textSize="14sp"
-                tools:ignore="RtlSymmetry" />
 
             <LinearLayout
                 android:layout_width="match_parent"
