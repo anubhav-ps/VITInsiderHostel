@@ -150,7 +150,7 @@
                 android:layout_marginTop="18dp"
                 android:fontFamily="@font/duru_sans"
                 android:padding="2dp"
-                android:text="Student Mail Id"
+                android:text="Student Mail ID"
                 android:textColor="#E6626161" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -233,7 +233,7 @@
                 android:layout_marginTop="18dp"
                 android:fontFamily="@font/duru_sans"
                 android:padding="2dp"
-                android:text="Parent Mail Id"
+                android:text="Parent Mail ID"
                 android:textColor="#E6626161" />
 
             <com.google.android.material.textview.MaterialTextView

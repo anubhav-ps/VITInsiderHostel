@@ -305,6 +305,10 @@ public class OutingRequestFragment extends Fragment implements View.OnClickListe
         datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         long milis = getDatesBlocked(blockDays).getTime();
         datePickerDialog.getDatePicker().setMinDate(milis);
+      /*  blockDays = calendar.getActualMaximum(Calendar.DATE) - calendar.get(Calendar.DATE);
+        if (blockDays < 8) blockDays = blockDays + 10;
+        milis = getDatesBlocked(blockDays).getTime();
+        datePickerDialog.getDatePicker().setMaxDate(milis);*/
         datePickerDialog.setCanceledOnTouchOutside(false);
         datePickerDialog.show();
 

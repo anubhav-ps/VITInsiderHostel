@@ -2,6 +2,7 @@ package com.anubhav.vitinsiderhostel.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import com.anubhav.vitinsiderhostel.models.Outing;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textview.MaterialTextView;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class OutingAdapter extends RecyclerView.Adapter<OutingAdapter.OutingViewHolder> {
@@ -50,6 +53,23 @@ public class OutingAdapter extends RecyclerView.Adapter<OutingAdapter.OutingView
         holder.dayTxt.setText(dayTxt);
 
         holder.cardView.setOnClickListener(v -> onOutingCardClicked.outingCardClicked(position));
+
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTime(outingList.get(position).getTimeStamp());
+        System.out.println("List date : "+calendar1.get(Calendar.DATE));
+        System.out.println("TODAY date : "+calendar.get(Calendar.DATE));
+        if (calendar1.get(Calendar.DATE)==calendar.get(Calendar.DATE)){
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#B3E78A"));
+            holder.dayTxt.setTextColor(Color.WHITE);
+            holder.dateTxt.setTextColor(Color.WHITE);
+        }else{
+            holder.cardView.setCardBackgroundColor( Color.WHITE);
+            holder.dayTxt.setTextColor(Color.parseColor("#A7E07A"));
+            holder.dateTxt.setTextColor(Color.parseColor("#A7E07A"));
+        }
 
 
     }

@@ -187,6 +187,9 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
     private void initialiseOutingStatus() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         outingRecyclerView.setLayoutManager(linearLayoutManager);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        linearLayoutManager.scrollToPosition(cal.get(Calendar.DATE) - 1);
     }
 
     private void initialiseFeaturedMenu(View view) {
@@ -213,18 +216,19 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
         noticeViewPager.setAdapter(noticeAdapter);
     }
 
+
     private void generateOutingDays() {
 
-        Date today = new Date();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(today);
 
-        for (int i = 0; i < 7; i++) {
-            cal.setTime(today);
-            cal.add(Calendar.DATE, i);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+
+        int thisMonth = cal.get(Calendar.MONTH);
+
+        while (thisMonth == cal.get(Calendar.MONTH)) {
             Date date = cal.getTime();
             Outing outing = new Outing();
-
             SimpleDateFormat formatToString = new SimpleDateFormat("dd", Locale.getDefault());
             final String dateText = formatToString.format(date);
             outing.setDate(dateText);
@@ -246,10 +250,11 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
             formatToString = new SimpleDateFormat("yyyy", Locale.getDefault());
             final String yearText = formatToString.format(date);
             outing.setYear(yearText);
-
+            outing.setTimeStamp(date);
             outingList.add(outing);
-
+            cal.add(Calendar.DAY_OF_MONTH, 1);
         }
+
         initialiseOutingAdapter(outingList);
     }
 
@@ -291,8 +296,6 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
         String date = outingData.getDate();
         String month = outingData.getMonth();
         String status = outingData.getStatus();
-        String from = outingData.getOpenTime();
-        String till = outingData.getCloseTime();
         String duration = outingData.getDuration() + " hrs";
 
         dialog.setContentView(R.layout.dialog_outing_status);
@@ -302,15 +305,11 @@ public class BlockFragment extends Fragment implements iOnOutingCardClicked, iOn
         MaterialTextView monthTxt = dialog.findViewById(R.id.dialogOutingMonthText);
         ImageView image = dialog.findViewById(R.id.dialogOutingImage);
         MaterialTextView statusTxt = dialog.findViewById(R.id.dialogOutingStatusTxt);
-        MaterialTextView fromTxt = dialog.findViewById(R.id.dialogOutingFromTxt);
-        MaterialTextView tillTxt = dialog.findViewById(R.id.dialogOutingTillTxt);
         MaterialTextView durationTxt = dialog.findViewById(R.id.dialogOutingDurationText);
 
         dateTxt.setText(date);
         monthTxt.setText(month);
         statusTxt.setText(status);
-        fromTxt.setText(from);
-        tillTxt.setText(till);
         durationTxt.setText(duration);
 
 

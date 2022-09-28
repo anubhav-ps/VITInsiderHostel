@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -29,8 +28,6 @@ import com.anubhav.vitinsiderhostel.models.Tenant;
 import com.anubhav.vitinsiderhostel.models.User;
 import com.anubhav.vitinsiderhostel.notifications.AppNotification;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -40,7 +37,6 @@ import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -416,7 +412,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //Display an alert dialog for  not verifying the mail ID
         MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(
                 LoginActivity.this);
-        materialAlertDialogBuilder.setTitle("Not Verified User");
+        materialAlertDialogBuilder.setTitle("User Not Verified");
         materialAlertDialogBuilder.setMessage("Verify the link sent to your V.I.T mail during registration");
         materialAlertDialogBuilder.setPositiveButton("Resend Verification Link", (dialog, which) -> {
             //second onComplete listener
@@ -492,7 +488,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (!task.isSuccessful()) {
                 progressBar.setVisibility(View.INVISIBLE);
                 callSnackBar(Objects.requireNonNull(task.getException()).getMessage());
-                callSnackBar("Try logging in again after sometime");
                 logoutUser();
             } else {
                 onFCMTokenGenerated.onTokenGenerated(task.getResult());
@@ -500,7 +495,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }).addOnFailureListener(e -> {
             progressBar.setVisibility(View.INVISIBLE);
             callSnackBar(e.getMessage());
-            callSnackBar("Try logging in again after sometime");
             logoutUser();
         });
     }

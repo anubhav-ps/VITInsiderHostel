@@ -224,7 +224,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     }
 
     private void openEditParentMailId() {
-        callSnackBar("Cannot update parent mail Id");
+        callSnackBar("Cannot update parent mail ID");
     }
 
     private void openEditStudentName() {
@@ -425,7 +425,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     }
 
     private void openEditMailIdView() {
-        callSnackBar("Cannot update user mail ID");
+        callSnackBar("Cannot update student mail ID");
     }
 
     private void openEditUserNameView() {

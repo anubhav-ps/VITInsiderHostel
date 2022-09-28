@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -17,8 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-
-import com.anubhav.vitinsiderhostel.BuildConfig;
 import com.anubhav.vitinsiderhostel.R;
 import com.anubhav.vitinsiderhostel.activities.LoginActivity;
 import com.anubhav.vitinsiderhostel.database.LocalSqlDatabase;
@@ -114,12 +113,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         MaterialTextView signOutTxt = rootView.findViewById(R.id.accountPgeSignOut);
         MaterialTextView versionCodeTxt = rootView.findViewById(R.id.accountPgeAppVersion);
 
-        String versionName = "v ";
-        try {
-            versionName = versionName + BuildConfig.VERSION_NAME;
-        } catch (Exception exception) {
-            callSnackBar("Error fetching version name");
-        }
+        String versionName = "v " + getVersionCode();
         versionCodeTxt.setText(versionName);
 
         setUserDetails();
@@ -140,6 +134,17 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         signOutTxt.setOnClickListener(this);
 
         return rootView;
+    }
+
+    public String getVersionCode() {
+        String v = "";
+        try {
+            v = requireActivity().getPackageManager().getPackageInfo(requireActivity().getPackageName(), 0).versionName;
+            return v;
+        } catch (PackageManager.NameNotFoundException e) {
+            Toast.makeText(getActivity(), "Failed to fetch Version Detail", Toast.LENGTH_SHORT).show();
+        }
+        return v;
     }
 
 
@@ -228,7 +233,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, "Insider Hostel");
         String shareMessage = "\nHey dude, check out this app for VIT Chennai Hostel\n\n";
-        shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID + "\n";
+        shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + requireContext().getPackageName() + "\n";
         intent.putExtra(Intent.EXTRA_TEXT, shareMessage);
         startActivity(Intent.createChooser(intent, "Select One"));
     }
